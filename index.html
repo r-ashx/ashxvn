@@ -1,357 +1,868 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manual Video Showcase</title>
-    <!-- Modern Font: Poppins -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ashx - AUTHENTICATION</title>
+  <style>
+    /* ==========================================================================
+       RESET & BASE STYLES
+       ========================================================================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      user-select: none;
+    }
 
-    <style>
-        /* ==========================================================================
-           1. RESET & AMBIENT BACKGROUND
-           ========================================================================== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+    body {
+      background-color: #ffffff;
+      color: #000000;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
 
-        body, html {
-            width: 100%;
-            min-height: 100vh;
-            font-family: 'Poppins', sans-serif;
-            background-color: #0b0c10;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px 10px;
-            overflow-x: hidden;
-        }
+    /* ==========================================================================
+       DYNAMIC ANIMATED BACKGROUND LAYERS
+       ========================================================================== */
+    #bg-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
 
-        .ambient-bg {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(108, 92, 231, 0.25) 0%, rgba(255, 118, 117, 0.15) 50%, rgba(0,0,0,0) 70%);
-            z-index: 1;
-            pointer-events: none;
-            filter: blur(60px);
-        }
+    .bg-grid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: 50px 50px;
+      background-image: 
+        linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+      z-index: 1;
+      pointer-events: none;
+    }
 
-        /* ==========================================================================
-           2. SHOWCASE CONTAINER
-           ========================================================================== */
-        .showcase-container {
-            position: relative;
-            z-index: 2;
-            width: 100%;
-            max-width: 400px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 18px;
-            animation: heroFadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
+    .bg-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(70px);
+      z-index: 1;
+      pointer-events: none;
+    }
 
-        .header-content {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
+    .bg-blob-1 {
+      top: 15%;
+      left: 15%;
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(255, 0, 0, 0.22) 0%, rgba(255, 255, 255, 0) 70%);
+      animation: floatBlob1 10s ease-in-out infinite alternate;
+    }
 
-        .logo {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: rgba(255, 255, 255, 0.85);
-            background: rgba(255, 255, 255, 0.08);
-            padding: 5px 14px;
-            border-radius: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
+    .bg-blob-2 {
+      bottom: 12%;
+      right: 15%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(255, 60, 60, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+      animation: floatBlob2 12s ease-in-out infinite alternate-reverse;
+    }
 
-        .heading {
-            font-size: 1.8rem;
-            font-weight: 800;
-            line-height: 1.2;
-            background: linear-gradient(135deg, #ffffff 0%, #d2d2d5 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    .bg-blob-3 {
+      top: 50%;
+      left: 50%;
+      width: 350px;
+      height: 350px;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(255, 0, 0, 0.12) 0%, rgba(255, 255, 255, 0) 70%);
+      animation: pulseBlob 6s ease-in-out infinite alternate;
+    }
 
-        .heading span {
-            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    @keyframes floatBlob1 {
+      0% { transform: translate(0px, 0px) scale(1); }
+      100% { transform: translate(60px, -40px) scale(1.15); }
+    }
 
-        .subtitle {
-            font-size: 0.85rem;
-            font-weight: 300;
-            color: rgba(255, 255, 255, 0.7);
-        }
+    @keyframes floatBlob2 {
+      0% { transform: translate(0px, 0px) scale(1); }
+      100% { transform: translate(-50px, 50px) scale(1.2); }
+    }
 
-        /* ==========================================================================
-           3. VIDEO CARD STYLES
-           ========================================================================== */
-        .video-card {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 9 / 16;
-            border-radius: 24px;
-            overflow: hidden;
-            background: #000000;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
-        }
+    @keyframes pulseBlob {
+      0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+      100% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.9; }
+    }
 
-        .fg-video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0;
-            visibility: hidden;
-            z-index: 1;
-            transition: opacity 0.6s ease-in-out, visibility 0.6s ease-in-out;
-        }
+    #alert-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(255, 0, 0, 0.3) 0%, rgba(255, 255, 255, 0) 100%);
+      z-index: 5;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
 
-        .fg-video.active {
-            opacity: 1;
-            visibility: visible;
-            z-index: 2;
-        }
+    .flashing-active {
+      animation: flashWarning 0.8s infinite alternate;
+    }
 
-        .card-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 35%;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
-            pointer-events: none;
-            z-index: 3;
-        }
+    @keyframes flashWarning {
+      0% { opacity: 0.1; }
+      100% { opacity: 0.85; }
+    }
 
-        /* Navigation Arrows (Left & Right) */
-        .nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 5;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: all 0.2s ease;
-            user-select: none;
-        }
+    /* ==========================================================================
+       3D CARD PERSPECTIVE & GLASSMORPHISM
+       ========================================================================== */
+    .perspective-container {
+      perspective: 1200px;
+      z-index: 10;
+      width: 100%;
+      max-width: 440px;
+      padding: 20px;
+      animation: cardFadeIn 1s ease-out forwards;
+    }
 
-        .nav-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-50%) scale(1.1);
-        }
+    @keyframes cardFadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-        .nav-prev { left: 12px; }
-        .nav-next { right: 12px; }
+    .auth-card {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border-radius: 28px;
+      padding: 45px 35px;
+      text-align: center;
+      border: 1.5px solid rgba(255, 0, 0, 0.4);
+      box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.08),
+        0 8px 16px rgba(0, 0, 0, 0.04),
+        0 0 30px rgba(255, 0, 0, 0.25);
+      transform-style: preserve-3d;
+      transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+      animation: cardFloat 6s ease-in-out infinite alternate;
+      position: relative;
+    }
 
-        /* Bottom Controls Overlay */
-        .controls-overlay {
-            position: absolute;
-            bottom: 18px;
-            left: 0;
-            width: 100%;
-            z-index: 4;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-        }
+    @keyframes cardFloat {
+      0% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
+      100% { transform: translateY(-8px) rotateX(1.5deg) rotateY(-1.5deg); }
+    }
 
-        .dots-indicator {
-            display: flex;
-            gap: 8px;
-        }
+    .auth-card:hover {
+      border-color: rgba(255, 0, 0, 0.8);
+      box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.12),
+        0 12px 24px rgba(0, 0, 0, 0.06),
+        0 0 45px rgba(255, 0, 0, 0.4);
+    }
 
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.4);
-            cursor: pointer;
-            transition: all 0.4s ease;
-        }
+    .shake {
+      animation: shakeCard 0.5s cubic-bezier(.36,.07,.19,.97) both !important;
+    }
 
-        .dot.active {
-            width: 26px;
-            border-radius: 10px;
-            background: #ffffff;
-        }
+    @keyframes shakeCard {
+      10%, 90% { transform: translate3d(-4px, 0, 0); }
+      20%, 80% { transform: translate3d(6px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+      40%, 60% { transform: translate3d(8px, 0, 0); }
+    }
 
-        .media-btn {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: transform 0.2s ease;
-        }
+    /* ==========================================================================
+       ICON & TYPOGRAPHY
+       ========================================================================== */
+    .icon-container {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 24px;
+      background: #ffffff;
+      border: 1.5px solid rgba(255, 0, 0, 0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 
+        0 8px 16px rgba(0, 0, 0, 0.06),
+        0 0 20px rgba(255, 0, 0, 0.2);
+      transition: all 0.4s ease;
+    }
 
-        .media-btn:hover {
-            transform: scale(1.1);
-        }
+    .icon-container svg {
+      width: 32px;
+      height: 32px;
+      fill: none;
+      stroke: #000000;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: all 0.3s ease;
+    }
 
-        .cta-button {
-            width: 100%;
-            padding: 14px 28px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            font-family: 'Poppins', sans-serif;
-            color: #ffffff;
-            text-decoration: none;
-            text-align: center;
-            border: none;
-            border-radius: 50px;
-            background: linear-gradient(135deg, #6C5CE7 0%, #8E44AD 50%, #FF7675 100%);
-            background-size: 200% auto;
-            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.4);
-            cursor: pointer;
-            transition: all 0.4s ease;
-        }
+    .auth-card:hover .icon-container {
+      border-color: #ff0000;
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
+    }
 
-        .cta-button:hover {
-            background-position: right center;
-            transform: translateY(-2px);
-        }
+    .auth-card:hover .icon-container svg { stroke: #ff0000; }
 
-        @keyframes heroFadeUp {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+    h1.title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #000000;
+      margin-bottom: 8px;
+    }
+
+    p.subtitle {
+      font-size: 0.85rem;
+      color: rgba(0, 0, 0, 0.55);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-bottom: 30px;
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       INPUT FIELDS & GLOW
+       ========================================================================== */
+    .digit-container {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .digit-box {
+      width: 56px;
+      height: 64px;
+      background: #ffffff;
+      border: 1.5px solid rgba(0, 0, 0, 0.12);
+      border-radius: 14px;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #000000;
+      text-align: center;
+      outline: none;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+      caret-color: #ff0000;
+    }
+
+    .digit-box:focus {
+      border-color: #ff0000;
+      box-shadow: 
+        0 0 20px rgba(255, 0, 0, 0.4),
+        0 4px 12px rgba(255, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .input-error {
+      border-color: #ff0000 !important;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.5) !important;
+      background-color: rgba(255, 0, 0, 0.03);
+    }
+
+    /* ==========================================================================
+       BUTTON & RIPPLE
+       ========================================================================== */
+    .verify-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #ff0000 0%, #b30000 100%);
+      border: none;
+      border-radius: 14px;
+      color: #ffffff;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      outline: none;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 10px 20px rgba(255, 0, 0, 0.3);
+    }
+
+    .verify-btn:hover:not(:disabled) {
+      box-shadow: 
+        0 14px 28px rgba(255, 0, 0, 0.45),
+        0 0 25px rgba(255, 0, 0, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .verify-btn:active:not(:disabled) {
+      transform: translateY(1px) scale(0.98);
+      box-shadow: 0 6px 12px rgba(255, 0, 0, 0.3);
+    }
+
+    .verify-btn:disabled {
+      background: #e0e0e0;
+      color: #999999;
+      cursor: not-allowed;
+      box-shadow: none;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      transform: scale(0);
+      animation: rippleAnim 0.6s linear;
+      pointer-events: none;
+    }
+
+    @keyframes rippleAnim {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    /* ==========================================================================
+       STATUS MESSAGES & COUNTERS
+       ========================================================================== */
+    .status-message {
+      min-height: 24px;
+      margin-top: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .status-message.error {
+      color: #d30000;
+      text-shadow: 0 0 8px rgba(255, 0, 0, 0.2);
+      animation: pulseError 0.8s infinite alternate;
+    }
+
+    .status-message.success {
+      color: #008000;
+      text-shadow: 0 0 8px rgba(0, 128, 0, 0.2);
+    }
+
+    @keyframes pulseError {
+      0% { opacity: 0.85; }
+      100% { opacity: 1; transform: scale(1.02); }
+    }
+
+    .attempts-tracker {
+      margin-top: 14px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.4);
+      letter-spacing: 1px;
+    }
+
+    .timer-display {
+      color: #ff0000;
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-top: 10px;
+      display: none;
+      letter-spacing: 1px;
+    }
+
+    .success-checkmark {
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+    }
+
+    .success-checkmark svg {
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: #008000;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 24;
+      stroke-dashoffset: 24;
+      animation: drawCheck 0.4s ease-in-out forwards;
+    }
+
+    @keyframes drawCheck {
+      to { stroke-dashoffset: 0; }
+    }
+
+    @media (max-width: 480px) {
+      .auth-card { padding: 35px 22px; }
+      .digit-box { width: 48px; height: 58px; font-size: 1.5rem; }
+      h1.title { font-size: 1.25rem; }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="ambient-bg"></div>
+  <!-- Background Animated Layers -->
+  <div class="bg-grid"></div>
+  <div class="bg-blob bg-blob-1"></div>
+  <div class="bg-blob bg-blob-2"></div>
+  <div class="bg-blob bg-blob-3"></div>
 
-    <div class="showcase-container">
-        <div class="header-content">
-            <div class="logo">AURA STUDIO</div>
-            <h1 class="heading">Featured <span>Visuals</span></h1>
-            <p class="subtitle">Use buttons or dots to switch videos</p>
-        </div>
+  <!-- Dynamic Particles & Wireframe Canvas -->
+  <canvas id="bg-canvas"></canvas>
 
-        <div class="video-card">
-            <!-- Next & Previous Buttons -->
-            <button class="nav-btn nav-prev" onclick="prevVideo()">❮</button>
-            <button class="nav-btn nav-next" onclick="nextVideo()">❯</button>
+  <!-- Flashing Security Overlay -->
+  <div id="alert-overlay"></div>
 
-            <!-- Video Elements (Only manual control) -->
-            <video class="fg-video active" muted playsinline loop id="vid0">
-                <source src="BWMxAPS.mp4" type="video/mp4">
-            </video>
-            <video class="fg-video" muted playsinline loop id="vid1">
-                <source src="DelhiQwali.mp4" type="video/mp4">
-            </video>
-            <video class="fg-video" muted playsinline loop id="vid1">
-                <source src="Afree!.mp4" type="video/mp4">
-            </video>
+  <!-- Main Card -->
+  <div class="perspective-container">
+    <div class="auth-card" id="card">
+      
+      <div class="icon-container">
+        <svg id="lock-icon" viewBox="0 0 24 24">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      </div>
 
-            <div class="card-overlay"></div>
+      <h1 class="title">Ashx AUTHENTICATION</h1>
+      <p class="subtitle">Enter Secret Code</p>
 
-            <div class="controls-overlay">
-                <!-- Dots for direct video selection -->
-                <div class="dots-indicator">
-                    <div class="dot active" onclick="goToVideo(0)"></div>
-                    <div class="dot" onclick="goToVideo(1)"></div>
-                    <div class="dot" onclick="goToVideo(2)"></div>
-                </div>
+      <div class="digit-container" id="digit-container">
+        <input type="text" class="digit-box" maxlength="1" autocomplete="off">
+        <input type="text" class="digit-box" maxlength="1" autocomplete="off">
+        <input type="text" class="digit-box" maxlength="1" autocomplete="off">
+        <input type="text" class="digit-box" maxlength="1" autocomplete="off">
+      </div>
 
-                <button class="media-btn" id="muteBtn" onclick="toggleMute()">🔇</button>
-            </div>
-        </div>
+      <button class="verify-btn" id="verify-btn">VERIFY</button>
 
-        <a href="#explore" class="cta-button">Explore Collection</a>
+      <div class="status-message" id="status-message"></div>
+      <div class="attempts-tracker" id="attempts-tracker">ATTEMPTS LEFT: <span id="attempts-left">3</span></div>
+      <div class="timer-display" id="timer-display">SYSTEM LOCKED: <span id="timer-count">10</span>s</div>
+
     </div>
+  </div>
 
-    <!-- PURE MANUAL CONTROL SCRIPT -->
-    <script>
-        const videos = document.querySelectorAll('.fg-video');
-        const dots = document.querySelectorAll('.dot');
-        const muteBtn = document.getElementById('muteBtn');
-        
-        let currentIndex = 0;
-        let isMuted = true;
+  <audio id="alert-audio" preload="auto">
+    <source src="Alerttt.mp3" type="audio/mpeg">
+  </audio>
 
-        // Function to switch to a specified video
-        function goToVideo(index) {
-            // Remove active status from current
-            videos[currentIndex].classList.remove('active');
-            videos[currentIndex].pause();
-            dots[currentIndex].classList.remove('active');
+  <script>
+    /* ==========================================================================
+       CONFIG & STATE
+       ========================================================================== */
+    const CONFIG = {
+      SECRET_CODE: "@5hx", // Updated Secret Code
+      MAX_ATTEMPTS: 3,
+      LOCKOUT_DURATION: 10,
+      REDIRECT_URL: "next.html",
+      REDIRECT_DELAY: 1500
+    };
 
-            // Set new active index
-            currentIndex = index;
+    let attempts = 0;
+    let isLocked = false;
+    let lockoutTimer = null;
 
-            // Update & play new video
-            const activeVid = videos[currentIndex];
-            activeVid.muted = isMuted;
-            activeVid.currentTime = 0;
-            activeVid.classList.add('active');
-            dots[currentIndex].classList.add('active');
+    const card = document.getElementById('card');
+    const inputs = Array.from(document.querySelectorAll('.digit-box'));
+    const verifyBtn = document.getElementById('verify-btn');
+    const statusMsg = document.getElementById('status-message');
+    const attemptsLeftDisplay = document.getElementById('attempts-left');
+    const timerDisplay = document.getElementById('timer-display');
+    const timerCountDisplay = document.getElementById('timer-count');
+    const alertOverlay = document.getElementById('alert-overlay');
+    const alertAudio = document.getElementById('alert-audio');
+    const lockIcon = document.getElementById('lock-icon');
 
-            activeVid.play().catch(err => console.log("Playback error:", err));
+    /* ==========================================================================
+       ANIMATED BACKGROUND CANVAS
+       ========================================================================== */
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    let mouse = { x: width / 2, y: height / 2 };
+    document.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+
+    class Particle {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.size = Math.random() * 2.5 + 0.5;
+        this.speedY = -(Math.random() * 0.8 + 0.2);
+        this.speedX = (Math.random() - 0.5) * 0.4;
+        this.opacity = Math.random() * 0.6 + 0.2;
+        this.color = Math.random() > 0.4 ? '#ff0000' : '#888888';
+      }
+      update() {
+        this.y += this.speedY;
+        this.x += this.speedX;
+        if (this.y < -10 || this.x < -10 || this.x > width + 10) {
+          this.reset();
+          this.y = height + 10;
         }
-
-        // Button handlers
-        function nextVideo() {
-            let nextIndex = (currentIndex + 1) % videos.length;
-            goToVideo(nextIndex);
+      }
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = this.color;
+        if (this.color === '#ff0000') {
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = '#ff0000';
         }
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
 
-        function prevVideo() {
-            let prevIndex = (currentIndex - 1 + videos.length) % videos.length;
-            goToVideo(prevIndex);
-        }
+    class Shape3D {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.size = Math.random() * 30 + 20;
+        this.rotX = Math.random() * Math.PI;
+        this.rotY = Math.random() * Math.PI;
+        this.rotSpeedX = (Math.random() - 0.5) * 0.01;
+        this.rotSpeedY = (Math.random() - 0.5) * 0.01;
+        this.speedY = (Math.random() - 0.5) * 0.3;
+        this.speedX = (Math.random() - 0.5) * 0.3;
 
-        function toggleMute() {
-            isMuted = !isMuted;
-            videos.forEach(v => v.muted = isMuted);
-            muteBtn.textContent = isMuted ? '🔇' : '🔊';
-        }
+        this.vertices = [
+          [-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1],
+          [-1, -1, 1],  [1, -1, 1],  [1, 1, 1],  [-1, 1, 1]
+        ];
+        this.edges = [
+          [0,1],[1,2],[2,3],[3,0],
+          [4,5],[5,6],[6,7],[7,4],
+          [0,4],[1,5],[2,6],[3,7]
+        ];
+      }
 
-        // Initial setup on load (Plays video #1 and waits for user input)
-        document.addEventListener('DOMContentLoaded', () => {
-            videos[0].play().catch(err => console.log("Waiting for user interaction", err));
+      update() {
+        this.rotX += this.rotSpeedX;
+        this.rotY += this.rotSpeedY;
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.x < 0 || this.x > width) this.speedX *= -1;
+        if (this.y < 0 || this.y > height) this.speedY *= -1;
+      }
+
+      draw() {
+        ctx.save();
+        ctx.strokeStyle = 'rgba(255, 0, 0, 0.18)';
+        ctx.lineWidth = 1;
+
+        const dx = (mouse.x - width / 2) * 0.02;
+        const dy = (mouse.y - height / 2) * 0.02;
+
+        const projected = [];
+        this.vertices.forEach(v => {
+          let y1 = v[1] * Math.cos(this.rotX) - v[2] * Math.sin(this.rotX);
+          let z1 = v[1] * Math.sin(this.rotX) + v[2] * Math.cos(this.rotX);
+
+          let x2 = v[0] * Math.cos(this.rotY) + z1 * Math.sin(this.rotY);
+          let z2 = -v[0] * Math.sin(this.rotY) + z1 * Math.cos(this.rotY);
+
+          const distance = 4;
+          const fov = 300;
+          const scale = fov / (fov + z2 * this.size);
+
+          const px = x2 * this.size * scale + this.x + dx;
+          const py = y1 * this.size * scale + this.y + dy;
+
+          projected.push([px, py]);
         });
-    </script>
+
+        this.edges.forEach(edge => {
+          ctx.beginPath();
+          ctx.moveTo(projected[edge[0]][0], projected[edge[0]][1]);
+          ctx.lineTo(projected[edge[1]][0], projected[edge[1]][1]);
+          ctx.stroke();
+        });
+        ctx.restore();
+      }
+    }
+
+    const particles = Array.from({ length: 65 }, () => new Particle());
+    const shapes = Array.from({ length: 12 }, () => new Shape3D());
+
+    function animateCanvas() {
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      shapes.forEach(s => { s.update(); s.draw(); });
+      requestAnimationFrame(animateCanvas);
+    }
+    animateCanvas();
+
+    /* 3D Parallax Hover */
+    document.addEventListener('mousemove', (e) => {
+      if (isLocked) return;
+      const xAxis = (window.innerWidth / 2 - e.pageX) / 30;
+      const yAxis = (window.innerHeight / 2 - e.pageY) / 30;
+      card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+    });
+
+    document.addEventListener('mouseleave', () => {
+      card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+    });
+
+    /* ==========================================================================
+       INPUT NAVIGATION
+       ========================================================================== */
+    inputs[0].focus();
+
+    inputs.forEach((input, index) => {
+      input.addEventListener('input', (e) => {
+        if (e.target.value.length === 1 && index < inputs.length - 1) {
+          inputs[index + 1].focus();
+        }
+        checkAutoSubmit();
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace') {
+          if (input.value === '' && index > 0) {
+            inputs[index - 1].focus();
+            inputs[index - 1].value = '';
+          } else {
+            input.value = '';
+          }
+        } else if (e.key === 'ArrowLeft' && index > 0) {
+          inputs[index - 1].focus();
+        } else if (e.key === 'ArrowRight' && index < inputs.length - 1) {
+          inputs[index + 1].focus();
+        } else if (e.key === 'Enter') {
+          handleVerification();
+        }
+      });
+
+      input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const pasteData = (e.clipboardData || window.clipboardData).getData('text').trim();
+        if (pasteData.length === 4) {
+          pasteData.split('').forEach((char, i) => {
+            if (inputs[i]) inputs[i].value = char;
+          });
+          inputs[3].focus();
+          checkAutoSubmit();
+        }
+      });
+    });
+
+    function getEnteredCode() {
+      return inputs.map(i => i.value).join('');
+    }
+
+    function checkAutoSubmit() {
+      if (getEnteredCode().length === 4) {
+        handleVerification();
+      }
+    }
+
+    function clearInputs() {
+      inputs.forEach(i => i.value = '');
+      if (!isLocked) inputs[0].focus();
+    }
+
+    verifyBtn.addEventListener('click', function (e) {
+      const circle = document.createElement('span');
+      const diameter = Math.max(this.clientWidth, this.clientHeight);
+      const radius = diameter / 2;
+      const rect = this.getBoundingClientRect();
+
+      circle.style.width = circle.style.height = `${diameter}px`;
+      circle.style.left = `${e.clientX - rect.left - radius}px`;
+      circle.style.top = `${e.clientY - rect.top - radius}px`;
+      circle.classList.add('ripple');
+
+      const ripple = this.getElementsByClassName('ripple')[0];
+      if (ripple) ripple.remove();
+
+      this.appendChild(circle);
+      handleVerification();
+    });
+
+    /* ==========================================================================
+       AUTHENTICATION & LOCKOUT LOGIC
+       ========================================================================== */
+    function handleVerification() {
+      if (isLocked) return;
+
+      const code = getEnteredCode();
+
+      if (code.length < 4) {
+        showStatus("ENTER FULL 4-CHARACTER CODE", "error");
+        triggerErrorAnimation();
+        return;
+      }
+
+      if (code === CONFIG.SECRET_CODE) {
+        processSuccess();
+      } else {
+        processFailure();
+      }
+    }
+
+    function processSuccess() {
+      statusMsg.className = "status-message success";
+      statusMsg.innerHTML = `
+        <span class="success-checkmark">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </span>
+        Access Granted
+      `;
+
+      card.style.borderColor = "#008000";
+      card.style.boxShadow = "0 20px 40px rgba(0, 0, 0, 0.08), 0 0 30px rgba(0, 128, 0, 0.3)";
+
+      lockIcon.innerHTML = `
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V4a5 5 0 0 1 9.9-1"></path>
+      `;
+      lockIcon.style.stroke = "#008000";
+
+      inputs.forEach(i => { i.disabled = true; i.classList.remove('input-error'); });
+      verifyBtn.disabled = true;
+
+      setTimeout(() => {
+        window.location.href = CONFIG.REDIRECT_URL;
+      }, CONFIG.REDIRECT_DELAY);
+    }
+
+    function processFailure() {
+      attempts++;
+      attemptsLeftDisplay.innerText = CONFIG.MAX_ATTEMPTS - attempts;
+
+      showStatus("You are not Authorized Person!!", "error");
+      triggerErrorAnimation();
+      clearInputs();
+
+      if (attempts >= CONFIG.MAX_ATTEMPTS) {
+        triggerLockout();
+      }
+    }
+
+    function triggerErrorAnimation() {
+      card.classList.remove('shake');
+      void card.offsetWidth;
+      card.classList.add('shake');
+
+      inputs.forEach(i => {
+        i.classList.add('input-error');
+        setTimeout(() => i.classList.remove('input-error'), 1200);
+      });
+    }
+
+    function showStatus(text, type) {
+      statusMsg.innerText = text;
+      statusMsg.className = `status-message ${type}`;
+    }
+
+    function triggerLockout() {
+      isLocked = true;
+      verifyBtn.disabled = true;
+      inputs.forEach(i => i.disabled = true);
+
+      playAlertAudio();
+      alertOverlay.classList.add('flashing-active');
+
+      timerDisplay.style.display = 'block';
+      let timeLeft = CONFIG.LOCKOUT_DURATION;
+      timerCountDisplay.innerText = timeLeft;
+
+      lockoutTimer = setInterval(() => {
+        timeLeft--;
+        timerCountDisplay.innerText = timeLeft;
+
+        if (timeLeft <= 0) {
+          clearInterval(lockoutTimer);
+          resetLockout();
+        }
+      }, 1000);
+    }
+
+    function resetLockout() {
+      isLocked = false;
+      attempts = 0;
+      attemptsLeftDisplay.innerText = CONFIG.MAX_ATTEMPTS;
+      verifyBtn.disabled = false;
+      inputs.forEach(i => i.disabled = false);
+
+      alertOverlay.classList.remove('flashing-active');
+      timerDisplay.style.display = 'none';
+      showStatus("", "");
+      inputs[0].focus();
+    }
+
+    function playAlertAudio() {
+      const playPromise = alertAudio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => synthesizeAlarmSound());
+      }
+    }
+
+    function synthesizeAlarmSound() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+
+        for (let i = 0; i < 3; i++) {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(880, ctx.currentTime + i * 0.3);
+          osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + i * 0.3 + 0.25);
+
+          gain.gain.setValueAtTime(0.3, ctx.currentTime + i * 0.3);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.3 + 0.25);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(ctx.currentTime + i * 0.3);
+          osc.stop(ctx.currentTime + i * 0.3 + 0.25);
+        }
+      } catch (e) {
+        console.warn("Audio synthesis unavailable.");
+      }
+    }
+  </script>
 </body>
 </html>
