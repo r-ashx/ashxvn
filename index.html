@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ashx - AUTHENTICATION</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Ashx-AUTHENTICATION</title>
   <style>
     /* ==========================================================================
-       RESET & BASE STYLES
+       RESET & CORE RESPONSIVE VARIABLES
        ========================================================================== */
     * {
       margin: 0;
@@ -14,16 +14,30 @@
       box-sizing: border-box;
       font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
       user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --primary-red: #ff0000;
+      --dark-red: #b30000;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --card-border: rgba(255, 0, 0, 0.4);
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
     }
 
     body {
       background-color: #ffffff;
       color: #000000;
       min-height: 100vh;
+      min-height: -webkit-fill-available;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
       position: relative;
     }
 
@@ -46,7 +60,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-size: 50px 50px;
+      background-size: clamp(30px, 5vw, 50px) clamp(30px, 5vw, 50px);
       background-image: 
         linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
@@ -57,25 +71,25 @@
     .bg-blob {
       position: absolute;
       border-radius: 50%;
-      filter: blur(70px);
+      filter: blur(clamp(40px, 8vw, 70px));
       z-index: 1;
       pointer-events: none;
     }
 
     .bg-blob-1 {
-      top: 15%;
-      left: 15%;
-      width: 450px;
-      height: 450px;
+      top: 10%;
+      left: 10%;
+      width: clamp(250px, 45vw, 500px);
+      height: clamp(250px, 45vw, 500px);
       background: radial-gradient(circle, rgba(255, 0, 0, 0.22) 0%, rgba(255, 255, 255, 0) 70%);
       animation: floatBlob1 10s ease-in-out infinite alternate;
     }
 
     .bg-blob-2 {
-      bottom: 12%;
-      right: 15%;
-      width: 500px;
-      height: 500px;
+      bottom: 10%;
+      right: 10%;
+      width: clamp(280px, 50vw, 550px);
+      height: clamp(280px, 50vw, 550px);
       background: radial-gradient(circle, rgba(255, 60, 60, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
       animation: floatBlob2 12s ease-in-out infinite alternate-reverse;
     }
@@ -83,8 +97,8 @@
     .bg-blob-3 {
       top: 50%;
       left: 50%;
-      width: 350px;
-      height: 350px;
+      width: clamp(200px, 35vw, 400px);
+      height: clamp(200px, 35vw, 400px);
       transform: translate(-50%, -50%);
       background: radial-gradient(circle, rgba(255, 0, 0, 0.12) 0%, rgba(255, 255, 255, 0) 70%);
       animation: pulseBlob 6s ease-in-out infinite alternate;
@@ -92,12 +106,12 @@
 
     @keyframes floatBlob1 {
       0% { transform: translate(0px, 0px) scale(1); }
-      100% { transform: translate(60px, -40px) scale(1.15); }
+      100% { transform: translate(40px, -30px) scale(1.15); }
     }
 
     @keyframes floatBlob2 {
       0% { transform: translate(0px, 0px) scale(1); }
-      100% { transform: translate(-50px, 50px) scale(1.2); }
+      100% { transform: translate(-30px, 40px) scale(1.2); }
     }
 
     @keyframes pulseBlob {
@@ -111,7 +125,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle, rgba(255, 0, 0, 0.3) 0%, rgba(255, 255, 255, 0) 100%);
+      background: radial-gradient(circle, rgba(255, 0, 0, 0.35) 0%, rgba(255, 255, 255, 0) 100%);
       z-index: 5;
       pointer-events: none;
       opacity: 0;
@@ -128,30 +142,30 @@
     }
 
     /* ==========================================================================
-       3D CARD PERSPECTIVE & GLASSMORPHISM
+       RESPONSIVE 3D CARD PERSPECTIVE & GLASSMORPHISM
        ========================================================================== */
     .perspective-container {
       perspective: 1200px;
       z-index: 10;
       width: 100%;
-      max-width: 440px;
-      padding: 20px;
-      animation: cardFadeIn 1s ease-out forwards;
+      max-width: clamp(300px, 90vw, 460px);
+      padding: clamp(12px, 3vw, 24px);
+      animation: cardFadeIn 0.8s ease-out forwards;
     }
 
     @keyframes cardFadeIn {
-      from { opacity: 0; transform: translateY(30px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
     .auth-card {
-      background: rgba(255, 255, 255, 0.82);
+      background: var(--card-bg);
       backdrop-filter: blur(25px);
       -webkit-backdrop-filter: blur(25px);
-      border-radius: 28px;
-      padding: 45px 35px;
+      border-radius: clamp(20px, 4vw, 32px);
+      padding: clamp(25px, 6vw, 45px) clamp(18px, 5vw, 35px);
       text-align: center;
-      border: 1.5px solid rgba(255, 0, 0, 0.4);
+      border: 1.5px solid var(--card-border);
       box-shadow: 
         0 20px 40px rgba(0, 0, 0, 0.08),
         0 8px 16px rgba(0, 0, 0, 0.04),
@@ -164,15 +178,14 @@
 
     @keyframes cardFloat {
       0% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
-      100% { transform: translateY(-8px) rotateX(1.5deg) rotateY(-1.5deg); }
+      100% { transform: translateY(-6px) rotateX(1deg) rotateY(-1deg); }
     }
 
     .auth-card:hover {
       border-color: rgba(255, 0, 0, 0.8);
       box-shadow: 
-        0 30px 60px rgba(0, 0, 0, 0.12),
-        0 12px 24px rgba(0, 0, 0, 0.06),
-        0 0 45px rgba(255, 0, 0, 0.4);
+        0 25px 50px rgba(0, 0, 0, 0.12),
+        0 0 40px rgba(255, 0, 0, 0.35);
     }
 
     .shake {
@@ -187,27 +200,25 @@
     }
 
     /* ==========================================================================
-       ICON & TYPOGRAPHY
+       ICON & TYPOGRAPHY (FLUID SCALING)
        ========================================================================== */
     .icon-container {
-      width: 72px;
-      height: 72px;
-      margin: 0 auto 24px;
+      width: clamp(56px, 12vw, 72px);
+      height: clamp(56px, 12vw, 72px);
+      margin: 0 auto clamp(16px, 3vw, 24px);
       background: #ffffff;
       border: 1.5px solid rgba(255, 0, 0, 0.3);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 
-        0 8px 16px rgba(0, 0, 0, 0.06),
-        0 0 20px rgba(255, 0, 0, 0.2);
-      transition: all 0.4s ease;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06), 0 0 20px rgba(255, 0, 0, 0.2);
+      transition: all 0.3s ease;
     }
 
     .icon-container svg {
-      width: 32px;
-      height: 32px;
+      width: clamp(24px, 5vw, 32px);
+      height: clamp(24px, 5vw, 32px);
       fill: none;
       stroke: #000000;
       stroke-width: 2.2;
@@ -217,84 +228,87 @@
     }
 
     .auth-card:hover .icon-container {
-      border-color: #ff0000;
+      border-color: var(--primary-red);
       transform: scale(1.05);
-      box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
     }
 
-    .auth-card:hover .icon-container svg { stroke: #ff0000; }
+    .auth-card:hover .icon-container svg { stroke: var(--primary-red); }
 
-    h1.title {
-      font-size: 1.5rem;
-      font-weight: 800;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: #000000;
-      margin-bottom: 8px;
-    }
+   h1.title {
+  font-size: clamp(0.95rem, 3.5vw, 1.35rem); /* Reduced maximum size so it never overflows */
+  font-weight: 800;
+  letter-spacing: clamp(0.5px, 0.2vw, 1.5px); /* Reduced letter-spacing to save horizontal space */
+  text-transform: uppercase;
+  color: #000000;
+  margin-bottom: 6px;
+  width: 100%;
+  word-wrap: break-word; /* Prevents overflow if screen gets very narrow */
+  text-align: center;
+}
 
     p.subtitle {
-      font-size: 0.85rem;
+      font-size: clamp(0.7rem, 2.5vw, 0.85rem);
       color: rgba(0, 0, 0, 0.55);
-      letter-spacing: 1.2px;
+      letter-spacing: 1px;
       text-transform: uppercase;
-      margin-bottom: 30px;
+      margin-bottom: clamp(20px, 4vw, 30px);
       font-weight: 600;
     }
 
     /* ==========================================================================
-       INPUT FIELDS & GLOW
+       RESPONSIVE INPUT FIELDS
        ========================================================================== */
     .digit-container {
       display: flex;
       justify-content: center;
-      gap: 12px;
-      margin-bottom: 24px;
+      gap: clamp(6px, 2.2vw, 12px);
+      margin-bottom: clamp(18px, 4vw, 24px);
+      width: 100%;
     }
 
     .digit-box {
-      width: 56px;
-      height: 64px;
+      width: clamp(42px, 12vw, 56px);
+      height: clamp(52px, 14vw, 64px);
       background: #ffffff;
       border: 1.5px solid rgba(0, 0, 0, 0.12);
-      border-radius: 14px;
-      font-size: 1.8rem;
+      border-radius: clamp(10px, 2.5vw, 14px);
+      font-size: clamp(1.3rem, 4vw, 1.8rem);
       font-weight: 700;
       color: #000000;
       text-align: center;
       outline: none;
-      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      transition: all 0.25s ease;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
-      caret-color: #ff0000;
+      caret-color: var(--primary-red);
     }
 
     .digit-box:focus {
-      border-color: #ff0000;
+      border-color: var(--primary-red);
       box-shadow: 
-        0 0 20px rgba(255, 0, 0, 0.4),
+        0 0 18px rgba(255, 0, 0, 0.4),
         0 4px 12px rgba(255, 0, 0, 0.15);
       transform: translateY(-2px);
     }
 
     .input-error {
-      border-color: #ff0000 !important;
+      border-color: var(--primary-red) !important;
       box-shadow: 0 0 20px rgba(255, 0, 0, 0.5) !important;
       background-color: rgba(255, 0, 0, 0.03);
     }
 
     /* ==========================================================================
-       BUTTON & RIPPLE
+       RESPONSIVE BUTTON
        ========================================================================== */
     .verify-btn {
       width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, #ff0000 0%, #b30000 100%);
+      padding: clamp(12px, 3vw, 16px);
+      background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%);
       border: none;
-      border-radius: 14px;
+      border-radius: clamp(10px, 2.5vw, 14px);
       color: #ffffff;
-      font-size: 0.95rem;
+      font-size: clamp(0.8rem, 2.5vw, 0.95rem);
       font-weight: 700;
-      letter-spacing: 3px;
+      letter-spacing: clamp(1.5px, 0.4vw, 3px);
       text-transform: uppercase;
       cursor: pointer;
       outline: none;
@@ -305,15 +319,12 @@
     }
 
     .verify-btn:hover:not(:disabled) {
-      box-shadow: 
-        0 14px 28px rgba(255, 0, 0, 0.45),
-        0 0 25px rgba(255, 0, 0, 0.5);
+      box-shadow: 0 14px 28px rgba(255, 0, 0, 0.45);
       transform: translateY(-2px);
     }
 
     .verify-btn:active:not(:disabled) {
       transform: translateY(1px) scale(0.98);
-      box-shadow: 0 6px 12px rgba(255, 0, 0, 0.3);
     }
 
     .verify-btn:disabled {
@@ -321,7 +332,6 @@
       color: #999999;
       cursor: not-allowed;
       box-shadow: none;
-      border: 1px solid rgba(0, 0, 0, 0.05);
     }
 
     .ripple {
@@ -334,39 +344,31 @@
     }
 
     @keyframes rippleAnim {
-      to {
-        transform: scale(4);
-        opacity: 0;
-      }
+      to { transform: scale(4); opacity: 0; }
     }
 
     /* ==========================================================================
-       STATUS MESSAGES & COUNTERS
+       STATUS MESSAGES & TIMERS
        ========================================================================== */
     .status-message {
       min-height: 24px;
-      margin-top: 20px;
-      font-size: 0.85rem;
+      margin-top: clamp(14px, 3vw, 20px);
+      font-size: clamp(0.75rem, 2.2vw, 0.85rem);
       font-weight: 700;
-      letter-spacing: 1px;
+      letter-spacing: 0.8px;
       text-transform: uppercase;
-      transition: all 0.3s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .status-message.error {
       color: #d30000;
-      text-shadow: 0 0 8px rgba(255, 0, 0, 0.2);
       animation: pulseError 0.8s infinite alternate;
     }
 
-    .status-message.success {
-      color: #008000;
-      text-shadow: 0 0 8px rgba(0, 128, 0, 0.2);
-    }
+    .status-message.success { color: #008000; }
 
     @keyframes pulseError {
       0% { opacity: 0.85; }
@@ -374,25 +376,25 @@
     }
 
     .attempts-tracker {
-      margin-top: 14px;
-      font-size: 0.75rem;
+      margin-top: clamp(10px, 2vw, 14px);
+      font-size: clamp(0.68rem, 2vw, 0.75rem);
       font-weight: 600;
       color: rgba(0, 0, 0, 0.4);
       letter-spacing: 1px;
     }
 
     .timer-display {
-      color: #ff0000;
+      color: var(--primary-red);
       font-weight: 700;
-      font-size: 0.85rem;
-      margin-top: 10px;
+      font-size: clamp(0.75rem, 2.2vw, 0.85rem);
+      margin-top: 8px;
       display: none;
       letter-spacing: 1px;
     }
 
     .success-checkmark {
-      width: 20px;
-      height: 20px;
+      width: clamp(16px, 3.5vw, 20px);
+      height: clamp(16px, 3.5vw, 20px);
       display: inline-block;
     }
 
@@ -413,25 +415,54 @@
       to { stroke-dashoffset: 0; }
     }
 
+    /* ==========================================================================
+       MEDIA QUERY BREAKPOINTS FOR DEVICE SPECIFIC OVERRIDES
+       ========================================================================== */
+    /* Mobile Devices (Portrait) */
     @media (max-width: 480px) {
-      .auth-card { padding: 35px 22px; }
-      .digit-box { width: 48px; height: 58px; font-size: 1.5rem; }
-      h1.title { font-size: 1.25rem; }
+      .auth-card {
+        animation: none; /* Disable 3D card floating on small touch screens for performance */
+      }
+    }
+
+    /* Landscape Mobiles & Short Height Displays */
+    @media (max-height: 580px) {
+      .auth-card {
+        padding: 16px 20px;
+      }
+      .icon-container {
+        width: 44px;
+        height: 44px;
+        margin-bottom: 10px;
+      }
+      p.subtitle {
+        margin-bottom: 14px;
+      }
+      .digit-box {
+        height: 46px;
+      }
+    }
+
+    /* Large Displays (Ultra-wide / 4K) */
+    @media (min-width: 1920px) {
+      .perspective-container {
+        max-width: 520px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Background Animated Layers -->
+  <!-- Animated Background Layers -->
   <div class="bg-grid"></div>
   <div class="bg-blob bg-blob-1"></div>
   <div class="bg-blob bg-blob-2"></div>
   <div class="bg-blob bg-blob-3"></div>
 
-  <!-- Dynamic Particles & Wireframe Canvas -->
+  <!-- Responsive Particle & Wireframe Canvas -->
   <canvas id="bg-canvas"></canvas>
 
-  <!-- Flashing Security Overlay -->
+  <!-- Security Flash Overlay -->
   <div id="alert-overlay"></div>
 
   <!-- Main Card -->
@@ -445,14 +476,14 @@
         </svg>
       </div>
 
-      <h1 class="title">Ashx AUTHENTICATION</h1>
+      <h1 class="title">Ash X AUTHENTICATION</h1>
       <p class="subtitle">Enter Secret Code</p>
 
       <div class="digit-container" id="digit-container">
-        <input type="text" class="digit-box" maxlength="1" autocomplete="off">
-        <input type="text" class="digit-box" maxlength="1" autocomplete="off">
-        <input type="text" class="digit-box" maxlength="1" autocomplete="off">
-        <input type="text" class="digit-box" maxlength="1" autocomplete="off">
+        <input type="text" class="digit-box" maxlength="1" autocomplete="off" inputmode="text" autofocus>
+        <input type="text" class="digit-box" maxlength="1" autocomplete="off" inputmode="text">
+        <input type="text" class="digit-box" maxlength="1" autocomplete="off" inputmode="text">
+        <input type="text" class="digit-box" maxlength="1" autocomplete="off" inputmode="text">
       </div>
 
       <button class="verify-btn" id="verify-btn">VERIFY</button>
@@ -473,7 +504,7 @@
        CONFIG & STATE
        ========================================================================== */
     const CONFIG = {
-      SECRET_CODE: "@5hx", // Updated Secret Code
+      SECRET_CODE: "@5hx",
       MAX_ATTEMPTS: 3,
       LOCKOUT_DURATION: 10,
       REDIRECT_URL: "next.html",
@@ -496,7 +527,7 @@
     const lockIcon = document.getElementById('lock-icon');
 
     /* ==========================================================================
-       ANIMATED BACKGROUND CANVAS
+       ADAPTIVE BACKGROUND CANVAS (Scales performance per device screen size)
        ========================================================================== */
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
@@ -504,24 +535,38 @@
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
+    // Dynamic particle count based on screen size (Lower count on small mobile screens for performance)
+    let particleCount = width < 600 ? 30 : 60;
+    let shapeCount = width < 600 ? 6 : 12;
+
     window.addEventListener('resize', () => {
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
+      particleCount = width < 600 ? 30 : 60;
     });
 
     let mouse = { x: width / 2, y: height / 2 };
-    document.addEventListener('mousemove', (e) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    });
+    
+    // Support both mouse and touch tilt events
+    function updateMousePos(x, y) {
+      mouse.x = x;
+      mouse.y = y;
+    }
+
+    document.addEventListener('mousemove', (e) => updateMousePos(e.clientX, e.clientY));
+    document.addEventListener('touchmove', (e) => {
+      if(e.touches.length > 0) {
+        updateMousePos(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
 
     class Particle {
       constructor() { this.reset(); }
       reset() {
         this.x = Math.random() * width;
         this.y = Math.random() * height;
-        this.size = Math.random() * 2.5 + 0.5;
-        this.speedY = -(Math.random() * 0.8 + 0.2);
+        this.size = Math.random() * 2 + 0.5;
+        this.speedY = -(Math.random() * 0.7 + 0.2);
         this.speedX = (Math.random() - 0.5) * 0.4;
         this.opacity = Math.random() * 0.6 + 0.2;
         this.color = Math.random() > 0.4 ? '#ff0000' : '#888888';
@@ -539,7 +584,7 @@
         ctx.globalAlpha = this.opacity;
         ctx.fillStyle = this.color;
         if (this.color === '#ff0000') {
-          ctx.shadowBlur = 8;
+          ctx.shadowBlur = 6;
           ctx.shadowColor = '#ff0000';
         }
         ctx.beginPath();
@@ -553,7 +598,7 @@
       constructor() {
         this.x = Math.random() * width;
         this.y = Math.random() * height;
-        this.size = Math.random() * 30 + 20;
+        this.size = Math.random() * 25 + 15;
         this.rotX = Math.random() * Math.PI;
         this.rotY = Math.random() * Math.PI;
         this.rotSpeedX = (Math.random() - 0.5) * 0.01;
@@ -587,8 +632,8 @@
         ctx.strokeStyle = 'rgba(255, 0, 0, 0.18)';
         ctx.lineWidth = 1;
 
-        const dx = (mouse.x - width / 2) * 0.02;
-        const dy = (mouse.y - height / 2) * 0.02;
+        const dx = (mouse.x - width / 2) * 0.015;
+        const dy = (mouse.y - height / 2) * 0.015;
 
         const projected = [];
         this.vertices.forEach(v => {
@@ -598,8 +643,7 @@
           let x2 = v[0] * Math.cos(this.rotY) + z1 * Math.sin(this.rotY);
           let z2 = -v[0] * Math.sin(this.rotY) + z1 * Math.cos(this.rotY);
 
-          const distance = 4;
-          const fov = 300;
+          const fov = 280;
           const scale = fov / (fov + z2 * this.size);
 
           const px = x2 * this.size * scale + this.x + dx;
@@ -618,31 +662,39 @@
       }
     }
 
-    const particles = Array.from({ length: 65 }, () => new Particle());
+    const particles = Array.from({ length: 60 }, () => new Particle());
     const shapes = Array.from({ length: 12 }, () => new Shape3D());
 
     function animateCanvas() {
       ctx.clearRect(0, 0, width, height);
-      particles.forEach(p => { p.update(); p.draw(); });
-      shapes.forEach(s => { s.update(); s.draw(); });
+      for (let i = 0; i < particleCount; i++) {
+        particles[i].update();
+        particles[i].draw();
+      }
+      for (let i = 0; i < shapeCount; i++) {
+        shapes[i].update();
+        shapes[i].draw();
+      }
       requestAnimationFrame(animateCanvas);
     }
     animateCanvas();
 
-    /* 3D Parallax Hover */
-    document.addEventListener('mousemove', (e) => {
-      if (isLocked) return;
-      const xAxis = (window.innerWidth / 2 - e.pageX) / 30;
-      const yAxis = (window.innerHeight / 2 - e.pageY) / 30;
-      card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-    });
+    /* Desktop Parallax Mouse Effect */
+    if (window.innerWidth > 768) {
+      document.addEventListener('mousemove', (e) => {
+        if (isLocked) return;
+        const xAxis = (window.innerWidth / 2 - e.pageX) / 35;
+        const yAxis = (window.innerHeight / 2 - e.pageY) / 35;
+        card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+      });
 
-    document.addEventListener('mouseleave', () => {
-      card.style.transform = `rotateY(0deg) rotateX(0deg)`;
-    });
+      document.addEventListener('mouseleave', () => {
+        card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+      });
+    }
 
     /* ==========================================================================
-       INPUT NAVIGATION
+       INPUT CONTROLS & NAVIGATION
        ========================================================================== */
     inputs[0].focus();
 
