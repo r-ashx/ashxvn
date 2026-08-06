@@ -1,1 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript Roadmap (Beginner → Strong Fundamentals)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;500&display=swap');
 
+    :root {
+      --primary: #f7df1e;
+      --dark: #1e1e24;
+      --text: #2d3748;
+      --light-bg: #f8fafc;
+      --border: #e2e8f0;
+      --accent: #2563eb;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background-color: #ffffff;
+      line-height: 1.5;
+      padding: 40px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* PDF Print Rules */
+    @media print {
+      body {
+        padding: 0;
+        max-width: 100%;
+      }
+      .section {
+        break-inside: avoid;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+    }
+
+    header {
+      border-bottom: 3px solid var(--primary);
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .badge {
+      background-color: #fef08a;
+      color: #854d0e;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--dark);
+    }
+
+    p.subtitle {
+      font-size: 0.95rem;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .section {
+      background: var(--light-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px 20px;
+      border-left: 4px solid var(--dark);
+    }
+
+    .section.highlight {
+      border-left-color: var(--accent);
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-number {
+      background: var(--dark);
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    ul {
+      list-style-type: none;
+    }
+
+    li {
+      font-size: 0.88rem;
+      padding: 3px 0;
+      color: #475569;
+      display: flex;
+      align-items: center;
+    }
+
+    li::before {
+      content: "•";
+      color: var(--accent);
+      font-weight: bold;
+      display: inline-block;
+      width: 1em;
+      margin-left: 4px;
+    }
+
+    .sub-list {
+      margin-left: 16px;
+      border-left: 2px solid #cbd5e1;
+      padding-left: 10px;
+      margin-top: 4px;
+      margin-bottom: 6px;
+    }
+
+    .sub-list li::before {
+      content: "–";
+      color: #94a3b8;
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+      background-color: #e2e8f0;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      color: #0f172a;
+    }
+
+    .full-width {
+      grid-column: span 2;
+    }
+
+    footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      border-top: 1px solid var(--border);
+      padding-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div>
+      <h1>JavaScript Roadmap</h1>
+      <p class="subtitle">Beginner → Strong Fundamentals</p>
+    </div>
+    <span class="badge">Complete Guide</span>
+  </header>
+
+  <div class="grid">
+
+    <!-- 1. Introduction -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">01</span> Introduction</div>
+      <ul>
+        <li>What is JavaScript?</li>
+        <li>How JavaScript Works</li>
+        <li>JavaScript Engine</li>
+        <li>Running JavaScript</li>
+        <li>Console & DevTools</li>
+      </ul>
+    </div>
+
+    <!-- 2. Variables & Data Types -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">02</span> Variables & Data Types</div>
+      <ul>
+        <li><code>var</code>, <code>let</code>, <code>const</code></li>
+        <li>Naming Rules & Scope Basics</li>
+        <li><strong>Primitive Data Types:</strong></li>
+        <div class="sub-list">
+          <li>String, Number, Boolean</li>
+          <li>Undefined, Null, BigInt, Symbol</li>
+        </div>
+        <li><strong>Non-Primitive Data Types:</strong></li>
+        <div class="sub-list">
+          <li>Object, Array, Function</li>
+        </div>
+        <li><code>typeof</code> Operator</li>
+      </ul>
+    </div>
+
+    <!-- 3. Operators -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">03</span> Operators</div>
+      <ul>
+        <li>Arithmetic & Assignment Operators</li>
+        <li>Comparison & Logical Operators</li>
+        <li>Increment (<code>++</code>) & Decrement (<code>--</code>)</li>
+        <li>Ternary Operator (<code>? :</code>)</li>
+        <li>Nullish Coalescing (<code>??</code>)</li>
+        <li>Optional Chaining (<code>?.</code>)</li>
+      </ul>
+    </div>
+
+    <!-- 4. Type Conversion -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">04</span> Type Conversion</div>
+      <ul>
+        <li>Implicit vs Explicit Conversion</li>
+        <li><code>Number()</code>, <code>String()</code>, <code>Boolean()</code></li>
+        <li><code>parseInt()</code> & <code>parseFloat()</code></li>
+      </ul>
+    </div>
+
+    <!-- 5. Input & Output -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">05</span> Input & Output</div>
+      <ul>
+        <li><code>console.log()</code>, <code>console.table()</code>, <code>console.error()</code></li>
+        <li><code>alert()</code>, <code>prompt()</code>, <code>confirm()</code></li>
+      </ul>
+    </div>
+
+    <!-- 6. Strings -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">06</span> Strings</div>
+      <ul>
+        <li>String Basics & Escape Characters</li>
+        <li>Template Literals (<code>` `</code>)</li>
+        <li><strong>Methods:</strong> <code>length</code>, <code>toUpperCase()</code>, <code>toLowerCase()</code>, <code>trim()</code>, <code>slice()</code>, <code>substring()</code>, <code>replace()</code>, <code>includes()</code>, <code>startsWith()</code>, <code>endsWith()</code>, <code>split()</code></li>
+      </ul>
+    </div>
+
+    <!-- 7. Numbers & Math -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">07</span> Numbers & Math</div>
+      <ul>
+        <li>Number & Math Objects</li>
+        <li>Rounding Methods (<code>floor</code>, <code>ceil</code>, <code>round</code>)</li>
+        <li>Random Numbers (<code>Math.random()</code>)</li>
+        <li>Min/Max, Power (<code>pow</code>), Square Root (<code>sqrt</code>)</li>
+      </ul>
+    </div>
+
+    <!-- 8. Conditional Statements -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">08</span> Conditional Statements</div>
+      <ul>
+        <li><code>if</code>, <code>else if</code>, <code>else</code></li>
+        <li>Nested <code>if</code> statements</li>
+        <li><code>switch</code> statement</li>
+      </ul>
+    </div>
+
+    <!-- 9. Loops -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">09</span> Loops</div>
+      <ul>
+        <li><code>for</code> loop</li>
+        <li><code>while</code> & <code>do...while</code> loop</li>
+        <li>Nested Loops</li>
+        <li>Control statements: <code>break</code>, <code>continue</code></li>
+      </ul>
+    </div>
+
+    <!-- 10. Functions -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">10</span> Functions</div>
+      <ul>
+        <li>Function Declaration vs Expression</li>
+        <li>Arrow Functions (<code>() =&gt; {}</code>)</li>
+        <li>Parameters, Arguments, Default Parameters</li>
+        <li><code>return</code> Statement</li>
+        <li>Callback Functions & Higher-Order Functions</li>
+      </ul>
+    </div>
+
+    <!-- 11. Scope & Hoisting -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">11</span> Scope & Hoisting</div>
+      <ul>
+        <li>Global, Local, and Block Scope</li>
+        <li>Lexical Scope</li>
+        <li>Hoisting Mechanism</li>
+      </ul>
+    </div>
+
+    <!-- 12. Arrays -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">12</span> Arrays</div>
+      <ul>
+        <li>Creation, Accessing, Updating & Length</li>
+        <li><strong>Mutating:</strong> <code>push()</code>, <code>pop()</code>, <code>shift()</code>, <code>unshift()</code>, <code>splice()</code></li>
+        <li><strong>Non-Mutating:</strong> <code>slice()</code>, <code>concat()</code>, <code>join()</code></li>
+      </ul>
+    </div>
+
+    <!-- 13. Advanced Array Methods -->
+    <div class="section highlight">
+      <div class="section-title"><span class="section-number">13</span> Advanced Array Methods</div>
+      <ul>
+        <li><code>forEach()</code>, <code>map()</code>, <code>filter()</code>, <code>reduce()</code></li>
+        <li><code>find()</code>, <code>findIndex()</code></li>
+        <li><code>some()</code>, <code>every()</code></li>
+        <li><code>sort()</code>, <code>reverse()</code></li>
+      </ul>
+    </div>
+
+    <!-- 14. Objects -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">14</span> Objects</div>
+      <ul>
+        <li>Properties, Methods & Nested Objects</li>
+        <li><code>Object.keys()</code>, <code>Object.values()</code>, <code>Object.entries()</code></li>
+        <li>Object Destructuring</li>
+      </ul>
+    </div>
+
+    <!-- 15. DOM -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">15</span> Document Object Model (DOM)</div>
+      <ul>
+        <li>What is DOM? & <code>document</code> Object</li>
+        <li><code>getElementById()</code>, <code>getElementsByClassName()</code></li>
+        <li><code>querySelector()</code> & <code>querySelectorAll()</code></li>
+      </ul>
+    </div>
+
+    <!-- 16. DOM Manipulation -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">16</span> DOM Manipulation</div>
+      <ul>
+        <li><code>textContent</code>, <code>innerHTML</code>, <code>innerText</code>, <code>value</code></li>
+        <li>Styling: <code>style</code>, <code>classList</code></li>
+        <li>Attributes: <code>setAttribute()</code>, <code>getAttribute()</code></li>
+        <li>Elements: <code>createElement()</code>, <code>appendChild()</code>, <code>remove()</code></li>
+      </ul>
+    </div>
+
+    <!-- 17. Events -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">17</span> Events</div>
+      <ul>
+        <li>Mouse: <code>click</code>, <code>dblclick</code>, <code>mouseover</code>, <code>mouseout</code></li>
+        <li>Form & Input: <code>input</code>, <code>change</code>, <code>submit</code></li>
+        <li>Keyboard: <code>keydown</code>, <code>keyup</code></li>
+        <li><code>addEventListener()</code>, <code>removeEventListener()</code> & Event Object</li>
+      </ul>
+    </div>
+
+    <!-- 18. ES6+ Features -->
+    <div class="section highlight">
+      <div class="section-title"><span class="section-number">18</span> Modern ES6+ Features</div>
+      <ul>
+        <li>Spread (<code>...</code>) & Rest Operators</li>
+        <li>Destructuring (Array & Object)</li>
+        <li>Enhanced Object Literals</li>
+        <li>Template Literals & Default Parameters</li>
+      </ul>
+    </div>
+
+    <!-- 19. Asynchronous JavaScript -->
+    <div class="section highlight">
+      <div class="section-title"><span class="section-number">19</span> Asynchronous JavaScript</div>
+      <ul>
+        <li>Synchronous vs Asynchronous</li>
+        <li><code>setTimeout()</code> & <code>setInterval()</code></li>
+        <li>Callback Hell</li>
+        <li><strong>Promises</strong>, <code>async</code> & <code>await</code></li>
+      </ul>
+    </div>
+
+    <!-- 20. Fetch API & JSON -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">20</span> Fetch API & JSON</div>
+      <ul>
+        <li>What is an API? & HTTP Methods (GET, POST)</li>
+        <li><code>fetch()</code> API Usage</li>
+        <li><code>JSON.parse()</code> & <code>JSON.stringify()</code></li>
+      </ul>
+    </div>
+
+    <!-- 21. Web Storage -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">21</span> Local & Session Storage</div>
+      <ul>
+        <li><code>localStorage</code> vs <code>sessionStorage</code></li>
+        <li><code>setItem()</code>, <code>getItem()</code></li>
+        <li><code>removeItem()</code>, <code>clear()</code></li>
+      </ul>
+    </div>
+
+    <!-- 22. Error Handling -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">22</span> Error Handling</div>
+      <ul>
+        <li><code>try</code>, <code>catch</code>, <code>finally</code> blocks</li>
+        <li><code>throw</code> statement & Custom Errors</li>
+      </ul>
+    </div>
+
+    <!-- 23. OOP JavaScript -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">23</span> Object-Oriented JS</div>
+      <ul>
+        <li>Classes & Constructor Functions</li>
+        <li>Inheritance (<code>extends</code>, <code>super</code>)</li>
+        <li>Encapsulation & Static Methods</li>
+      </ul>
+    </div>
+
+    <!-- 24. Modules -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">24</span> JS Modules</div>
+      <ul>
+        <li><code>import</code> & <code>export</code> statements</li>
+        <li>Default Exports vs Named Exports</li>
+      </ul>
+    </div>
+
+    <!-- 25. Projects -->
+    <div class="section full-width highlight">
+      <div class="section-title"><span class="section-number">25</span> Practice Projects</div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 5px;">
+        <ul>
+          <li>Calculator</li>
+          <li>Todo App</li>
+          <li>Counter App</li>
+        </ul>
+        <ul>
+          <li>Digital Clock</li>
+          <li>Weather App</li>
+          <li>Notes App</li>
+        </ul>
+        <ul>
+          <li>Quiz App</li>
+          <li>Expense Tracker</li>
+          <li>Password Generator</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>JavaScript Roadmap • Designed for Printing & Self-Study</p>
+  </footer>
+
+</body>
+</html>
