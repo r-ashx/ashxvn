@@ -1,1196 +1,267 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aura - Premium Music Player</title>
-    <style>
-        :root {
-            --primary: #ff7a00;
-            --primary-glow: rgba(255, 122, 0, 0.4);
-            --bg: #0d0d0d;
-            --bg-secondary: #1b1b1b;
-            --bg-card: rgba(27, 27, 27, 0.7);
-            --text: #ffffff;
-            --text-secondary: #a0a0a0;
-            --border: #2a2a2a;
-            --border-hover: #3a3a3a;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Ambient Background Glow */
-        body::before {
-            content: '';
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(255,122,0,0.15) 0%, rgba(13,13,13,0) 70%);
-            top: -100px;
-            left: -100px;
-            z-index: -1;
-            filter: blur(60px);
-        }
-
-        body::after {
-            content: '';
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(255,122,0,0.1) 0%, rgba(13,13,13,0) 70%);
-            bottom: -100px;
-            right: -100px;
-            z-index: -1;
-            filter: blur(60px);
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 1200px;
-            height: 100vh;
-            max-height: 850px;
-            background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            display: grid;
-            grid-template-columns: 1fr 400px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 40px rgba(255,122,0,0.1);
-            overflow: hidden;
-            position: relative;
-        }
-
-        @media (max-width: 900px) {
-            .app-container {
-                grid-template-columns: 1fr;
-                max-height: none;
-                height: 100vh;
-                border-radius: 0;
-                border: none;
-            }
-            .playlist-container {
-                display: none;
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                z-index: 10;
-                background: var(--bg);
-            }
-            .playlist-container.active {
-                display: flex;
-            }
-        }
-
-        /* Player Main Section */
-        .player-main {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 30px;
-            overflow-y: auto;
-        }
-
-        .player-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .now-playing-badge {
-            background: rgba(255, 122, 0, 0.15);
-            border: 1px solid rgba(255, 122, 0, 0.3);
-            color: var(--primary);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            box-shadow: 0 0 15px var(--primary-glow);
-        }
-
-        .song-counter {
-            font-size: 13px;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .mobile-playlist-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--text);
-            cursor: pointer;
-            font-size: 20px;
-        }
-
-        @media (max-width: 900px) {
-            .mobile-playlist-btn {
-                display: block;
-            }
-        }
-
-        /* Album Art & Visualizer */
-        .visualizer-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            margin: 10px 0;
-        }
-
-        .album-art-wrapper {
-            width: 260px;
-            height: 260px;
-            border-radius: 50%;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 30px rgba(255,122,0,0.15);
-            transition: transform 0.5s ease;
-        }
-
-        @media (max-width: 500px) {
-            .album-art-wrapper {
-                width: 200px;
-                height: 200px;
-            }
-        }
-
-        .album-art {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 80px;
-            font-weight: bold;
-            color: white;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.5s ease;
-        }
-
-        .album-art::after {
-            content: '';
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            background: var(--bg);
-            border-radius: 50%;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
-            z-index: 2;
-        }
-
-        .rotating {
-            animation: rotateAlbum 20s linear infinite;
-        }
-
-        .paused {
-            animation-play-state: paused;
-        }
-
-        @keyframes rotateAlbum {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* Audio Visualizer Bars */
-        .audio-visualizer {
-            position: absolute;
-            bottom: -20px;
-            display: flex;
-            gap: 4px;
-            height: 30px;
-            align-items: flex-end;
-        }
-
-        .vis-bar {
-            width: 4px;
-            background: var(--primary);
-            border-radius: 2px;
-            height: 4px;
-            transition: height 0.1s ease;
-        }
-
-        .playing-vis .vis-bar {
-            animation: bounceBar 0.8s ease infinite alternate;
-        }
-
-        .playing-vis .vis-bar:nth-child(1) { animation-delay: 0.1s; }
-        .playing-vis .vis-bar:nth-child(2) { animation-delay: 0.3s; }
-        .playing-vis .vis-bar:nth-child(3) { animation-delay: 0.2s; }
-        .playing-vis .vis-bar:nth-child(4) { animation-delay: 0.5s; }
-        .playing-vis .vis-bar:nth-child(5) { animation-delay: 0.4s; }
-
-        @keyframes bounceBar {
-            0% { height: 5px; }
-            100% { height: 25px; }
-        }
-
-        /* Song Info */
-        .song-info {
-            text-align: center;
-            margin: 15px 0;
-        }
-
-        .song-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            color: var(--text);
-        }
-
-        .song-artist {
-            font-size: 15px;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-        }
-
-        .song-album {
-            font-size: 13px;
-            color: #666;
-        }
-
-        /* Progress & Controls Section */
-        .controls-section {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .progress-container {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .progress-bar-wrapper {
-            position: relative;
-            width: 100%;
-            height: 6px;
-            background: var(--border);
-            border-radius: 3px;
-            cursor: pointer;
-            transition: height 0.2s ease;
-        }
-
-        .progress-bar-wrapper:hover {
-            height: 8px;
-        }
-
-        .progress-buffered {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            background: rgba(255,255,255,0.15);
-            border-radius: 3px;
-            width: 0%;
-        }
-
-        .progress-bar {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            background: linear-gradient(90deg, #ff5100, var(--primary));
-            border-radius: 3px;
-            width: 0%;
-            transition: width 0.1s linear;
-        }
-
-        .progress-handle {
-            position: absolute;
-            right: -6px;
-            top: 50%;
-            transform: translateY(-50%) scale(0);
-            width: 12px;
-            height: 12px;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--primary);
-            transition: transform 0.2s ease;
-        }
-
-        .progress-bar-wrapper:hover .progress-handle {
-            transform: translateY(-50%) scale(1);
-        }
-
-        .time-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        /* Main Controls */
-        .main-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 10px;
-        }
-
-        .control-btn {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-size: 18px;
-            transition: all 0.2s ease;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-        }
-
-        .control-btn:hover {
-            color: var(--text);
-            background: rgba(255,255,255,0.05);
-        }
-
-        .control-btn.active {
-            color: var(--primary);
-            text-shadow: 0 0 10px var(--primary-glow);
-        }
-
-        .play-pause-btn {
-            background: linear-gradient(135deg, #ff8c00, var(--primary));
-            color: white;
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            font-size: 22px;
-            box-shadow: 0 10px 20px var(--primary-glow);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .play-pause-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 25px var(--primary-glow);
-            background: linear-gradient(135deg, #ffa133, #ff7a00);
-            color: white;
-        }
-
-        /* Secondary Controls (Volume & Extra) */
-        .extra-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 5px;
-            border-top: 1px solid var(--border);
-        }
-
-        .volume-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .volume-slider {
-            -webkit-appearance: none;
-            width: 90px;
-            height: 5px;
-            background: var(--border);
-            border-radius: 3px;
-            outline: none;
-            transition: background 0.2s;
-        }
-
-        .volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--primary);
-            cursor: pointer;
-            box-shadow: 0 0 8px var(--primary-glow);
-            transition: transform 0.1s;
-        }
-
-        .volume-slider::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-        }
-
-        .error-message {
-            color: #ff4d4d;
-            font-size: 13px;
-            text-align: center;
-            min-height: 18px;
-            font-weight: 500;
-        }
-
-        /* Playlist Panel */
-        .playlist-container {
-            background: rgba(18, 18, 18, 0.95);
-            border-left: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            padding: 25px;
-            overflow: hidden;
-        }
-
-        .playlist-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .playlist-title {
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .close-playlist {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--text);
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        @media (max-width: 900px) {
-            .close-playlist {
-                display: block;
-            }
-        }
-
-        .search-wrapper {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .search-input {
-            width: 100%;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            padding: 10px 15px 10px 38px;
-            border-radius: 10px;
-            color: var(--text);
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .search-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 10px rgba(255,122,0,0.15);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        .playlist-songs {
-            flex: 1;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            padding-right: 5px;
-        }
-
-        /* Custom Scrollbar */
-        .playlist-songs::-webkit-scrollbar,
-        .player-main::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .playlist-songs::-webkit-scrollbar-track,
-        .player-main::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .playlist-songs::-webkit-scrollbar-thumb,
-        .player-main::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 3px;
-        }
-
-        .playlist-songs::-webkit-scrollbar-thumb:hover,
-        .player-main::-webkit-scrollbar-thumb:hover {
-            background: var(--border-hover);
-        }
-
-        .song-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 12px;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid transparent;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .song-item:hover {
-            background: rgba(255,255,255,0.05);
-            border-color: var(--border);
-        }
-
-        .song-item.active {
-            background: rgba(255, 122, 0, 0.1);
-            border-color: rgba(255, 122, 0, 0.3);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .song-item-thumb {
-            width: 45px;
-            height: 45px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            font-size: 18px;
-            color: white;
-            flex-shrink: 0;
-        }
-
-        .song-item-details {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .song-item-title {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 3px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            color: var(--text);
-        }
-
-        .song-item.active .song-item-title {
-            color: var(--primary);
-        }
-
-        .song-item-artist {
-            font-size: 12px;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .song-item-playing-icon {
-            display: none;
-            gap: 2px;
-            align-items: flex-end;
-            height: 14px;
-            width: 14px;
-        }
-
-        .song-item.active .song-item-playing-icon {
-            display: flex;
-        }
-
-        .song-item.active .song-item-playing-icon span {
-            width: 3px;
-            background: var(--primary);
-            animation: miniBounce 0.6s ease infinite alternate;
-        }
-
-        .song-item.active .song-item-playing-icon span:nth-child(2) { animation-delay: 0.2s; }
-        .song-item.active .song-item-playing-icon span:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes miniBounce {
-            0% { height: 3px; }
-            100% { height: 14px; }
-        }
-
-        .empty-playlist {
-            text-align: center;
-            color: var(--text-secondary);
-            padding: 40px 0;
-            font-size: 14px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ash X Tunes — Premium Music Experience</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Splash Screen -->
+  <div id="splash-screen" class="splash-screen">
+    <div class="splash-content">
+      <div class="splash-logo-icon">
+        <svg viewBox="0 0 24 24" width="48" height="48" fill="currentColor">
+          <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+        </svg>
+      </div>
+      <h1 class="splash-title">Ash X Tunes</h1>
+      <p class="splash-subtitle">YOUR MUSIC. YOUR MOOD.</p>
+      <div class="splash-loader"></div>
+    </div>
+  </div>
 
-    <div class="app-container">
-        <!-- Main Player Section -->
-        <div class="player-main">
-            <div class="player-header">
-                <div class="now-playing-badge">Now Playing</div>
-                <div class="song-counter" id="songCounter">Playing 1 / 7</div>
-                <button class="mobile-playlist-btn" id="openPlaylistBtn" aria-label="Open Playlist">☰</button>
-            </div>
-
-            <div class="visualizer-container">
-                <div class="album-art-wrapper">
-                    <div class="album-art rotating paused" id="albumArt">
-                        A
-                    </div>
-                    <div class="audio-visualizer" id="audioVisualizer">
-                        <div class="vis-bar"></div>
-                        <div class="vis-bar"></div>
-                        <div class="vis-bar"></div>
-                        <div class="vis-bar"></div>
-                        <div class="vis-bar"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="song-info">
-                <div class="song-title" id="songTitle">Loading...</div>
-                <div class="song-artist" id="songArtist">Artist</div>
-                <div class="song-album" id="songAlbum">Album</div>
-            </div>
-
-            <div class="error-message" id="errorMessage"></div>
-
-            <div class="controls-section">
-                <div class="progress-container">
-                    <div class="progress-bar-wrapper" id="progressBarWrapper">
-                        <div class="progress-buffered" id="progressBuffered"></div>
-                        <div class="progress-bar" id="progressBar">
-                            <div class="progress-handle"></div>
-                        </div>
-                    </div>
-                    <div class="time-info">
-                        <span id="currentTime">0:00</span>
-                        <span id="duration">0:00</span>
-                    </div>
-                </div>
-
-                <div class="main-controls">
-                    <button class="control-btn" id="shuffleBtn" title="Shuffle (S)" aria-label="Shuffle">🔀</button>
-                    <button class="control-btn" id="prevBtn" title="Previous (Left Arrow)" aria-label="Previous Song">⏮</button>
-                    <button class="control-btn play-pause-btn" id="playPauseBtn" title="Play/Pause (Space)" aria-label="Play/Pause">▶</button>
-                    <button class="control-btn" id="nextBtn" title="Next (Right Arrow)" aria-label="Next Song">⏭</button>
-                    <button class="control-btn" id="repeatBtn" title="Repeat (R)" aria-label="Repeat Mode">🔁</button>
-                </div>
-
-                <div class="extra-controls">
-                    <div class="volume-wrapper">
-                        <button class="control-btn" id="muteBtn" title="Mute/Unmute (M)" aria-label="Mute">🔊</button>
-                        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.01" value="1" aria-label="Volume Slider">
-                    </div>
-                    <button class="control-btn" id="togglePlaylistDesktop" style="font-size: 16px;" title="Playlist" aria-label="Toggle Playlist">🎵 Playlist</button>
-                </div>
-            </div>
+  <!-- Main Application Container -->
+  <div class="app-container">
+    
+    <!-- Header -->
+    <header class="top-header">
+      <div class="header-left">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24" class="logo-icon" fill="currentColor">
+            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+          </svg>
+          <span class="logo-text">Ash X Tunes</span>
         </div>
+      </div>
 
-        <!-- Playlist Panel -->
-        <div class="playlist-container" id="playlistContainer">
-            <div class="playlist-header">
-                <div class="playlist-title">Queue & Playlist</div>
-                <button class="close-playlist" id="closePlaylistBtn" aria-label="Close Playlist">✕</button>
-            </div>
-
-            <div class="search-wrapper">
-                <span class="search-icon">🔍</span>
-                <input type="text" class="search-input" id="searchInput" placeholder="Search songs or artists..." aria-label="Search Songs">
-            </div>
-
-            <div class="playlist-songs" id="playlistSongs">
-                <!-- Dynamically populated via JS -->
-            </div>
+      <div class="header-center">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" class="search-icon" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="search-input" placeholder="Search songs, artists, files..." aria-label="Search music">
+          <button id="clear-search" class="clear-btn" aria-label="Clear search" style="display: none;">&times;</button>
         </div>
+      </div>
+
+      <div class="header-right">
+        <div class="badge-indicator">
+          <span id="active-view-badge">All Songs</span>
+        </div>
+        <button class="profile-btn" aria-label="User profile">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="main-body">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar" id="sidebar">
+        <nav class="sidebar-nav">
+          <div class="nav-section">
+            <div class="nav-section-title">MENU</div>
+            <button class="nav-item active" data-view="all">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+              <span>Home</span>
+            </button>
+            <button class="nav-item" data-view="favorites">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+              <span>Favorites</span>
+            </button>
+            <button class="nav-item" data-view="recent">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.25 2.52.77-1.28-3.52-2.09V8z"/></svg>
+              <span>Recently Played</span>
+            </button>
+          </div>
+
+          <div class="nav-section">
+            <div class="nav-section-title">YOUR LIBRARY</div>
+            <div class="library-stat-item">
+              <span>All Songs</span>
+              <span id="stat-all-count" class="stat-count">0</span>
+            </div>
+            <div class="library-stat-item">
+              <span>Favorites</span>
+              <span id="stat-fav-count" class="stat-count">0</span>
+            </div>
+            <div class="library-stat-item">
+              <span>Recently Played</span>
+              <span id="stat-recent-count" class="stat-count">0</span>
+            </div>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- Main Center Content -->
+      <main class="content-area">
+        <!-- Hero Featured Header -->
+        <section class="hero-banner">
+          <div class="hero-text">
+            <span class="greeting-tag" id="greeting-text">GOOD MORNING</span>
+            <h2 class="featured-title" id="featured-title">Your Music Collection</h2>
+            <p class="featured-desc" id="featured-desc">Experience audio in unmatched luxury.</p>
+          </div>
+        </section>
+
+        <!-- Player Hero (Center Stage Album Art & Display) -->
+        <section class="hero-player-card">
+          <div class="artwork-wrapper">
+            <div id="hero-artwork" class="artwork-container">
+              <div class="art-bg-shapes"></div>
+              <!-- <svg class="art-icon" viewBox="0 0 24 24" fill="currentColor"> -->
+                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+              </svg>
+              <div class="art-text-brand">Ash X Tunes</div>
+              <div id="art-song-title" class="art-text-title">Select a Song</div>
+            </div>
+          </div>
+
+          <div class="hero-player-meta">
+            <div class="meta-details">
+              <h1 id="main-song-title" class="hero-song-title">Select a Song to Play</h1>
+              <p id="main-artist-name" class="hero-artist-name">Ash X Tunes Library</p>
+            </div>
+
+            <!-- CSS Animated Visualizer -->
+            <div class="visualizer-container" id="visualizer">
+              <div class="v-bar"></div>
+              <div class="v-bar"></div>
+              <div class="v-bar"></div>
+              <div class="v-bar"></div>
+              <div class="v-bar"></div>
+              <div class="v-bar"></div>
+              <div class="v-bar"></div>
+              <div class="v-bar"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Song List Table Section -->
+        <section class="song-list-container">
+          <div class="list-header-bar">
+            <h3 id="view-section-title">All Songs</h3>
+            <span id="song-count-label" class="song-count-label">26 Tracks</span>
+          </div>
+
+          <div class="song-table-header">
+            <span class="col-num">#</span>
+            <span class="col-title">TITLE</span>
+            <span class="col-artist">ARTIST</span>
+            <span class="col-duration">DURATION</span>
+            <span class="col-actions">ACTIONS</span>
+          </div>
+
+          <div id="song-list" class="song-list">
+            <!-- Dynamic Rows rendered here -->
+          </div>
+        </section>
+      </main>
+
+      <!-- Right Queue Panel -->
+      <aside class="queue-panel">
+        <div class="queue-header">
+          <h3>UP NEXT</h3>
+          <span id="queue-count" class="queue-badge">0 tracks</span>
+        </div>
+        <div id="queue-list" class="queue-list">
+          <!-- Dynamic Queue items rendered here -->
+        </div>
+      </aside>
     </div>
 
-    <!-- Hidden Audio Element -->
-    <audio id="audioElement"></audio>
+    <!-- Sticky Bottom Player -->
+    <footer class="bottom-player">
+      <!-- Left Track Details -->
+      <div class="bp-left">
+        <div id="mini-artwork" class="mini-art">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+          </svg>
+        </div>
+        <div class="mini-meta">
+          <div id="mini-title" class="mini-title">No Song Selected</div>
+          <div id="mini-artist" class="mini-artist">Ash X Tunes</div>
+        </div>
+        <button id="mini-fav-btn" class="icon-btn fav-btn" aria-label="Favorite">
+          <svg viewBox="0 0 24 24" class="heart-icon"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </button>
+      </div>
 
-    <script>
-        // Songs Dataset
-        const songs = [
-            {
-                title: "Arz kya hai",
-                artist: "Unknown",
-                album: "Unknown",
-                src: "Music/Arz kya hai.mp3"
-            },
-            {
-                title: "Bairan",
-                artist: "Unknown",
-                album: "Unknown",
-                src: "Music/Bairan.mp3"
-            },
-            {
-                title: "Dagabazz re",
-                artist: "Unknown",
-                album: "Unknown",
-                src: "Music/Dagabazz re.mp3"
-            },
-            {
-                title: "Mast Magan",
-                artist: "Arijit Singh, Chinmayi Sripada",
-                album: "2 States",
-                src: "Music/Mast Magan.mp3"
-            },
-            {
-                title: "Tere Mast Mast Do Nain",
-                artist: "Rahat Fateh Ali Khan",
-                album: "Dabangg",
-                src: "Music/Tere Mast Mast Do Nain.mp3"
-            },
-            {
-                title: "Varoon",
-                artist: "Unknown",
-                album: "Unknown",
-                src: "Music/Varoon.mp3"
-            },
-            {
-                title: "Zalima",
-                artist: "Arijit Singh, Harshdeep Kaur",
-                album: "Raees",
-                src: "Music/Zalima.mp3"
-            },
-            {
-                title: "Saudebaazi",
-                artist: "Arijit Singh, Harshdeep Kaur",
-                album: "Unknown",
-                src: "Music/Saudebaazi.mp3"
-            }
-        ];
+      <!-- Center Player Controls & Progress -->
+      <div class="bp-center">
+        <div class="player-controls">
+          <button id="btn-shuffle" class="icon-btn" title="Shuffle (S)" aria-label="Shuffle">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.45 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
+          </button>
+          
+          <button id="btn-prev" class="icon-btn" title="Previous (Left Arrow)" aria-label="Previous">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+          </button>
 
-        // State variables
-        let currentSongIndex = 0;
-        let isPlaying = false;
-        let isShuffle = false;
-        let repeatMode = 0; // 0: None, 1: Repeat All, 2: Repeat One
-        let filteredSongs = [...songs];
-        let lastVolume = 1;
+          <button id="btn-play" class="play-btn-main" title="Play/Pause (Space)" aria-label="Play">
+            <svg id="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            <svg id="icon-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          </button>
 
-        // Gradients for placeholders
-        const gradients = [
-            "linear-gradient(135deg, #ff7a00, #ff0055)",
-            "linear-gradient(135deg, #ff9900, #ff2a85)",
-            "linear-gradient(135deg, #ff5100, #7b00ff)",
-            "linear-gradient(135deg, #ffa200, #ffea00)",
-            "linear-gradient(135deg, #ff7a00, #333333)",
-            "linear-gradient(135deg, #ff3b00, #ff00b7)",
-            "linear-gradient(135deg, #ff6a00, #ffb700)"
-        ];
+          <button id="btn-next" class="icon-btn" title="Next (Right Arrow)" aria-label="Next">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+          </button>
 
-        // DOM Elements
-        const audioElement = document.getElementById('audioElement');
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const shuffleBtn = document.getElementById('shuffleBtn');
-        const repeatBtn = document.getElementById('repeatBtn');
-        const muteBtn = document.getElementById('muteBtn');
-        const volumeSlider = document.getElementById('volumeSlider');
-        const progressBarWrapper = document.getElementById('progressBarWrapper');
-        const progressBar = document.getElementById('progressBar');
-        const progressBuffered = document.getElementById('progressBuffered');
-        const currentTimeEl = document.getElementById('currentTime');
-        const durationEl = document.getElementById('duration');
-        const songTitleEl = document.getElementById('songTitle');
-        const songArtistEl = document.getElementById('songArtist');
-        const songAlbumEl = document.getElementById('songAlbum');
-        const albumArt = document.getElementById('albumArt');
-        const audioVisualizer = document.getElementById('audioVisualizer');
-        const songCounter = document.getElementById('songCounter');
-        const errorMessage = document.getElementById('errorMessage');
-        const playlistSongs = document.getElementById('playlistSongs');
-        const searchInput = document.getElementById('searchInput');
-        const playlistContainer = document.getElementById('playlistContainer');
-        const openPlaylistBtn = document.getElementById('openPlaylistBtn');
-        const closePlaylistBtn = document.getElementById('closePlaylistBtn');
-        const togglePlaylistDesktop = document.getElementById('togglePlaylistDesktop');
+          <button id="btn-repeat" class="icon-btn" title="Repeat (R)" aria-label="Repeat">
+            <svg id="icon-repeat" viewBox="0 0 24 24" fill="currentColor"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
+          </button>
+        </div>
 
-        // Initialize Player
-        function initPlayer() {
-            renderPlaylist();
-            loadSavedSettings();
-            
-            // Load saved index or default to 0
-            const savedIndex = localStorage.getItem('aura_current_index');
-            if (savedIndex !== null && savedIndex < songs.length) {
-                currentSongIndex = parseInt(savedIndex);
-            }
-            
-            loadSong(currentSongIndex, false);
-            
-            // Restore saved playback position if available
-            const savedTime = localStorage.getItem('aura_playback_time');
-            if (savedTime) {
-                audioElement.currentTime = parseFloat(savedTime);
-            }
+        <div class="progress-bar-container">
+          <span id="time-current" class="time-label">0:00</span>
+          <div id="progress-wrapper" class="progress-wrapper">
+            <div id="progress-fill" class="progress-fill"></div>
+            <input type="range" id="progress-slider" min="0" max="100" value="0" step="0.1" aria-label="Track timeline scrubber">
+          </div>
+          <span id="time-duration" class="time-label">0:00</span>
+        </div>
+      </div>
 
-            setupEventListeners();
-        }
+      <!-- Right Volume Controls -->
+      <div class="bp-right">
+        <button id="btn-mute" class="icon-btn" title="Mute/Unmute (M)" aria-label="Mute">
+          <svg id="icon-vol-high" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <svg id="icon-vol-mute" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+        </button>
+        <div class="volume-wrapper">
+          <div id="volume-fill" class="volume-fill" style="width: 70%;"></div>
+          <input type="range" id="volume-slider" min="0" max="100" value="70" aria-label="Volume slider">
+        </div>
+      </div>
+    </footer>
+  </div>
 
-        // Load specific song
-        function loadSong(index, autoPlay = true) {
-            currentSongIndex = index;
-            const song = songs[currentSongIndex];
-            
-            songTitleEl.textContent = song.title;
-            songArtistEl.textContent = song.artist;
-            songAlbumEl.textContent = song.album;
-            songCounter.textContent = `Playing ${currentSongIndex + 1} / ${songs.length}`;
-            errorMessage.textContent = '';
+  <!-- Context Menu for Songs -->
+  <div id="context-menu" class="context-menu" style="display: none;">
+    <button class="context-item" id="ctx-play">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      Play
+    </button>
+    <button class="context-item" id="ctx-fav">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      Toggle Favorite
+    </button>
+    <button class="context-item" id="ctx-queue">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h11v2H4zm14 0v-3h2v3h3v2h-3v3h-2v-3h-3v-2h3z"/></svg>
+      Play Next
+    </button>
+  </div>
 
-            // Set dynamic gradient and first letter
-            albumArt.style.background = gradients[currentSongIndex % gradients.length];
-            albumArt.textContent = song.title.charAt(0).toUpperCase();
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
 
-            audioElement.src = song.src;
-            audioElement.load();
+  <!-- Hidden HTML5 Audio Element -->
+  <audio id="audio-player" preload="metadata"></audio>
 
-            // Save state
-            localStorage.setItem('aura_current_index', currentSongIndex);
-
-            updatePlaylistHighlight();
-
-            if (autoPlay) {
-                playSong();
-            } else {
-                pauseSong();
-            }
-        }
-
-        // Play Song
-        function playSong() {
-            isPlaying = true;
-            audioElement.play().then(() => {
-                playPauseBtn.textContent = '⏸';
-                albumArt.classList.remove('paused');
-                audioVisualizer.classList.add('playing-vis');
-                errorMessage.textContent = '';
-            }).catch(error => {
-                console.error("Playback error:", error);
-                errorMessage.textContent = 'Error: Music file missing or unsupported format.';
-                pauseSong();
-            });
-        }
-
-        // Pause Song
-        function pauseSong() {
-            isPlaying = false;
-            audioElement.pause();
-            playPauseBtn.textContent = '▶';
-            albumArt.classList.add('paused');
-            audioVisualizer.classList.remove('playing-vis');
-        }
-
-        // Toggle Play/Pause
-        function togglePlay() {
-            if (isPlaying) {
-                pauseSong();
-            } else {
-                playSong();
-            }
-        }
-
-        // Previous Song
-        function prevSong() {
-            if (isShuffle) {
-                currentSongIndex = Math.floor(Math.random() * songs.length);
-            } else {
-                currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
-            }
-            loadSong(currentSongIndex, true);
-        }
-
-        // Next Song
-        function nextSong() {
-            if (repeatMode === 2) {
-                // Repeat One behavior handled in 'ended' event
-                audioElement.currentTime = 0;
-                playSong();
-                return;
-            }
-
-            if (isShuffle) {
-                currentSongIndex = Math.floor(Math.random() * songs.length);
-            } else {
-                currentSongIndex = (currentSongIndex + 1) % songs.length;
-            }
-
-            if (currentSongIndex === 0 && repeatMode === 0) {
-                loadSong(currentSongIndex, false);
-                return;
-            }
-
-            loadSong(currentSongIndex, true);
-        }
-
-        // Format Time helper (seconds to mm:ss)
-        function formatTime(seconds) {
-            if (isNaN(seconds)) return "0:00";
-            const minutes = Math.floor(seconds / 60);
-            const remainingSeconds = Math.floor(seconds % 60);
-            return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
-        }
-
-        // Update Progress Bar & Time
-        function updateProgress() {
-            const { currentTime, duration } = audioElement;
-            if (isNaN(duration)) return;
-
-            const progressPercent = (currentTime / duration) * 100;
-            progressBar.style.width = `${progressPercent}%`;
-            currentTimeEl.textContent = formatTime(currentTime);
-            durationEl.textContent = formatTime(duration);
-
-            // Save playback position
-            localStorage.setItem('aura_playback_time', currentTime);
-
-            // Buffer status
-            if (audioElement.buffered.length > 0) {
-                const bufferedEnd = audioElement.buffered.end(audioElement.buffered.length - 1);
-                const bufferPercent = (bufferedEnd / duration) * 100;
-                progressBuffered.style.width = `${bufferPercent}%`;
-            }
-        }
-
-        // Set Progress via Click
-        function setProgress(e) {
-            const width = progressBarWrapper.clientWidth;
-            const clickX = e.offsetX;
-            const duration = audioElement.duration;
-            if (isNaN(duration)) return;
-            audioElement.currentTime = (clickX / width) * duration;
-        }
-
-        // Volume Handling
-        function setVolume(value) {
-            audioElement.volume = value;
-            volumeSlider.value = value;
-            localStorage.setItem('aura_volume', value);
-
-            if (value == 0) {
-                muteBtn.textContent = '🔇';
-            } else if (value < 0.5) {
-                muteBtn.textContent = '🔉';
-            } else {
-                muteBtn.textContent = '🔊';
-            }
-        }
-
-        function toggleMute() {
-            if (audioElement.volume > 0) {
-                lastVolume = audioElement.volume;
-                setVolume(0);
-            } else {
-                setVolume(lastVolume || 0.5);
-            }
-        }
-
-        // Render Playlist
-        function renderPlaylist(songsToRender = songs) {
-            playlistSongs.innerHTML = '';
-
-            if (songsToRender.length === 0) {
-                playlistSongs.innerHTML = `<div class="empty-playlist">No songs found</div>`;
-                return;
-            }
-
-            songsToRender.forEach((song, index) => {
-                // Find actual index in master array
-                const originalIndex = songs.findIndex(s => s.src === song.src);
-
-                const item = document.createElement('div');
-                item.className = `song-item ${originalIndex === currentSongIndex ? 'active' : ''}`;
-                item.dataset.index = originalIndex;
-
-                item.innerHTML = `
-                    <div class="song-item-thumb" style="background: ${gradients[originalIndex % gradients.length]}">
-                        ${song.title.charAt(0).toUpperCase()}
-                    </div>
-                    <div class="song-item-details">
-                        <div class="song-item-title">${song.title}</div>
-                        <div class="song-item-artist">${song.artist} • ${song.album}</div>
-                    </div>
-                    <div class="song-item-playing-icon">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                `;
-
-                item.addEventListener('click', () => {
-                    loadSong(originalIndex, true);
-                });
-
-                playlistSongs.appendChild(item);
-            });
-        }
-
-        // Update Playlist Highlight
-        function updatePlaylistHighlight() {
-            const items = playlistSongs.querySelectorAll('.song-item');
-            items.forEach(item => {
-                const index = parseInt(item.dataset.index);
-                if (index === currentSongIndex) {
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
-                }
-            });
-        }
-
-        // Search Filter
-        function handleSearch(e) {
-            const query = e.target.value.toLowerCase();
-            filteredSongs = songs.filter(song => 
-                song.title.toLowerCase().includes(query) || 
-                song.artist.toLowerCase().includes(query) ||
-                song.album.toLowerCase().includes(query)
-            );
-            renderPlaylist(filteredSongs);
-        }
-
-        // Load Saved Settings from LocalStorage
-        function loadSavedSettings() {
-            const savedVol = localStorage.getItem('aura_volume');
-            if (savedVol !== null) {
-                setVolume(parseFloat(savedVol));
-            } else {
-                setVolume(1);
-            }
-        }
-
-        // Setup All Event Listeners
-        function setupEventListeners() {
-            playPauseBtn.addEventListener('click', togglePlay);
-            prevBtn.addEventListener('click', prevSong);
-            nextBtn.addEventListener('click', nextSong);
-
-            audioElement.addEventListener('timeupdate', updateProgress);
-            audioElement.addEventListener('ended', () => {
-                if (repeatMode === 2) {
-                    audioElement.currentTime = 0;
-                    playSong();
-                } else {
-                    nextSong();
-                }
-            });
-
-            progressBarWrapper.addEventListener('click', setProgress);
-
-            volumeSlider.addEventListener('input', (e) => {
-                setVolume(e.target.value);
-            });
-
-            muteBtn.addEventListener('click', toggleMute);
-
-            // Shuffle Toggle
-            shuffleBtn.addEventListener('click', () => {
-                isShuffle = !isShuffle;
-                shuffleBtn.classList.toggle('active', isShuffle);
-            });
-
-            // Repeat Toggle (0 -> 1 -> 2 -> 0)
-            repeatBtn.addEventListener('click', () => {
-                repeatMode = (repeatMode + 1) % 3;
-                if (repeatMode === 0) {
-                    repeatBtn.classList.remove('active');
-                    repeatBtn.textContent = '🔁';
-                    repeatBtn.title = 'Repeat Off';
-                } else if (repeatMode === 1) {
-                    repeatBtn.classList.add('active');
-                    repeatBtn.textContent = '🔁';
-                    repeatBtn.title = 'Repeat All';
-                } else if (repeatMode === 2) {
-                    repeatBtn.classList.add('active');
-                    repeatBtn.textContent = '🔂';
-                    repeatBtn.title = 'Repeat One';
-                }
-            });
-
-            // Mobile Playlist Panel Toggle
-            openPlaylistBtn.addEventListener('click', () => {
-                playlistContainer.classList.add('active');
-            });
-
-            closePlaylistBtn.addEventListener('click', () => {
-                playlistContainer.classList.remove('active');
-            });
-
-            togglePlaylistDesktop.addEventListener('click', () => {
-                playlistContainer.classList.toggle('active');
-            });
-
-            searchInput.addEventListener('input', handleSearch);
-
-            // Keyboard Shortcuts
-            window.addEventListener('keydown', (e) => {
-                if (e.target.tagName === 'INPUT') return; // Skip if typing in search
-
-                switch(e.code) {
-                    case 'Space':
-                        e.preventDefault();
-                        togglePlay();
-                        break;
-                    case 'ArrowLeft':
-                        e.preventDefault();
-                        prevSong();
-                        break;
-                    case 'ArrowRight':
-                        e.preventDefault();
-                        nextSong();
-                        break;
-                    case 'ArrowUp':
-                        e.preventDefault();
-                        setVolume(Math.min(1, audioElement.volume + 0.05));
-                        break;
-                    case 'ArrowDown':
-                        e.preventDefault();
-                        setVolume(Math.max(0, audioElement.volume - 0.05));
-                        break;
-                    case 'KeyS':
-                        shuffleBtn.click();
-                        break;
-                    case 'KeyR':
-                        repeatBtn.click();
-                        break;
-                    case 'KeyM':
-                        toggleMute();
-                        break;
-                }
-            });
-        }
-
-        // Run application on load
-        window.addEventListener('DOMContentLoaded', initPlayer);
-    </script>
+  <script src="script.js"></script>
 </body>
 </html>
