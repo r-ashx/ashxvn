@@ -1,19 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JavaScript Roadmap (Beginner → Strong Fundamentals)</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LEVEL UP — Communication & Mindset Hub</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
+  <style>
     :root {
-      --primary: #f7df1e;
-      --dark: #1e1e24;
-      --text: #2d3748;
-      --light-bg: #f8fafc;
-      --border: #e2e8f0;
-      --accent: #2563eb;
+      --bg-dark: #080b12;
+      --bg-secondary: #101522;
+      --bg-card: #141a29;
+      --bg-card-hover: #1c2438;
+      
+      --accent-primary: #7c5cff;
+      --accent-secondary: #00d4ff;
+      --accent-success: #35d07f;
+      --accent-warning: #ffb020;
+      --accent-danger: #ff4757;
+      
+      --text-main: #f5f7ff;
+      --text-muted: #8e98ad;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --glass-bg: rgba(20, 26, 41, 0.65);
+      
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      
+      --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.3);
+      --shadow-glow: 0 0 30px rgba(124, 92, 255, 0.25);
+      
+      --transition-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-normal: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     * {
@@ -22,455 +46,1798 @@
       padding: 0;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
-      font-family: 'Inter', sans-serif;
-      color: var(--text);
-      background-color: #ffffff;
-      line-height: 1.5;
-      padding: 40px;
-      max-width: 900px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    /* Typography & Utilities */
+    h1, h2, h3, h4, h5 {
+      color: var(--text-main);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      outline: none;
+      background: none;
+      color: inherit;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1240px;
       margin: 0 auto;
+      padding: 0 24px;
     }
 
-    /* PDF Print Rules */
-    @media print {
-      body {
-        padding: 0;
-        max-width: 100%;
-      }
-      .section {
-        break-inside: avoid;
-      }
-      a {
-        text-decoration: none;
-        color: inherit;
-      }
+    .gradient-text {
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    header {
-      border-bottom: 3px solid var(--primary);
-      padding-bottom: 20px;
-      margin-bottom: 30px;
+    /* Ambient Background Effects */
+    .bg-blobs {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.15;
+      animation: floatBlob 18s ease-in-out infinite alternate;
+    }
+
+    .blob-1 {
+      width: 500px;
+      height: 500px;
+      background: var(--accent-primary);
+      top: -100px;
+      left: -100px;
+    }
+
+    .blob-2 {
+      width: 400px;
+      height: 400px;
+      background: var(--accent-secondary);
+      top: 40%;
+      right: -100px;
+      animation-delay: -6s;
+    }
+
+    .blob-3 {
+      width: 450px;
+      height: 450px;
+      background: #e056fd;
+      bottom: -100px;
+      left: 30%;
+      animation-delay: -12s;
+    }
+
+    @keyframes floatBlob {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(60px, 40px) scale(1.1); }
+      100% { transform: translate(-40px, 80px) scale(0.95); }
+    }
+
+    /* Sticky Navigation */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(8, 11, 18, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition-normal);
+    }
+
+    .header-content {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      height: 76px;
     }
 
-    .badge {
-      background-color: #fef08a;
-      color: #854d0e;
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 15px rgba(124, 92, 255, 0.4);
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .logo-subtitle {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-link a {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: var(--transition-fast);
+      position: relative;
+      padding: 6px 0;
+    }
+
+    .nav-link a:hover,
+    .nav-link a.active {
+      color: var(--text-main);
+    }
+
+    .nav-link a.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+      border-radius: var(--radius-full);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+    }
+
+    /* Hero Section */
+    .hero-section {
+      position: relative;
+      z-index: 1;
+      padding: 80px 0 60px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(124, 92, 255, 0.1);
+      border: 1px solid rgba(124, 92, 255, 0.25);
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
       font-weight: 700;
-      padding: 6px 12px;
-      border-radius: 6px;
+      color: #a28bff;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .hero-title {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      max-width: 900px;
+      margin: 0 auto 20px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-description {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto 36px;
+      font-weight: 400;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 60px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: var(--transition-normal);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-primary), #6342eb);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(124, 92, 255, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(124, 92, 255, 0.5);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .stat-card {
+      flex: 1;
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px 16px;
+      text-align: center;
+      min-width: 130px;
+    }
+
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text-main);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    /* Search and Filter Area */
+    .controls-section {
+      position: relative;
+      z-index: 1;
+      padding: 40px 0 20px;
+    }
+
+    .controls-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .search-sort-bar {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 14px 16px 14px 48px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: var(--transition-fast);
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.2);
+    }
+
+    .select-wrapper {
+      position: relative;
+      min-width: 180px;
+    }
+
+    .sort-select {
+      width: 100%;
+      padding: 14px 38px 14px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .select-arrow {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--text-muted);
+    }
+
+    .category-chips {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      scrollbar-width: none; /* Firefox */
+    }
+
+    .category-chips::-webkit-scrollbar {
+      display: none; /* Chrome/Safari */
+    }
+
+    .chip {
+      padding: 8px 18px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-full);
       font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+      transition: var(--transition-fast);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chip:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-main);
+    }
+
+    .chip.active {
+      background: rgba(124, 92, 255, 0.15);
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+    }
+
+    /* Video Cards Grid */
+    .videos-section {
+      position: relative;
+      z-index: 1;
+      padding: 20px 0 60px;
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .video-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: var(--transition-normal);
+      position: relative;
+    }
+
+    .video-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(124, 92, 255, 0.4);
+      box-shadow: var(--shadow-subtle), var(--shadow-glow);
+    }
+
+    .card-thumb-wrapper {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 Aspect Ratio */
+      background: var(--bg-secondary);
+      overflow: hidden;
+    }
+
+    .card-thumb {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .video-card:hover .card-thumb {
+      transform: scale(1.05);
+    }
+
+    .play-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(8, 11, 18, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: var(--transition-fast);
+    }
+
+    .video-card:hover .play-overlay {
+      opacity: 1;
+    }
+
+    .play-btn-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(124, 92, 255, 0.6);
+      transform: scale(0.8);
+      transition: var(--transition-fast);
+    }
+
+    .video-card:hover .play-btn-circle {
+      transform: scale(1);
+    }
+
+    .fav-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(8, 11, 18, 0.7);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-fast);
+      z-index: 2;
+    }
+
+    .fav-btn:hover,
+    .fav-btn.active {
+      background: rgba(255, 71, 87, 0.2);
+      border-color: rgba(ff, 71, 87, 0.4);
+      color: var(--accent-danger);
+    }
+
+    .fav-btn.active svg {
+      fill: var(--accent-danger);
+    }
+
+    .completed-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 4px 10px;
+      background: rgba(53, 208, 127, 0.9);
+      color: #000;
+      font-size: 0.7rem;
+      font-weight: 800;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      z-index: 2;
+    }
+
+    .card-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .card-category {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent-secondary);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
-    h1 {
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--dark);
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 8px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
-    p.subtitle {
-      font-size: 0.95rem;
-      color: #64748b;
-      margin-top: 4px;
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      flex: 1;
     }
 
-    .grid {
+    .card-footer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .btn-watch {
+      flex: 1;
+      padding: 10px;
+      background: rgba(124, 92, 255, 0.1);
+      border: 1px solid rgba(124, 92, 255, 0.25);
+      border-radius: var(--radius-sm);
+      color: #a28bff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: var(--transition-fast);
+    }
+
+    .btn-watch:hover {
+      background: var(--accent-primary);
+      color: #fff;
+    }
+
+    .btn-complete-toggle {
+      padding: 10px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-fast);
+    }
+
+    .btn-complete-toggle:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-main);
+    }
+
+    .btn-complete-toggle.completed {
+      background: rgba(53, 208, 127, 0.15);
+      border-color: rgba(53, 208, 127, 0.3);
+      color: var(--accent-success);
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      background: var(--bg-card);
+      border: 1px dashed var(--border-color);
+      border-radius: var(--radius-lg);
+    }
+
+    .empty-icon {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 16px;
+      color: var(--text-muted);
+      opacity: 0.5;
+    }
+
+    /* Progress Section */
+    .progress-section {
+      position: relative;
+      z-index: 1;
+      padding: 60px 0;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .progress-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 36px;
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: 240px 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .chart-wrapper {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+    }
+
+    .donut-chart {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .donut-bg {
+      fill: none;
+      stroke: var(--bg-secondary);
+      stroke-width: 12;
+    }
+
+    .donut-fill {
+      fill: none;
+      stroke: url(#gradient);
+      stroke-width: 12;
+      stroke-linecap: round;
+      stroke-dasharray: 502; /* 2 * PI * 80 */
+      stroke-dashoffset: 502;
+      transition: stroke-dashoffset 1s ease-out;
+    }
+
+    .chart-center-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .chart-percent {
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .chart-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .progress-details {
+      display: flex;
+      flex-direction: column;
       gap: 20px;
     }
 
-    .section {
-      background: var(--light-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 18px 20px;
-      border-left: 4px solid var(--dark);
+    .progress-header-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
     }
 
-    .section.highlight {
-      border-left-color: var(--accent);
+    .progress-subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
     }
 
-    .section-title {
+    .progress-count {
       font-size: 1.1rem;
       font-weight: 700;
-      color: var(--dark);
-      margin-bottom: 10px;
+      color: var(--accent-secondary);
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 14px;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+      border-radius: var(--radius-full);
+      transition: width 0.8s ease-out;
+    }
+
+    .motivation-box {
+      padding: 16px 20px;
+      background: rgba(124, 92, 255, 0.08);
+      border-left: 4px solid var(--accent-primary);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 0.95rem;
+      font-style: italic;
+      color: #c4b5ff;
+    }
+
+    /* Roadmap Section */
+    .roadmap-section {
+      position: relative;
+      z-index: 1;
+      padding: 80px 0;
+    }
+
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+      position: relative;
+    }
+
+    .roadmap-step {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 24px 20px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      transition: var(--transition-normal);
+    }
+
+    .roadmap-step:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-4px);
+    }
+
+    .step-number {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-secondary);
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      margin-bottom: 16px;
     }
 
-    .section-number {
-      background: var(--dark);
-      color: #fff;
-      font-size: 0.75rem;
-      padding: 2px 8px;
-      border-radius: 4px;
+    .step-icon {
+      color: var(--accent-primary);
+      margin-bottom: 12px;
     }
 
-    ul {
-      list-style-type: none;
-    }
-
-    li {
-      font-size: 0.88rem;
-      padding: 3px 0;
-      color: #475569;
-      display: flex;
-      align-items: center;
-    }
-
-    li::before {
-      content: "•";
-      color: var(--accent);
-      font-weight: bold;
-      display: inline-block;
-      width: 1em;
-      margin-left: 4px;
-    }
-
-    .sub-list {
-      margin-left: 16px;
-      border-left: 2px solid #cbd5e1;
-      padding-left: 10px;
-      margin-top: 4px;
+    .step-title {
+      font-size: 1.05rem;
+      font-weight: 700;
       margin-bottom: 6px;
     }
 
-    .sub-list li::before {
-      content: "–";
-      color: #94a3b8;
+    .step-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
     }
 
-    code {
-      font-family: 'Fira Code', monospace;
-      background-color: #e2e8f0;
-      padding: 1px 5px;
-      border-radius: 4px;
-      font-size: 0.82rem;
-      color: #0f172a;
+    /* Daily Reminder & About Combined Grid */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      padding: 0 0 80px;
+      position: relative;
+      z-index: 1;
     }
 
-    .full-width {
-      grid-column: span 2;
+    .info-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
-    footer {
-      margin-top: 30px;
-      text-align: center;
-      font-size: 0.8rem;
-      color: #94a3b8;
-      border-top: 1px solid var(--border);
-      padding-top: 15px;
+    .quote-icon {
+      color: var(--accent-primary);
+      opacity: 0.4;
+      margin-bottom: 12px;
+    }
+
+    .reminder-quote {
+      font-size: 1.15rem;
+      font-weight: 500;
+      line-height: 1.5;
+      margin-bottom: 24px;
+      min-height: 70px;
+    }
+
+    /* Footer */
+    .footer {
+      position: relative;
+      z-index: 1;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-color);
+      padding: 40px 0;
+      margin-top: auto;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .back-to-top {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-fast);
+    }
+
+    .back-to-top:hover {
+      background: var(--accent-primary);
+      color: #fff;
+    }
+
+    /* Modal Player */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 6, 10, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 900px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+      transform: scale(0.95);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-backdrop.active .modal-container {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 80%;
+    }
+
+    .modal-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-fast);
+    }
+
+    .modal-close:hover {
+      color: var(--text-main);
+      background: var(--bg-card-hover);
+    }
+
+    .video-player-wrapper {
+      position: relative;
+      padding-top: 56.25%; /* 16:9 */
+      background: #000;
+    }
+
+    .video-player-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .modal-body {
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toast {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-left: 4px solid var(--accent-primary);
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      font-size: 0.9rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-subtle);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+
+    /* Scroll Reveal Animation Classes */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 900px) {
+      .progress-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .bottom-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        position: fixed;
+        top: 76px;
+        left: 0;
+        width: 100%;
+        background: var(--bg-card);
+        border-bottom: 1px solid var(--border-color);
+        flex-direction: column;
+        padding: 20px;
+        gap: 16px;
+        transform: translateY(-150%);
+        transition: transform 0.3s ease;
+      }
+
+      .nav-links.active {
+        transform: translateY(0);
+      }
+
+      .mobile-menu-btn {
+        display: flex;
+      }
+
+      .hero-stats {
+        flex-wrap: wrap;
+      }
+
+      .stat-card {
+        min-width: 45%;
+      }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <div>
-      <h1>JavaScript Roadmap</h1>
-      <p class="subtitle">Beginner → Strong Fundamentals</p>
-    </div>
-    <span class="badge">Complete Guide</span>
-  </header>
-
-  <div class="grid">
-
-    <!-- 1. Introduction -->
-    <div class="section">
-      <div class="section-title"><span class="section-number">01</span> Introduction</div>
-      <ul>
-        <li>What is JavaScript?</li>
-        <li>How JavaScript Works</li>
-        <li>JavaScript Engine</li>
-        <li>Running JavaScript</li>
-        <li>Console & DevTools</li>
-      </ul>
-    </div>
-
-    <!-- 2. Variables & Data Types -->
-    <div class="section">
-      <div class="section-title"><span class="section-number">02</span> Variables & Data Types</div>
-      <ul>
-        <li><code>var</code>, <code>let</code>, <code>const</code></li>
-        <li>Naming Rules & Scope Basics</li>
-        <li><strong>Primitive Data Types:</strong></li>
-        <div class="sub-list">
-          <li>String, Number, Boolean</li>
-          <li>Undefined, Null, BigInt, Symbol</li>
-        </div>
-        <li><strong>Non-Primitive Data Types:</strong></li>
-        <div class="sub-list">
-          <li>Object, Array, Function</li>
-        </div>
-        <li><code>typeof</code> Operator</li>
-      </ul>
-    </div>
-
-    <!-- 3. Operators -->
-    <div class="section">
-      <div class="section-title"><span class="section-number">03</span> Operators</div>
-      <ul>
-        <li>Arithmetic & Assignment Operators</li>
-        <li>Comparison & Logical Operators</li>
-        <li>Increment (<code>++</code>) & Decrement (<code>--</code>)</li>
-        <li>Ternary Operator (<code>? :</code>)</li>
-        <li>Nullish Coalescing (<code>??</code>)</li>
-        <li>Optional Chaining (<code>?.</code>)</li>
-      </ul>
-    </div>
-
-    <!-- 4. Type Conversion -->
-    <div class="section">
-      <div class="section-title"><span class="section-number">04</span> Type Conversion</div>
-      <ul>
-        <li>Implicit vs Explicit Conversion</li>
-        <li><code>Number()</code>, <code>String()</code>, <code>Boolean()</code></li>
-        <li><code>parseInt()</code> & <code>parseFloat()</code></li>
-      </ul>
-    </div>
-
-    <!-- 5. Input & Output -->
-    <div class="section">
-      <div class="section-title"><span class="section-number">05</span> Input & Output</div>
-      <ul>
-        <li><code>console.log()</code>, <code>console.table()</code>, <code>console.error()</code></li>
-        <li><code>alert()</code>, <code>prompt()</code>, <code>confirm()</code></li>
-      </ul>
-    </div>
-
-    <!-- 6. Strings -->
-    <div class="section">
-      <div class="section-title"><span class="section-number">06</span> Strings</div>
-      <ul>
-        <li>String Basics & Escape Characters</li>
-        <li>Template Literals (<code>` `</code>)</li>
-        <li><strong>Methods:</strong> <code>length</code>, <code>toUpperCase()</code>, <code>toLowerCase()</code>, <code>trim()</code>, <code>slice()</code>, <code>substring()</code>, <code>replace()</code>, <code>includes()</code>, <code>startsWith()</code>, <code>endsWith()</code>, <code>split()</code></li>
-      </ul>
-    </div>
-
-    <!-- 7. Numbers & Math -->
-    <div class="section">
-      <div class="section-title"><span class="section-number">07</span> Numbers & Math</div>
-      <ul>
-        <li>Number & Math Objects</li>
-        <li>Rounding Methods (<code>floor</code>, <code>ceil</code>, <code>round</code>)</li>
-        <li>Random Numbers (<code>Math.random()</code>)</li>
-        <li>Min/Max, Power (<code>pow</code>), Square Root (<code>sqrt</code>)</li>
-      </ul>
-    </div>
-
-    <!-- 8. Conditional Statements -->
-    <div class="section">
-      <div class="section-title"><span class="section-number">08</span> Conditional Statements</div>
-      <ul>
-        <li><code>if</code>, <code>else if</code>, <code>else</code></li>
-        <li>Nested <code>if</code> statements</li>
-        <li><code>switch</code> statement</li>
-      </ul>
-    </div>
-
-    <!-- 9. Loops -->
-    <div class="section">
-      <div class="section-title"><span class="section-number">09</span> Loops</div>
-      <ul>
-        <li><code>for</code> loop</li>
-        <li><code>while</code> & <code>do...while</code> loop</li>
-        <li>Nested Loops</li>
-        <li>Control statements: <code>break</code>, <code>continue</code></li>
-      </ul>
-    </div>
-
-    <!-- 10. Functions -->
-    <div class="section">
-      <div class="section-title"><span class="section-number">10</span> Functions</div>
-      <ul>
-        <li>Function Declaration vs Expression</li>
-        <li>Arrow Functions (<code>() =&gt; {}</code>)</li>
-        <li>Parameters, Arguments, Default Parameters</li>
-        <li><code>return</code> Statement</li>
-        <li>Callback Functions & Higher-Order Functions</li>
-      </ul>
-    </div>
-
-    <!-- 11. Scope & Hoisting -->
-    <div class="section">
-      <div class="section-title"><span class="section-number">11</span> Scope & Hoisting</div>
-      <ul>
-        <li>Global, Local, and Block Scope</li>
-        <li>Lexical Scope</li>
-        <li>Hoisting Mechanism</li>
-      </ul>
-    </div>
-
-    <!-- 12. Arrays -->
-    <div class="section">
-      <div class="section-title"><span class="section-number">12</span> Arrays</div>
-      <ul>
-        <li>Creation, Accessing, Updating & Length</li>
-        <li><strong>Mutating:</strong> <code>push()</code>, <code>pop()</code>, <code>shift()</code>, <code>unshift()</code>, <code>splice()</code></li>
-        <li><strong>Non-Mutating:</strong> <code>slice()</code>, <code>concat()</code>, <code>join()</code></li>
-      </ul>
-    </div>
-
-    <!-- 13. Advanced Array Methods -->
-    <div class="section highlight">
-      <div class="section-title"><span class="section-number">13</span> Advanced Array Methods</div>
-      <ul>
-        <li><code>forEach()</code>, <code>map()</code>, <code>filter()</code>, <code>reduce()</code></li>
-        <li><code>find()</code>, <code>findIndex()</code></li>
-        <li><code>some()</code>, <code>every()</code></li>
-        <li><code>sort()</code>, <code>reverse()</code></li>
-      </ul>
-    </div>
-
-    <!-- 14. Objects -->
-    <div class="section">
-      <div class="section-title"><span class="section-number">14</span> Objects</div>
-      <ul>
-        <li>Properties, Methods & Nested Objects</li>
-        <li><code>Object.keys()</code>, <code>Object.values()</code>, <code>Object.entries()</code></li>
-        <li>Object Destructuring</li>
-      </ul>
-    </div>
-
-    <!-- 15. DOM -->
-    <div class="section">
-      <div class="section-title"><span class="section-number">15</span> Document Object Model (DOM)</div>
-      <ul>
-        <li>What is DOM? & <code>document</code> Object</li>
-        <li><code>getElementById()</code>, <code>getElementsByClassName()</code></li>
-        <li><code>querySelector()</code> & <code>querySelectorAll()</code></li>
-      </ul>
-    </div>
-
-    <!-- 16. DOM Manipulation -->
-    <div class="section">
-      <div class="section-title"><span class="section-number">16</span> DOM Manipulation</div>
-      <ul>
-        <li><code>textContent</code>, <code>innerHTML</code>, <code>innerText</code>, <code>value</code></li>
-        <li>Styling: <code>style</code>, <code>classList</code></li>
-        <li>Attributes: <code>setAttribute()</code>, <code>getAttribute()</code></li>
-        <li>Elements: <code>createElement()</code>, <code>appendChild()</code>, <code>remove()</code></li>
-      </ul>
-    </div>
-
-    <!-- 17. Events -->
-    <div class="section">
-      <div class="section-title"><span class="section-number">17</span> Events</div>
-      <ul>
-        <li>Mouse: <code>click</code>, <code>dblclick</code>, <code>mouseover</code>, <code>mouseout</code></li>
-        <li>Form & Input: <code>input</code>, <code>change</code>, <code>submit</code></li>
-        <li>Keyboard: <code>keydown</code>, <code>keyup</code></li>
-        <li><code>addEventListener()</code>, <code>removeEventListener()</code> & Event Object</li>
-      </ul>
-    </div>
-
-    <!-- 18. ES6+ Features -->
-    <div class="section highlight">
-      <div class="section-title"><span class="section-number">18</span> Modern ES6+ Features</div>
-      <ul>
-        <li>Spread (<code>...</code>) & Rest Operators</li>
-        <li>Destructuring (Array & Object)</li>
-        <li>Enhanced Object Literals</li>
-        <li>Template Literals & Default Parameters</li>
-      </ul>
-    </div>
-
-    <!-- 19. Asynchronous JavaScript -->
-    <div class="section highlight">
-      <div class="section-title"><span class="section-number">19</span> Asynchronous JavaScript</div>
-      <ul>
-        <li>Synchronous vs Asynchronous</li>
-        <li><code>setTimeout()</code> & <code>setInterval()</code></li>
-        <li>Callback Hell</li>
-        <li><strong>Promises</strong>, <code>async</code> & <code>await</code></li>
-      </ul>
-    </div>
-
-    <!-- 20. Fetch API & JSON -->
-    <div class="section">
-      <div class="section-title"><span class="section-number">20</span> Fetch API & JSON</div>
-      <ul>
-        <li>What is an API? & HTTP Methods (GET, POST)</li>
-        <li><code>fetch()</code> API Usage</li>
-        <li><code>JSON.parse()</code> & <code>JSON.stringify()</code></li>
-      </ul>
-    </div>
-
-    <!-- 21. Web Storage -->
-    <div class="section">
-      <div class="section-title"><span class="section-number">21</span> Local & Session Storage</div>
-      <ul>
-        <li><code>localStorage</code> vs <code>sessionStorage</code></li>
-        <li><code>setItem()</code>, <code>getItem()</code></li>
-        <li><code>removeItem()</code>, <code>clear()</code></li>
-      </ul>
-    </div>
-
-    <!-- 22. Error Handling -->
-    <div class="section">
-      <div class="section-title"><span class="section-number">22</span> Error Handling</div>
-      <ul>
-        <li><code>try</code>, <code>catch</code>, <code>finally</code> blocks</li>
-        <li><code>throw</code> statement & Custom Errors</li>
-      </ul>
-    </div>
-
-    <!-- 23. OOP JavaScript -->
-    <div class="section">
-      <div class="section-title"><span class="section-number">23</span> Object-Oriented JS</div>
-      <ul>
-        <li>Classes & Constructor Functions</li>
-        <li>Inheritance (<code>extends</code>, <code>super</code>)</li>
-        <li>Encapsulation & Static Methods</li>
-      </ul>
-    </div>
-
-    <!-- 24. Modules -->
-    <div class="section">
-      <div class="section-title"><span class="section-number">24</span> JS Modules</div>
-      <ul>
-        <li><code>import</code> & <code>export</code> statements</li>
-        <li>Default Exports vs Named Exports</li>
-      </ul>
-    </div>
-
-    <!-- 25. Projects -->
-    <div class="section full-width highlight">
-      <div class="section-title"><span class="section-number">25</span> Practice Projects</div>
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 5px;">
-        <ul>
-          <li>Calculator</li>
-          <li>Todo App</li>
-          <li>Counter App</li>
-        </ul>
-        <ul>
-          <li>Digital Clock</li>
-          <li>Weather App</li>
-          <li>Notes App</li>
-        </ul>
-        <ul>
-          <li>Quiz App</li>
-          <li>Expense Tracker</li>
-          <li>Password Generator</li>
-        </ul>
-      </div>
-    </div>
-
+  <!-- Background Animated Blobs -->
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
   </div>
 
-  <footer>
-    <p>JavaScript Roadmap • Designed for Printing & Self-Study</p>
+  <!-- Sticky Header -->
+  <header class="header">
+    <div class="container header-content">
+      <div class="logo-container">
+        <div class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title gradient-text">LEVEL UP</span>
+          <span class="logo-subtitle">Mindset • Communication • Focus</span>
+        </div>
+      </div>
+
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+
+      <ul class="nav-links" id="navLinks">
+        <li class="nav-link"><a href="#home" class="active">Home</a></li>
+        <li class="nav-link"><a href="#library">Videos</a></li>
+        <li class="nav-link"><a href="#progress">Progress</a></li>
+        <li class="nav-link"><a href="#about">About</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section" id="home">
+      <div class="container">
+        <div class="hero-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Personal Development Playlist
+        </div>
+        <h1 class="hero-title">Build Confidence. Communicate Better. <span class="gradient-text">Think Sharper.</span></h1>
+        <p class="hero-description">A focused collection of videos to improve confidence, communication, conversation skills, focus, and personal growth.</p>
+        
+        <div class="hero-actions">
+          <a href="#library" class="btn btn-primary">
+            Start Learning
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+          <a href="#progress" class="btn btn-secondary">
+            View Progress
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-card">
+            <span class="stat-number gradient-text" id="statVideos">8</span>
+            <span class="stat-label">Videos</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number gradient-text">5</span>
+            <span class="stat-label">Core Topics</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number gradient-text">100%</span>
+            <span class="stat-label">Free Access</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Controls Section (Search & Filter) -->
+    <section class="controls-section" id="library">
+      <div class="container">
+        <div class="controls-header">
+          <h2 class="section-title">Your Learning Library</h2>
+        </div>
+
+        <div class="search-sort-bar">
+          <div class="search-box">
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search videos...">
+          </div>
+
+          <div class="select-wrapper">
+            <select id="sortSelect" class="sort-select">
+              <option value="default">Default Order</option>
+              <option value="az">Title: A-Z</option>
+              <option value="recent">Recently Added</option>
+            </select>
+            <svg class="select-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+
+        <div class="category-chips" id="categoryChips">
+          <button class="chip active" data-category="All">All</button>
+          <button class="chip" data-category="Confidence">Confidence</button>
+          <button class="chip" data-category="Communication">Communication</button>
+          <button class="chip" data-category="Conversation">Conversation</button>
+          <button class="chip" data-category="Focus">Focus</button>
+          <button class="chip" data-category="Mindset">Mindset</button>
+          <button class="chip" data-category="Favorites">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            Favorites
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Video Grid Section -->
+    <section class="videos-section">
+      <div class="container">
+        <div class="video-grid" id="videoGrid">
+          <!-- Dynamic video cards rendered here -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Progress Dashboard Section -->
+    <section class="progress-section" id="progress">
+      <div class="container">
+        <h2 class="section-title reveal" style="margin-bottom: 30px;">Your Progress</h2>
+
+        <div class="progress-card reveal">
+          <div class="chart-wrapper">
+            <svg class="donut-chart" viewBox="0 0 180 180">
+              <defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#7c5cff" />
+                  <stop offset="100%" stop-color="#00d4ff" />
+                </linearGradient>
+              </defs>
+              <circle class="donut-bg" cx="90" cy="90" r="80"></circle>
+              <circle class="donut-fill" id="donutFill" cx="90" cy="90" r="80"></circle>
+            </svg>
+            <div class="chart-center-text">
+              <span class="chart-percent gradient-text" id="chartPercent">0%</span>
+              <span class="chart-label">Completed</span>
+            </div>
+          </div>
+
+          <div class="progress-details">
+            <div class="progress-header-info">
+              <div>
+                <h3>Mastery Status</h3>
+                <p class="progress-subtitle">Keep building your skills every day</p>
+              </div>
+              <span class="progress-count" id="progressCountText">0 / 8 Completed</span>
+            </div>
+
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="progressBarFill"></div>
+            </div>
+
+            <div class="motivation-box" id="motivationBox">
+              "Your journey starts with one video."
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section class="roadmap-section">
+      <div class="container">
+        <h2 class="section-title reveal" style="text-align: center; justify-content: center;">Learning Roadmap</h2>
+        <p style="text-align: center; color: var(--text-muted); margin-top: 8px;" class="reveal">A structured path to total personal transformation</p>
+
+        <div class="roadmap-grid">
+          <div class="roadmap-step reveal">
+            <div class="step-number">1</div>
+            <svg class="step-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <h3 class="step-title">Build Confidence</h3>
+            <p class="step-desc">Overcome self-doubt and develop unshakeable self-belief.</p>
+          </div>
+
+          <div class="roadmap-step reveal">
+            <div class="step-number">2</div>
+            <svg class="step-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <h3 class="step-title">Improve Communication</h3>
+            <p class="step-desc">Express ideas with precision, impact, and natural charisma.</p>
+          </div>
+
+          <div class="roadmap-step reveal">
+            <div class="step-number">3</div>
+            <svg class="step-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <h3 class="step-title">Master Conversation</h3>
+            <p class="step-desc">Engage anyone in meaningful, comfortable dialogue.</p>
+          </div>
+
+          <div class="roadmap-step reveal">
+            <div class="step-number">4</div>
+            <svg class="step-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            <h3 class="step-title">Train Focus</h3>
+            <p class="step-desc">Eliminate distractions and achieve deep mental clarity.</p>
+          </div>
+
+          <div class="roadmap-step reveal">
+            <div class="step-number">5</div>
+            <svg class="step-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04z"/></svg>
+            <h3 class="step-title">Upgrade Mindset</h3>
+            <p class="step-desc">Adopt long-term strategic thinking for career and life success.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Daily Motivation & About Section -->
+    <section class="container" id="about">
+      <div class="bottom-grid">
+        <div class="info-card reveal">
+          <div>
+            <svg class="quote-icon" width="36" height="36" viewBox="0 0 24 24" fill="currentColor"><path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/></svg>
+            <h3 style="margin-bottom: 12px;">Daily Reminder</h3>
+            <p class="reminder-quote" id="reminderQuote">"Confidence isn't something you wait for. It's something you build."</p>
+          </div>
+          <button class="btn btn-secondary" id="newReminderBtn" style="align-self: flex-start;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            New Reminder
+          </button>
+        </div>
+
+        <div class="info-card reveal">
+          <div>
+            <h3 style="margin-bottom: 12px;">About LEVEL UP</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 16px;">
+              This dashboard is a personal learning space for improving confidence, communication, focus, conversation skills, and mindset through carefully selected YouTube videos.
+            </p>
+            <p style="color: var(--accent-secondary); font-size: 0.95rem; font-weight: 600;">
+              "Watch one video, take one idea, and apply it in real life."
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div>
+        <h4 class="gradient-text" style="font-size: 1.1rem; font-weight: 800;">LEVEL UP</h4>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Mindset • Communication • Focus</p>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">© 2026 Level Up Learning Hub</p>
+      </div>
+
+      <button class="back-to-top" id="backToTopBtn" aria-label="Back to Top">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+      </button>
+    </div>
   </footer>
 
+  <!-- Modal Player -->
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Video Title</h3>
+        <button class="modal-close" id="modalCloseBtn" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="video-player-wrapper">
+        <iframe id="modalIframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div class="modal-body">
+        <a id="modalExternalLink" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="padding: 10px 16px; font-size: 0.85rem;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Open on YouTube
+        </a>
+        <button id="modalCompleteBtn" class="btn btn-primary" style="padding: 10px 20px; font-size: 0.85rem;">
+          Mark as Complete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- JavaScript Logic -->
+  <script>
+    // --- Data Definitions ---
+    const rawVideos = [
+      {
+        id: 'eVFzbxmKNUw',
+        title: 'How to be Confident',
+        category: 'Confidence',
+        description: 'Learn foundational mindsets and behavioral adjustments to project genuine, natural confidence in any situation.'
+      },
+      {
+        id: 'HAnw168huqA',
+        title: 'Think Fast, Talk Smart & Communication Techniques',
+        category: 'Communication',
+        description: 'Stanford experts share actionable frameworks for spontaneous speaking and managing communication anxiety.'
+      },
+      {
+        id: 'eIho2S0ZahI',
+        title: 'How to Speak So People Want to Listen',
+        category: 'Communication',
+        description: 'Discover vocal exercises, vocal habits to avoid, and powerful tools to make your voice engaging.'
+      },
+      {
+        id: 'F4Zu5ZZAG7I',
+        title: '7 Ways to Make Conversation with Anyone',
+        category: 'Conversation',
+        description: 'Simple, practical strategies to break the ice, maintain flow, and build effortless rapport with anyone.'
+      },
+      {
+        id: 'w-HYZv6HzAs',
+        title: 'The Skill of Self Confidence',
+        category: 'Confidence',
+        description: 'Explore confidence not as an inherent trait, but as a trainable skill developed through repetition and persistence.'
+      },
+      {
+        id: '7hr60EumwQ4',
+        title: 'Give Me 8 Minutes, I Will Improve Your Communication',
+        category: 'Communication',
+        description: 'A rapid, high-impact breakdown of actionable tips to elevate your daily verbal interactions immediately.'
+      },
+      {
+        id: 'Hu4Yvq-g7_Y',
+        title: 'How to Get Brain Focus',
+        category: 'Focus',
+        description: 'Uncover science-backed protocols to eliminate brain fog, regain deep concentration, and sustain focus.'
+      },
+      {
+        id: 'OHu1FY1R-x0',
+        title: "It Took Me 37 Years to Realize What I'll Tell You in 18 Minutes — Alex Hormozi",
+        category: 'Mindset',
+        description: 'Hard-hitting mental models and life lessons on work ethic, leverage, and achieving extraordinary goals.'
+      }
+    ];
+
+    const motivationalQuotes = [
+      "Confidence isn't something you wait for. It's something you build.",
+      "Small daily improvements over time lead to stunning long-term results.",
+      "The way you communicate with yourself dictates how you communicate with others.",
+      "Focus is not about saying yes, it's about saying no to a hundred other good ideas.",
+      "Action precedes motivation. Start moving first.",
+      "Your mind grows stronger when you lean into discomfort.",
+      "Clear speaking comes from clear thinking.",
+      "Consistency beats intensity every single time."
+    ];
+
+    // --- State Management ---
+    let completedVideos = JSON.parse(localStorage.getItem('levelUpCompleted')) || [];
+    let favoriteVideos = JSON.parse(localStorage.getItem('levelUpFavorites')) || [];
+    
+    let currentCategory = 'All';
+    let searchQuery = '';
+    let sortOption = 'default';
+    let activeModalVideoId = null;
+
+    // --- DOM Elements ---
+    const videoGrid = document.getElementById('videoGrid');
+    const searchInput = document.getElementById('searchInput');
+    const sortSelect = document.getElementById('sortSelect');
+    const categoryChips = document.getElementById('categoryChips');
+    
+    const donutFill = document.getElementById('donutFill');
+    const chartPercent = document.getElementById('chartPercent');
+    const progressBarFill = document.getElementById('progressBarFill');
+    const progressCountText = document.getElementById('progressCountText');
+    const motivationBox = document.getElementById('motivationBox');
+    
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalIframe = document.getElementById('modalIframe');
+    const modalExternalLink = document.getElementById('modalExternalLink');
+    const modalCompleteBtn = document.getElementById('modalCompleteBtn');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    
+    const reminderQuote = document.getElementById('reminderQuote');
+    const newReminderBtn = document.getElementById('newReminderBtn');
+    const toastContainer = document.getElementById('toastContainer');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
+    const backToTopBtn = document.getElementById('backToTopBtn');
+
+    // --- Core Functions ---
+
+    function saveState() {
+      localStorage.setItem('levelUpCompleted', JSON.stringify(completedVideos));
+      localStorage.setItem('levelUpFavorites', JSON.stringify(favoriteVideos));
+      updateProgressUI();
+    }
+
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        ${message}
+      `;
+      toastContainer.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    function filterAndSortVideos() {
+      let result = [...rawVideos];
+
+      // Category / Favorites filter
+      if (currentCategory === 'Favorites') {
+        result = result.filter(v => favoriteVideos.includes(v.id));
+      } else if (currentCategory !== 'All') {
+        result = result.filter(v => v.category === currentCategory);
+      }
+
+      // Search filter
+      if (searchQuery.trim() !== '') {
+        const q = searchQuery.toLowerCase();
+        result = result.filter(v => 
+          v.title.toLowerCase().includes(q) || 
+          v.description.toLowerCase().includes(q) ||
+          v.category.toLowerCase().includes(q)
+        );
+      }
+
+      // Sorting
+      if (sortOption === 'az') {
+        result.sort((a, b) => a.title.localeCompare(b.title));
+      } else if (sortOption === 'recent') {
+        result.reverse();
+      }
+
+      return result;
+    }
+
+    function renderVideoCards() {
+      const videos = filterAndSortVideos();
+      videoGrid.innerHTML = '';
+
+      if (videos.length === 0) {
+        videoGrid.innerHTML = `
+          <div class="empty-state">
+            <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <h3>No videos found</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Try adjusting your search query or selected filter.</p>
+          </div>
+        `;
+        return;
+      }
+
+      videos.forEach(video => {
+        const isCompleted = completedVideos.includes(video.id);
+        const isFav = favoriteVideos.includes(video.id);
+        const maxThumb = `https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`;
+        const hqThumb = `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`;
+
+        const card = document.createElement('div');
+        card.className = 'video-card';
+        card.innerHTML = `
+          <div class="card-thumb-wrapper">
+            <img class="card-thumb" src="${maxThumb}" alt="${video.title}" onerror="this.onerror=null;this.src='${hqThumb}';">
+            <div class="play-overlay" onclick="openModal('${video.id}')">
+              <div class="play-btn-circle">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
+            </div>
+            <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${video.id}')" aria-label="Favorite">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="${isFav ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </button>
+            ${isCompleted ? `
+              <div class="completed-badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                Done
+              </div>
+            ` : ''}
+          </div>
+
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="card-category">${video.category}</span>
+            </div>
+            <h3 class="card-title">${video.title}</h3>
+            <p class="card-desc">${video.description}</p>
+
+            <div class="card-footer">
+              <button class="btn-watch" onclick="openModal('${video.id}')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Watch Now
+              </button>
+              <button class="btn-complete-toggle ${isCompleted ? 'completed' : ''}" onclick="toggleComplete('${video.id}')" title="${isCompleted ? 'Mark Incomplete' : 'Mark Complete'}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              </button>
+            </div>
+          </div>
+        `;
+
+        videoGrid.appendChild(card);
+      });
+    }
+
+    function toggleComplete(id) {
+      if (completedVideos.includes(id)) {
+        completedVideos = completedVideos.filter(vId => vId !== id);
+        showToast('Marked as incomplete');
+      } else {
+        completedVideos.push(id);
+        showToast('Marked as complete!');
+      }
+      saveState();
+      renderVideoCards();
+      if (activeModalVideoId === id) {
+        updateModalCompleteBtn(id);
+      }
+    }
+
+    function toggleFavorite(id) {
+      if (favoriteVideos.includes(id)) {
+        favoriteVideos = favoriteVideos.filter(vId => vId !== id);
+        showToast('Removed from favorites');
+      } else {
+        favoriteVideos.push(id);
+        showToast('Added to favorites!');
+      }
+      saveState();
+      renderVideoCards();
+    }
+
+    function updateProgressUI() {
+      const total = rawVideos.length;
+      const count = completedVideos.length;
+      const percent = Math.round((count / total) * 100);
+
+      // UI updates
+      progressCountText.innerText = `${count} / ${total} Completed`;
+      chartPercent.innerText = `${percent}%`;
+      progressBarFill.style.width = `${percent}%`;
+
+      // Circular Donut Calculation (r = 80 -> circumference ~ 502)
+      const circumference = 502;
+      const offset = circumference - (percent / 100) * circumference;
+      donutFill.style.strokeDashoffset = offset;
+
+      // Dynamic Motivational Text
+      let msg = "";
+      if (percent === 0) {
+        msg = "Your journey starts with one video.";
+      } else if (percent <= 25) {
+        msg = "Great start. Keep going.";
+      } else if (percent <= 50) {
+        msg = "You're building momentum.";
+      } else if (percent <= 75) {
+        msg = "You're more than halfway there.";
+      } else if (percent < 100) {
+        msg = "Almost there. Finish strong.";
+      } else {
+        msg = "Excellent! You've completed the entire playlist.";
+      }
+      motivationBox.innerText = `"${msg}"`;
+    }
+
+    // --- Modal Player Logic ---
+    function openModal(id) {
+      const video = rawVideos.find(v => v.id === id);
+      if (!video) return;
+
+      activeModalVideoId = id;
+      modalTitle.innerText = video.title;
+      modalIframe.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+      modalExternalLink.href = `https://youtu.be/${id}`;
+
+      updateModalCompleteBtn(id);
+
+      modalBackdrop.classList.add('active');
+      document.body.classList.add('modal-open');
+    }
+
+    function updateModalCompleteBtn(id) {
+      const isCompleted = completedVideos.includes(id);
+      modalCompleteBtn.innerText = isCompleted ? 'Completed ✓' : 'Mark as Complete';
+      modalCompleteBtn.style.background = isCompleted ? 'var(--accent-success)' : 'linear-gradient(135deg, var(--accent-primary), #6342eb)';
+      modalCompleteBtn.style.color = isCompleted ? '#000' : '#fff';
+    }
+
+    function closeModal() {
+      modalBackdrop.classList.remove('active');
+      document.body.classList.remove('modal-open');
+      modalIframe.src = ''; // Stops video playback
+      activeModalVideoId = null;
+    }
+
+    // --- Event Listeners ---
+    searchInput.addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      renderVideoCards();
+    });
+
+    sortSelect.addEventListener('change', (e) => {
+      sortOption = e.target.value;
+      renderVideoCards();
+    });
+
+    categoryChips.addEventListener('click', (e) => {
+      const target = e.target.closest('.chip');
+      if (!target) return;
+
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      target.classList.add('active');
+
+      currentCategory = target.getAttribute('data-category');
+      renderVideoCards();
+    });
+
+    modalCloseBtn.addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', (e) => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modalBackdrop.classList.contains('active')) {
+        closeModal();
+      }
+    });
+
+    modalCompleteBtn.addEventListener('click', () => {
+      if (activeModalVideoId) {
+        toggleComplete(activeModalVideoId);
+      }
+    });
+
+    newReminderBtn.addEventListener('click', () => {
+      const randomIndex = Math.floor(Math.random() * motivationalQuotes.length);
+      reminderQuote.innerText = `"${motivationalQuotes[randomIndex]}"`;
+    });
+
+    mobileMenuBtn.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // --- Scroll Reveal Effect ---
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // --- Initial Initialization ---
+    renderVideoCards();
+    updateProgressUI();
+  </script>
 </body>
 </html>
