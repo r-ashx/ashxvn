@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X (Twitter) Posts Showcase</title>
+    <!-- Google Fonts for Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green-50: #f0fdf4;
+            --green-100: #dcfce7;
+            --green-200: #bbf7d0;
+            --green-500: #22c55e;
+            --green-600: #16a34a;
+            --green-700: #15803d;
+            --green-800: #166534;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --bg-body: #fafdfb;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --border-green: #dcfce7;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 10px 25px -5px rgba(22, 163, 74, 0.1), 0 8px 10px -6px rgba(22, 163, 74, 0.05);
+            --shadow-xl: 0 20px 30px -10px rgba(22, 163, 74, 0.15);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-full: 9999px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Dark mode variables fallback support */
+        [data-theme="dark"] {
+            --bg-body: #090d0a;
+            --card-bg: #121813;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #1e2920;
+            --border-green: #1a3822;
+            --green-50: #0b1a0e;
+            --green-100: #132a18;
+            --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Helper focus state */
+        :focus-visible {
+            outline: 2px solid var(--green-500);
+            outline-offset: 2px;
+        }
+
+        /* Sticky Header */
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-green);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        [data-theme="dark"] .site-header {
+            background: rgba(18, 24, 19, 0.85);
+        }
+
+        .header-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .icon-circle {
+            width: 42px;
+            height: 42px;
+            border-radius: var(--radius-full);
+            background: linear-gradient(135deg, var(--green-500), var(--green-700));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 4px 10px rgba(34, 197, 94, 0.3);
+            flex-shrink: 0;
+        }
+
+        .brand-text h1 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .brand-text p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-grow: 1;
+            justify-content: flex-end;
+            max-width: 600px;
+        }
+
+        .search-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.55rem 1rem 0.55rem 2.4rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-full);
+            background: var(--green-50);
+            color: var(--text-main);
+            font-size: 0.875rem;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--green-500);
+            background: var(--card-bg);
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+        }
+
+        .badge-count {
+            background: var(--green-100);
+            color: var(--green-800);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.35rem 0.75rem;
+            border-radius: var(--radius-full);
+            white-space: nowrap;
+            border: 1px solid var(--border-green);
+        }
+
+        .theme-toggle-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-full);
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-main);
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        .theme-toggle-btn:hover {
+            background: var(--green-50);
+            border-color: var(--green-500);
+            color: var(--green-600);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            position: relative;
+            padding: 4.5rem 1.5rem 3.5rem;
+            background: radial-gradient(circle at 50% 0%, var(--green-50) 0%, var(--bg-body) 70%);
+            overflow: hidden;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(50px);
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .blob-1 {
+            top: -100px;
+            left: 20%;
+            width: 300px;
+            height: 300px;
+            background: var(--green-200);
+        }
+
+        .blob-2 {
+            top: 50px;
+            right: 15%;
+            width: 250px;
+            height: 250px;
+            background: #a7f3d0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 780px;
+            margin: 0 auto;
+        }
+
+        .hero-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--green-200);
+            border-radius: var(--radius-full);
+            font-size: 0.825rem;
+            font-weight: 600;
+            color: var(--green-700);
+            margin-bottom: 1.25rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .hero-pill span {
+            width: 8px;
+            height: 8px;
+            background: var(--green-500);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px var(--green-500);
+        }
+
+        .hero-title {
+            font-size: 2.75rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text-main);
+            line-height: 1.15;
+            margin-bottom: 1rem;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, var(--green-600), var(--green-800));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            max-width: 620px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--green-600), var(--green-700));
+            color: white;
+            padding: 0.85rem 1.85rem;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+            transition: var(--transition);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(22, 163, 74, 0.45);
+            background: linear-gradient(135deg, var(--green-500), var(--green-600));
+        }
+
+        .stats-card-inline {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1.25rem;
+            border-radius: var(--radius-full);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stats-number {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--green-600);
+        }
+
+        .stats-label {
+            font-size: 0.825rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Main Section & Layout */
+        .main-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-title-area h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .section-title-area p {
+            font-size: 0.925rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .filter-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--card-bg);
+            padding: 0.35rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: none;
+            padding: 0.45rem 0.9rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.825rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn.active {
+            background: var(--green-500);
+            color: white;
+            box-shadow: 0 2px 6px rgba(34, 197, 94, 0.3);
+        }
+
+        /* Responsive Grid */
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.75rem;
+        }
+
+        /* Post Card Styling */
+        .post-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+
+        .post-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--green-500);
+        }
+
+        .card-header {
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--green-50);
+            background: rgba(240, 253, 244, 0.3);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .avatar-placeholder {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-full);
+            background: linear-gradient(135deg, var(--green-100), var(--green-200));
+            display: flex;
+            align-items: center;
+            justify-content: justify-content;
+            color: var(--green-700);
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-details h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            line-height: 1.2;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .verified-badge {
+            color: var(--green-600);
+            display: inline-flex;
+        }
+
+        .user-details span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .card-menu-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.35rem;
+            border-radius: var(--radius-full);
+            transition: var(--transition);
+        }
+
+        .card-menu-btn:hover {
+            background: var(--green-50);
+            color: var(--green-600);
+        }
+
+        .card-body {
+            padding: 1.25rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 280px;
+        }
+
+        .embed-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .embed-container iframe {
+            border-radius: var(--radius-md) !important;
+            margin: 0 auto !important;
+        }
+
+        /* Loading Skeleton */
+        .skeleton-loader {
+            width: 100%;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .skeleton-header {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .skeleton-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--green-100);
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        .skeleton-lines {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .skeleton-line {
+            height: 12px;
+            background: var(--green-100);
+            border-radius: 4px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        .skeleton-line.short { width: 40%; }
+        .skeleton-line.medium { width: 70%; }
+        .skeleton-line.full { width: 100%; }
+
+        .skeleton-box {
+            height: 140px;
+            background: var(--green-50);
+            border-radius: var(--radius-md);
+            animation: pulse 1.5s infinite ease-in-out;
+            border: 1px stroke var(--border-green);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        /* Fallback Card Design */
+        .fallback-card {
+            background: var(--card-bg);
+            border: 1.5px dashed var(--green-500);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.85rem;
+            margin: 0.5rem 0;
+            background-color: var(--green-50);
+        }
+
+        .fallback-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--card-bg);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--green-600);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .fallback-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        .fallback-desc {
+            font-size: 0.825rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .fallback-id {
+            font-family: monospace;
+            font-size: 0.75rem;
+            background: rgba(22, 163, 74, 0.1);
+            color: var(--green-800);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-fallback {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--green-600);
+            color: white;
+            text-decoration: none;
+            padding: 0.55rem 1.15rem;
+            border-radius: var(--radius-full);
+            font-size: 0.825rem;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-fallback:hover {
+            background: var(--green-700);
+            transform: translateY(-1px);
+        }
+
+        .card-footer {
+            padding: 0.85rem 1.25rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+        }
+
+        .btn-expand {
+            background: transparent;
+            border: none;
+            color: var(--green-600);
+            font-size: 0.825rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: var(--transition);
+        }
+
+        .btn-expand:hover {
+            color: var(--green-800);
+            text-decoration: underline;
+        }
+
+        /* Empty Search State */
+        .empty-state {
+            grid-column: 1 / -1;
+            padding: 4rem 1.5rem;
+            text-align: center;
+            background: var(--card-bg);
+            border: 1px dashed var(--border);
+            border-radius: var(--radius-lg);
+        }
+
+        .empty-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--green-50);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--green-600);
+            margin: 0 auto 1rem;
+        }
+
+        .empty-state h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Modal View */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(6px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-container {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 650px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: scale(0.95);
+            transition: var(--transition);
+            border: 1px solid var(--border-green);
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--green-50);
+        }
+
+        .modal-header h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--green-800);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.35rem;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .modal-close-btn:hover {
+            background: white;
+            color: var(--text-main);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            max-height: calc(90vh - 130px);
+            display: flex;
+            justify-content: center;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            background: var(--card-bg);
+        }
+
+        /* Footer */
+        .site-footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 2.5rem 1.5rem 1.5rem;
+            margin-top: auto;
+            position: relative;
+        }
+
+        .footer-accent {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 3px;
+            width: 120px;
+            background: linear-gradient(90deg, transparent, var(--green-500), transparent);
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .footer-text {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .footer-copy {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1024px) {
+            .posts-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header-container {
+                padding: 0.65rem 1rem;
+            }
+
+            .brand-text p {
+                display: none;
+            }
+
+            .search-wrapper {
+                max-width: 180px;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 0.95rem;
+            }
+
+            .posts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .filter-wrapper {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .filter-btn {
+                flex-grow: 1;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Header -->
+    <header class="site-header">
+        <div class="header-container">
+            <a href="#" class="brand-logo" aria-label="X Posts Showcase Home">
+                <div class="icon-circle">
+                    <!-- Custom Inline SVG X Logo -->
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
+                        <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h1>X Posts</h1>
+                    <p>Selected Posts Collection</p>
+                </div>
+            </a>
+
+            <div class="header-actions">
+                <div class="search-wrapper">
+                    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search posts by Title or ID..." aria-label="Search posts">
+                </div>
+                <span class="badge-count" id="headerPostCount">6 Posts</span>
+                <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle dark mode">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="hero-content">
+            <div class="hero-pill">
+                <span></span> Modern Display Platform
+            </div>
+            <h2 class="hero-title">Explore <span>X Posts</span> Collection</h2>
+            <p class="hero-subtitle">A curated collection of selected posts, presented in a clean, high-performance, and distraction-free interface.</p>
+            <div class="hero-actions">
+                <a href="#postsSection" class="btn-primary">
+                    View Posts
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <polyline points="19 12 12 19 5 12"></polyline>
+                    </svg>
+                </a>
+                <div class="stats-card-inline">
+                    <span class="stats-number" id="heroTotalCount">6</span>
+                    <span class="stats-label">Total Posts</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Posts Section -->
+    <main class="main-container" id="postsSection">
+        <div class="section-header">
+            <div class="section-title-area">
+                <h2>Featured Posts</h2>
+                <p>Browse the selected posts below.</p>
+            </div>
+            <div class="filter-wrapper">
+                <button class="filter-btn active" data-filter="all">All Posts</button>
+                <button class="filter-btn" data-filter="latest">Latest</button>
+                <button class="filter-btn" data-filter="oldest">Oldest</button>
+            </div>
+        </div>
+
+        <!-- Dynamic Responsive Grid -->
+        <div class="posts-grid" id="postsGrid">
+            <!-- Cards loaded dynamically via JavaScript -->
+        </div>
+    </main>
+
+    <!-- Modal Layout -->
+    <div class="modal-overlay" id="postModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="modalTitle">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
+                        <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
+                    </svg>
+                    X Post Showcase
+                </h3>
+                <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close modal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Embedded tweet or fallback dynamically injected -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-fallback" id="modalExternalBtn">
+                    View on X
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="7" y1="17" x2="17" y2="7"></line>
+                        <polyline points="7 7 17 7 17 17"></polyline>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-accent"></div>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="icon-circle" style="width: 28px; height: 28px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
+                        <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
+                    </svg>
+                </div>
+                <span>X Posts Collection</span>
+            </div>
+            <p class="footer-text">Built with HTML, CSS & Vanilla JavaScript</p>
+            <p class="footer-copy">&copy; 2026 X Posts Showcase. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        /**
+         * X Posts Showcase Application State & Architecture
+         */
+        const postsData = [
+            {
+                id: "2089263575454085182",
+                url: "https://x.com/i/status/2089263575454085182",
+                title: "X Post 01"
+            },
+            {
+                id: "2062775172520976492",
+                url: "https://x.com/i/status/2062775172520976492",
+                title: "X Post 02"
+            },
+            {
+                id: "2089320083357360317",
+                url: "https://x.com/i/status/2089320083357360317",
+                title: "X Post 03"
+            },
+            {
+                id: "2089373686478557470",
+                url: "https://x.com/i/status/2089373686478557470",
+                title: "X Post 04"
+            },
+            {
+                id: "2091184619773211081",
+                url: "https://x.com/i/status/2091184619773211081",
+                title: "X Post 05"
+            },
+            {
+                id: "2091406060418748835",
+                url: "https://x.com/i/status/2091406060418748835",
+                title: "X Post 06"
+            }
+        ];
+
+        let currentPosts = [...postsData];
+        let currentFilter = "all";
+        let twitterWidgetPromise = null;
+
+        /**
+         * Dynamically loads X (Twitter) Widgets Script safely
+         */
+        function loadTwitterWidget() {
+            if (twitterWidgetPromise) return twitterWidgetPromise;
+
+            twitterWidgetPromise = new Promise((resolve, reject) => {
+                if (window.twttr && window.twttr.widgets) {
+                    resolve(window.twttr);
+                    return;
+                }
+
+                const script = document.createElement("script");
+                script.src = "https://platform.twitter.com/widgets.js";
+                script.async = true;
+
+                script.onload = () => {
+                    if (window.twttr) {
+                        resolve(window.twttr);
+                    } else {
+                        reject(new Error("Twitter widget unavailable"));
+                    }
+                };
+
+                script.onerror = () => {
+                    reject(new Error("Twitter widget failed to load"));
+                };
+
+                document.head.appendChild(script);
+            });
+
+            return twitterWidgetPromise;
+        }
+
+        /**
+         * Renders Skeleton Loader UI inside container
+         */
+        function renderSkeleton(container) {
+            container.innerHTML = `
+                <div class="skeleton-loader">
+                    <div class="skeleton-header">
+                        <div class="skeleton-avatar"></div>
+                        <div class="skeleton-lines">
+                            <div class="skeleton-line medium"></div>
+                            <div class="skeleton-line short"></div>
+                        </div>
+                    </div>
+                    <div class="skeleton-line full"></div>
+                    <div class="skeleton-line medium"></div>
+                    <div class="skeleton-box"></div>
+                </div>
+            `;
+        }
+
+        /**
+         * Fallback UI Renderer when Tweet embed fails or network is blocked
+         */
+        function renderFallback(container, post) {
+            container.innerHTML = '';
+            
+            const fallbackCard = document.createElement('div');
+            fallbackCard.className = 'fallback-card';
+
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'fallback-icon';
+            iconDiv.innerHTML = `
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
+                    <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
+                </svg>
+            `;
+
+            const title = document.createElement('div');
+            title.className = 'fallback-title';
+            title.textContent = post.title || 'X Post';
+
+            const desc = document.createElement('div');
+            desc.className = 'fallback-desc';
+            desc.textContent = 'This post is available on X.';
+
+            const idTag = document.createElement('div');
+            idTag.className = 'fallback-id';
+            idTag.textContent = `ID: ${post.id}`;
+
+            const btn = document.createElement('button');
+            btn.className = 'btn-fallback';
+            btn.innerHTML = `
+                View on X &rarr;
+            `;
+            btn.addEventListener('click', () => {
+                window.open(post.url, '_blank', 'noopener,noreferrer');
+            });
+
+            fallbackCard.appendChild(iconDiv);
+            fallbackCard.appendChild(title);
+            fallbackCard.appendChild(desc);
+            fallbackCard.appendChild(idTag);
+            fallbackCard.appendChild(btn);
+
+            container.appendChild(fallbackCard);
+        }
+
+        /**
+         * Safely Embed Tweet into Container
+         */
+        async function embedTweet(container, post) {
+            renderSkeleton(container);
+            try {
+                const twttr = await loadTwitterWidget();
+                container.innerHTML = ''; // Clear skeleton
+                const element = await twttr.widgets.createTweet(post.id, container, {
+                    theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light',
+                    dnt: true,
+                    align: 'center'
+                });
+
+                if (!element) {
+                    console.warn(`Tweet render failed for ID: ${post.id}. Showing fallback.`);
+                    renderFallback(container, post);
+                }
+            } catch (error) {
+                console.error(`Embed error for ID ${post.id}:`, error);
+                renderFallback(container, post);
+            }
+        }
+
+        /**
+         * Creates a single Post Card Element
+         */
+        function createPostCard(post) {
+            const article = document.createElement('article');
+            article.className = 'post-card';
+            article.setAttribute('data-id', post.id);
+
+            // Card Header
+            const header = document.createElement('div');
+            header.className = 'card-header';
+            
+            const userInfo = document.createElement('div');
+            userInfo.className = 'user-info';
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar-placeholder';
+            avatar.textContent = post.title.replace('X Post ', '#');
+
+            const userDetails = document.createElement('div');
+            userDetails.className = 'user-details';
+
+            const name = document.createElement('h4');
+            name.textContent = post.title;
+
+            // Verified checkmark SVG
+            const check = document.createElement('span');
+            check.className = 'verified-badge';
+            check.innerHTML = `
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+            `;
+            name.appendChild(check);
+
+            const handle = document.createElement('span');
+            handle.textContent = '@xposts';
+
+            userDetails.appendChild(name);
+            userDetails.appendChild(handle);
+
+            userInfo.appendChild(avatar);
+            userInfo.appendChild(userDetails);
+
+            const menuBtn = document.createElement('button');
+            menuBtn.className = 'card-menu-btn';
+            menuBtn.setAttribute('aria-label', 'Options');
+            menuBtn.innerHTML = `
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            `;
+
+            header.appendChild(userInfo);
+            header.appendChild(menuBtn);
+
+            // Card Body (Container for X Embed)
+            const body = document.createElement('div');
+            body.className = 'card-body';
+            
+            const embedContainer = document.createElement('div');
+            embedContainer.className = 'embed-container';
+            body.appendChild(embedContainer);
+
+            // Embed the tweet dynamically
+            embedTweet(embedContainer, post);
+
+            // Card Footer
+            const footer = document.createElement('div');
+            footer.className = 'card-footer';
+
+            const expandBtn = document.createElement('button');
+            expandBtn.className = 'btn-expand';
+            expandBtn.innerHTML = `
+                Full View
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <polyline points="9 21 3 21 3 15"></polyline>
+                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                </svg>
+            `;
+            expandBtn.addEventListener('click', () => openModal(post));
+
+            const externalLink = document.createElement('a');
+            externalLink.className = 'btn-expand';
+            externalLink.href = post.url;
+            externalLink.target = '_blank';
+            externalLink.rel = 'noopener noreferrer';
+            externalLink.innerHTML = `
+                Open X
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                </svg>
+            `;
+
+            footer.appendChild(expandBtn);
+            footer.appendChild(externalLink);
+
+            article.appendChild(header);
+            article.appendChild(body);
+            article.appendChild(footer);
+
+            return article;
+        }
+
+        /**
+         * Render Posts Grid based on current filtered/searched state
+         */
+        function renderPosts(postsToRender) {
+            const grid = document.getElementById('postsGrid');
+            grid.innerHTML = '';
+
+            if (postsToRender.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                        </div>
+                        <h3>No posts found</h3>
+                        <p>Try another search term or reset filters.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            postsToRender.forEach(post => {
+                const card = createPostCard(post);
+                grid.appendChild(card);
+            });
+        }
+
+        /**
+         * Setup Real-time Search Logic
+         */
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.trim().toLowerCase();
+                filterAndRender();
+            });
+        }
+
+        /**
+         * Setup Sorting / Filter Controls
+         */
+        function setupFilters() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.getAttribute('data-filter');
+                    filterAndRender();
+                });
+            });
+        }
+
+        /**
+         * Filters and sorts the posts array and triggers render
+         */
+        function filterAndRender() {
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            
+            let filtered = postsData.filter(post => {
+                const matchesTitle = post.title.toLowerCase().includes(searchTerm);
+                const matchesId = post.id.includes(searchTerm);
+                return matchesTitle || matchesId;
+            });
+
+            if (currentFilter === 'latest') {
+                filtered.sort((a, b) => b.id.localeCompare(a.id));
+            } else if (currentFilter === 'oldest') {
+                filtered.sort((a, b) => a.id.localeCompare(b.id));
+            }
+
+            renderPosts(filtered);
+            
+            // Update counts UI
+            document.getElementById('headerPostCount').textContent = `${filtered.length} Posts`;
+            document.getElementById('heroTotalCount').textContent = filtered.length;
+        }
+
+        /**
+         * Setup Modal Full View Functionality
+         */
+        function setupModal() {
+            const modal = document.getElementById('postModal');
+            const closeBtn = document.getElementById('modalCloseBtn');
+            const overlay = document.getElementById('postModal');
+
+            closeBtn.addEventListener('click', closeModal);
+            
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) closeModal();
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('active')) {
+                    closeModal();
+                }
+            });
+        }
+
+        function openModal(post) {
+            const modal = document.getElementById('postModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            const externalBtn = document.getElementById('modalExternalBtn');
+
+            modalTitle.innerHTML = `
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
+                    <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
+                </svg>
+                ${post.title}
+            `;
+
+            externalBtn.onclick = () => {
+                window.open(post.url, '_blank', 'noopener,noreferrer');
+            };
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // Embed in modal
+            embedTweet(modalBody, post);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('postModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        /**
+         * Dark / Light Theme Toggle Setup
+         */
+        function setupThemeToggle() {
+            const btn = document.getElementById('themeToggle');
+            btn.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                if (newTheme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                } else {
+                    document.documentElement.removeAttribute('data-theme');
+                }
+                
+                // Re-render tweets to adapt to new theme
+                filterAndRender();
+            });
+        }
+
+        /**
+         * Initialize Application
+         */
+        function initApp() {
+            renderPosts(postsData);
+            setupSearch();
+            setupFilters();
+            setupModal();
+            setupThemeToggle();
+        }
+
+        // Execute on DOM Load
+        document.addEventListener("DOMContentLoaded", initApp);
+    </script>
+</body>
+</html>
