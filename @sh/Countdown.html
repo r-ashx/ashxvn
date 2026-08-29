@@ -3,1022 +3,502 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countdown to 10 November 2026</title>
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+    <title>LearnX - Learn Tech. Understand More.</title>
     <style>
-        /* ==========================================================================
-           1. RESET & VARIABLES
-           ========================================================================== */
-        *, *::before, *::after {
+        /* CSS Variables & Global Resets */
+        :root {
+            --primary-green: #10b981;
+            --primary-dark-green: #059669;
+            --light-green: #ecfdf5;
+            --dark-black: #111827;
+            --medium-gray: #4b5563;
+            --light-gray: #f3f4f6;
+            --border-gray: #e5e7eb;
+            --white: #ffffff;
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --transition-speed: 0.25s;
+        }
+
+        * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
-        :root {
-            --primary: #16a34a;
-            --primary-light: #22c55e;
-            --primary-dark: #15803d;
-            --accent: #4ade80;
-            --accent-glow: rgba(74, 222, 128, 0.4);
-            --background: #f0fdf4;
-            --white: #ffffff;
-            --text: #14532d;
-            --muted: #64748b;
-            --border-light: rgba(22, 163, 74, 0.18);
-            --shadow-subtle: 0 12px 35px -10px rgba(22, 163, 74, 0.14);
-            --shadow-hover: 0 25px 45px -12px rgba(22, 163, 74, 0.28);
-            --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-            --transition-base: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        /* ==========================================================================
-           2. BODY & AMBIENT ANIMATED BACKGROUND
-           ========================================================================== */
-        html {
-            font-family: var(--font-family);
-            background-color: var(--background);
-            color: var(--text);
-            min-height: 100%;
-        }
-
         body {
+            font-family: var(--font-main);
+            background-color: var(--light-gray);
+            color: var(--dark-black);
+            line-height: 1.5;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow-x: hidden;
-            position: relative;
-            padding: 3rem 1.5rem;
         }
 
-        /* Canvas Particle Mesh (Background Effect) */
-        #bg-particles-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -2;
-            pointer-events: none;
-        }
-
-        /* Vibrant Glowing Background Orbs */
-        .bg-blobs {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -3;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(90px);
-            opacity: 0.6;
-            animation: pulseFloat 18s infinite ease-in-out alternate;
-        }
-
-        .blob-1 {
-            top: -15%;
-            left: -10%;
-            width: 60vw;
-            height: 60vw;
-            background: radial-gradient(circle, #86efac 0%, #bbf7d0 70%, transparent 100%);
-            animation-duration: 20s;
-        }
-
-        .blob-2 {
-            bottom: -20%;
-            right: -10%;
-            width: 65vw;
-            height: 65vw;
-            background: radial-gradient(circle, #4ade80 0%, #dcfce7 70%, transparent 100%);
-            animation-duration: 25s;
-            animation-delay: -5s;
-        }
-
-        .blob-3 {
-            top: 35%;
-            left: 30%;
-            width: 40vw;
-            height: 40vw;
-            background: radial-gradient(circle, #22c55e 0%, #a7f3d0 70%, transparent 100%);
-            opacity: 0.35;
-            animation-duration: 22s;
-            animation-delay: -10s;
-        }
-
-        /* Floating Organic Decorative Elements */
-        .floating-leaf {
-            position: fixed;
-            font-size: 1.5rem;
-            opacity: 0.25;
-            z-index: -1;
-            pointer-events: none;
-            animation: floatLeaf 14s infinite ease-in-out alternate;
-        }
-        .leaf-1 { top: 15%; left: 8%; animation-delay: 0s; }
-        .leaf-2 { bottom: 20%; left: 12%; animation-delay: -4s; transform: rotate(45deg); }
-        .leaf-3 { top: 25%; right: 10%; animation-delay: -7s; transform: rotate(-30deg); }
-        .leaf-4 { bottom: 15%; right: 8%; animation-delay: -11s; transform: rotate(15deg); }
-
-        /* Container Scaffold */
-        .container {
-            width: 100%;
-            max-width: 860px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2.25rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Entrance Animations */
-        .anim-element {
-            opacity: 0;
-            transform: translateY(25px);
-            animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.25s; }
-        .delay-3 { animation-delay: 0.4s; }
-        .delay-4 { animation-delay: 0.55s; }
-        .delay-5 { animation-delay: 0.7s; }
-
-        /* ==========================================================================
-           3. HERO SECTION
-           ========================================================================== */
-        .hero {
+        /* Layout Structure */
+        header {
+            background-color: var(--white);
+            border-bottom: 2px solid var(--primary-green);
+            padding: 1.5rem 1rem;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
 
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.55rem;
-            padding: 0.5rem 1.2rem;
-            border-radius: 9999px;
-            background: rgba(255, 255, 255, 0.85);
-            border: 1px solid var(--border-light);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            font-size: 0.75rem;
-            font-weight: 800;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            color: var(--primary-dark);
-            box-shadow: 0 4px 20px rgba(22, 163, 74, 0.12),
-                        0 0 15px rgba(74, 222, 128, 0.2);
-            animation: glowPulse 3s infinite alternate;
+        .header-content h1 {
+            font-size: 2rem;
+            color: var(--dark-black);
+            letter-spacing: -0.5px;
         }
 
-        .badge-sparkle {
-            color: var(--primary-light);
-            font-size: 0.9rem;
-            animation: spinSparkle 6s linear infinite;
+        .header-content h1 span {
+            color: var(--primary-green);
         }
 
-        .main-heading {
-            font-size: clamp(2.35rem, 5.8vw, 3.6rem);
-            font-weight: 800;
-            letter-spacing: -0.035em;
-            line-height: 1.15;
-            background: linear-gradient(135deg, #14532d 0%, #16a34a 60%, #15803d 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 10px 30px rgba(22, 163, 74, 0.15);
-        }
-
-        .date-range {
+        .header-content p {
+            color: var(--medium-gray);
             font-size: 0.95rem;
-            color: var(--muted);
+            margin-top: 0.25rem;
+        }
+
+        main {
+            max-width: 800px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            flex-grow: 1;
+        }
+
+        /* Controls Area (Search & Filters) */
+        .controls-card {
+            background: var(--white);
+            padding: 1.25rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-box input {
+            flex-grow: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color var(--transition-speed);
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary-green);
+        }
+
+        .btn-reset {
+            background-color: var(--light-gray);
+            color: var(--dark-black);
+            border: 1px solid var(--border-gray);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
             font-weight: 600;
-            letter-spacing: 0.02em;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.6rem;
-            background: rgba(255, 255, 255, 0.75);
-            padding: 0.55rem 1.35rem;
-            border-radius: 9999px;
-            border: 1px solid var(--border-light);
-            backdrop-filter: blur(12px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+            transition: all var(--transition-speed);
         }
 
-        .date-range .arrow {
-            color: var(--primary);
-            font-weight: 800;
+        .btn-reset:hover {
+            background-color: var(--border-gray);
         }
 
-        /* ==========================================================================
-           4. COUNTDOWN CARDS (3D TILT + GLOW EFFECTS)
-           ========================================================================== */
-        .countdown-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.25rem;
-            width: 100%;
-            perspective: 1000px;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.88);
-            border: 1.5px solid rgba(34, 197, 94, 0.22);
-            border-radius: 1.35rem;
-            padding: 1.85rem 1rem;
+        /* Categories Chips */
+        .categories-wrapper {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: var(--shadow-subtle),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.9);
-            transition: var(--transition-base);
-            position: relative;
-            overflow: hidden;
-            transform-style: preserve-3d;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
-            opacity: 0;
-            transition: var(--transition-base);
+        .chip {
+            background-color: var(--light-gray);
+            color: var(--medium-gray);
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed);
         }
 
-        .card:hover {
-            transform: translateY(-8px) scale(1.025) rotateX(4deg);
-            border-color: var(--primary-light);
-            box-shadow: var(--shadow-hover),
-                        0 0 25px rgba(74, 222, 128, 0.3);
+        .chip:hover {
+            background-color: var(--border-gray);
+            color: var(--dark-black);
         }
 
-        .card:hover::before {
-            opacity: 1;
+        .chip.active {
+            background-color: var(--primary-green);
+            color: var(--white);
         }
 
-        .card-number-wrapper {
-            height: 3.85rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .card-number {
-            font-size: clamp(2.6rem, 4.6vw, 3.6rem);
-            font-weight: 800;
-            line-height: 1;
-            letter-spacing: -0.03em;
-            color: var(--primary);
-            font-variant-numeric: tabular-nums;
-            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
-        }
-
-        .card-number.num-animate {
-            animation: numSlidePulse 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .card-seconds {
-            border-color: rgba(34, 197, 94, 0.35);
-        }
-
-        .card-seconds .card-number {
-            color: var(--primary-dark);
-            text-shadow: 0 0 18px rgba(74, 222, 128, 0.45);
-            animation: secPulse 1s infinite alternate ease-in-out;
-        }
-
-        .card-label {
-            font-size: 0.75rem;
-            font-weight: 800;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--muted);
-            margin-top: 0.65rem;
-        }
-
-        /* ==========================================================================
-           5. PROGRESS SECTION (CIRCULAR & HORIZONTAL BAR)
-           ========================================================================== */
-        .progress-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2rem;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.82);
-            border: 1px solid var(--border-light);
-            border-radius: 1.6rem;
-            padding: 2.25rem 2rem;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: var(--shadow-subtle);
-            position: relative;
-        }
-
-        /* SVG Circular Progress Ring */
-        .circle-container {
-            position: relative;
-            width: 145px;
-            height: 145px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .circle-svg {
-            width: 100%;
-            height: 100%;
-            transform: rotate(-90deg);
-        }
-
-        .circle-bg {
-            fill: none;
-            stroke: rgba(22, 163, 74, 0.08);
-            stroke-width: 9;
-        }
-
-        .circle-progress {
-            fill: none;
-            stroke: url(#green-gradient);
-            stroke-width: 9;
-            stroke-dasharray: 364.42;
-            stroke-dashoffset: 364.42;
-            stroke-linecap: round;
-            transition: stroke-dashoffset 1s ease-in-out;
-            filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.45));
-        }
-
-        .circle-content {
-            position: absolute;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-
-        .circle-percentage {
-            font-size: 1.85rem;
-            font-weight: 800;
-            color: var(--text);
-            line-height: 1;
-        }
-
-        .circle-label {
-            font-size: 0.65rem;
-            font-weight: 800;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            color: var(--primary-dark);
-            margin-top: 0.35rem;
-        }
-
-        /* Horizontal Progress Bar */
-        .bar-container {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .bar-header {
+        /* Status & Counter Bar */
+        .status-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.75rem;
-            font-weight: 800;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
+            font-size: 0.875rem;
+            color: var(--medium-gray);
+            border-top: 1px solid var(--border-gray);
+            padding-top: 0.75rem;
         }
 
-        .bar-title {
-            color: var(--muted);
+        .badge-count {
+            background-color: var(--light-green);
+            color: var(--primary-dark-green);
+            font-weight: 700;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
         }
 
-        .bar-value {
-            color: var(--primary);
-        }
-
-        .bar-track {
-            width: 100%;
-            height: 12px;
-            background: rgba(22, 163, 74, 0.08);
-            border-radius: 9999px;
-            overflow: hidden;
-            position: relative;
-            border: 1px solid rgba(22, 163, 74, 0.12);
-        }
-
-        .bar-fill {
-            height: 100%;
-            width: 0%;
-            border-radius: 9999px;
-            background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--accent));
-            box-shadow: 0 0 16px rgba(34, 197, 94, 0.5);
-            transition: width 1s ease-in-out;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Animated Sweep Shine on Progress Bar */
-        .bar-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
-            animation: shineSweep 2.2s infinite;
-        }
-
-        /* ==========================================================================
-           6. DATE CARDS & MOTIVATIONAL MESSAGE
-           ========================================================================== */
-        .date-cards-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        /* QA Cards Chat Interface */
+        .qa-container {
+            display: flex;
+            flex-direction: column;
             gap: 1.25rem;
-            width: 100%;
         }
 
-        .date-card {
-            background: rgba(255, 255, 255, 0.85);
-            border: 1px solid var(--border-light);
-            border-radius: 1.2rem;
-            padding: 1.35rem 1.6rem;
+        .qa-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            border: 1px solid var(--border-gray);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+            overflow: hidden;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        .qa-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .qa-question {
+            padding: 1rem 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            background-color: var(--white);
+        }
+
+        .qa-question-text {
             display: flex;
             align-items: center;
-            gap: 1.1rem;
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            box-shadow: var(--shadow-subtle);
-            transition: var(--transition-base);
+            gap: 0.75rem;
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: var(--dark-black);
         }
 
-        .date-card:hover {
-            border-color: var(--primary-light);
-            transform: translateY(-3px);
-            background: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 15px 30px -10px rgba(22, 163, 74, 0.2);
-        }
-
-        .date-icon {
-            width: 44px;
-            height: 44px;
+        .user-avatar {
+            background-color: var(--dark-black);
+            color: var(--white);
+            font-size: 0.75rem;
+            font-weight: bold;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
-            background: rgba(22, 163, 74, 0.1);
-            color: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.15rem;
             flex-shrink: 0;
-            box-shadow: inset 0 0 10px rgba(22, 163, 74, 0.1);
         }
 
-        .date-info {
+        .toggle-icon {
+            font-size: 1.25rem;
+            color: var(--primary-green);
+            font-weight: bold;
+            transition: transform var(--transition-speed);
+        }
+
+        /* Hover Behavior: Automatically reveals answer and rotates icon */
+        .qa-card:hover .toggle-icon,
+        .qa-card.open .toggle-icon {
+            transform: rotate(45deg);
+        }
+
+        .qa-answer-wrapper {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: var(--light-green);
+            border-top: 1px solid transparent;
+        }
+
+        .qa-card:hover .qa-answer-wrapper,
+        .qa-card.open .qa-answer-wrapper {
+            max-height: 300px;
+            border-top: 1px solid var(--border-gray);
+        }
+
+        .qa-answer {
+            padding: 1rem 1.25rem;
             display: flex;
-            flex-direction: column;
-            gap: 0.2rem;
+            gap: 0.75rem;
+            color: var(--dark-black);
+            font-size: 0.975rem;
+            line-height: 1.6;
         }
 
-        .date-card-label {
-            font-size: 0.65rem;
-            font-weight: 800;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--muted);
+        .bot-avatar {
+            background-color: var(--primary-green);
+            color: var(--white);
+            font-size: 0.75rem;
+            font-weight: bold;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
-        .date-card-value {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: var(--text);
+        .qa-category-tag {
+            font-size: 0.7rem;
+            background-color: var(--light-gray);
+            color: var(--medium-gray);
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            margin-left: 0.5rem;
+            font-weight: normal;
         }
 
-        .motivational-box {
+        /* No Results Box */
+        .no-results {
             text-align: center;
-            padding: 0.95rem 2rem;
-            border-radius: 9999px;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid var(--border-light);
-            color: var(--primary-dark);
-            font-size: 0.95rem;
-            font-weight: 700;
-            backdrop-filter: blur(12px);
-            box-shadow: var(--shadow-subtle),
-                        0 0 20px rgba(74, 222, 128, 0.15);
-            transition: opacity 0.4s ease, transform 0.4s ease;
-        }
-
-        /* ==========================================================================
-           7. COMPLETION CELEBRATION
-           ========================================================================== */
-        .completion-message {
-            display: none;
-            font-size: clamp(1.85rem, 4.5vw, 2.75rem);
-            font-weight: 800;
-            color: var(--primary);
-            text-align: center;
-            text-shadow: 0 0 25px rgba(34, 197, 94, 0.4);
-            animation: pulseGlow 2s infinite alternate;
-        }
-
-        #celebration-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 999;
+            padding: 3rem;
+            background: var(--white);
+            border-radius: 12px;
+            color: var(--medium-gray);
             display: none;
         }
 
-        /* ==========================================================================
-           8. ANIMATIONS & KEYFRAMES
-           ========================================================================== */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(25px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--medium-gray);
+            margin-top: auto;
         }
 
-        @keyframes pulseFloat {
-            0% {
-                transform: translate(0, 0) scale(1);
+        /* Responsive Design Adjustments */
+        @media (max-width: 600px) {
+            .header-content h1 {
+                font-size: 1.5rem;
             }
-            50% {
-                transform: translate(4%, 6%) scale(1.06);
+            .qa-question-text {
+                font-size: 0.95rem;
             }
-            100% {
-                transform: translate(-3%, -4%) scale(0.94);
+            .search-box {
+                flex-direction: column;
             }
-        }
-
-        @keyframes floatLeaf {
-            0% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(15deg); }
-            100% { transform: translateY(10px) rotate(-10deg); }
-        }
-
-        @keyframes glowPulse {
-            0% { box-shadow: 0 4px 20px rgba(22, 163, 74, 0.12), 0 0 10px rgba(74, 222, 128, 0.15); }
-            100% { box-shadow: 0 4px 20px rgba(22, 163, 74, 0.2), 0 0 25px rgba(74, 222, 128, 0.4); }
-        }
-
-        @keyframes spinSparkle {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes numSlidePulse {
-            0% {
-                transform: translateY(-12px) scale(0.9);
-                opacity: 0.1;
-            }
-            50% {
-                transform: translateY(2px) scale(1.05);
-            }
-            100% {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
-        }
-
-        @keyframes secPulse {
-            0% { opacity: 0.9; transform: scale(1); }
-            100% { opacity: 1; transform: scale(1.03); }
-        }
-
-        @keyframes shineSweep {
-            0% { left: -100%; }
-            100% { left: 200%; }
-        }
-
-        @keyframes pulseGlow {
-            from { transform: scale(1); opacity: 0.9; }
-            to { transform: scale(1.05); opacity: 1; }
-        }
-
-        /* ==========================================================================
-           9. RESPONSIVE DESIGN & ACCESSIBILITY
-           ========================================================================== */
-        @media (max-width: 640px) {
-            body {
-                padding: 2rem 1rem;
-            }
-
-            .container {
-                gap: 1.75rem;
-            }
-
-            .countdown-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.85rem;
-            }
-
-            .card {
-                padding: 1.35rem 0.75rem;
-            }
-
-            .card-number-wrapper {
-                height: 3rem;
-            }
-
-            .date-cards-grid {
-                grid-template-columns: 1fr;
-                gap: 0.85rem;
-            }
-
-            .progress-section {
-                padding: 1.75rem 1.25rem;
-                gap: 1.5rem;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .blob,
-            .floating-leaf,
-            .badge-sparkle,
-            .card-number.num-animate,
-            .bar-fill::after,
-            .completion-message,
-            .anim-element {
-                animation: none !important;
-                transition: none !important;
-                opacity: 1 !important;
-                transform: none !important;
-            }
-            
-            .card:hover {
-                transform: none !important;
+            .btn-reset {
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Canvas Particle Mesh Background -->
-    <canvas id="bg-particles-canvas"></canvas>
-
-    <!-- Animated Glowing Background Blobs -->
-    <div class="bg-blobs" aria-hidden="true">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-    </div>
-
-    <!-- Floating Organic Decorative Elements -->
-    <div class="floating-leaf leaf-1" aria-hidden="true">🌿</div>
-    <div class="floating-leaf leaf-2" aria-hidden="true">🌱</div>
-    <div class="floating-leaf leaf-3" aria-hidden="true">✨</div>
-    <div class="floating-leaf leaf-4" aria-hidden="true">🍃</div>
-
-    <!-- Confetti Celebration Canvas -->
-    <canvas id="celebration-canvas"></canvas>
-
-    <!-- Main App Container -->
-    <main class="container">
-        
-        <!-- Hero Section -->
-        <header class="hero anim-element delay-1">
-            <div class="badge">
-                <span class="badge-sparkle" aria-hidden="true">✦</span>
-                <span>COUNTDOWN TIMER</span>
-            </div>
-            <h1 class="main-heading">Countdown to 10 November</h1>
-            <div class="date-range">
-                <span>8 July 2026</span>
-                <span class="arrow" aria-hidden="true">→</span>
-                <span>10 November 2026</span>
-            </div>
-        </header>
-
-        <!-- Countdown Display Grid -->
-        <section aria-label="Countdown Timer" class="countdown-grid anim-element delay-2">
-            <div class="card">
-                <div class="card-number-wrapper">
-                    <span id="days" class="card-number" aria-live="polite">00</span>
-                </div>
-                <span class="card-label">Days</span>
-            </div>
-            
-            <div class="card">
-                <div class="card-number-wrapper">
-                    <span id="hours" class="card-number" aria-live="polite">00</span>
-                </div>
-                <span class="card-label">Hours</span>
-            </div>
-
-            <div class="card">
-                <div class="card-number-wrapper">
-                    <span id="minutes" class="card-number" aria-live="polite">00</span>
-                </div>
-                <span class="card-label">Minutes</span>
-            </div>
-
-            <div class="card card-seconds">
-                <div class="card-number-wrapper">
-                    <span id="seconds" class="card-number" aria-live="polite">00</span>
-                </div>
-                <span class="card-label">Seconds</span>
-            </div>
-        </section>
-
-        <!-- Completion State Message -->
-        <div id="completion-message" class="completion-message" role="status">
-            🎉 Countdown Complete!
+    <header>
+        <div class="header-content">
+            <h1>Learn<span>X</span></h1>
+            <p>Learn Tech. Understand More.</p>
         </div>
+    </header>
 
-        <!-- Progress Tracking Section -->
-        <section aria-label="Time Progress Information" class="progress-section anim-element delay-3">
-            
-            <!-- SVG Circular Progress Indicator -->
-            <div class="circle-container">
-                <svg class="circle-svg" viewBox="0 0 130 130" aria-hidden="true">
-                    <defs>
-                        <linearGradient id="green-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="var(--primary)" />
-                            <stop offset="50%" stop-color="var(--primary-light)" />
-                            <stop offset="100%" stop-color="var(--accent)" />
-                        </linearGradient>
-                    </defs>
-                    <circle class="circle-bg" cx="65" cy="65" r="58"></circle>
-                    <circle id="circle-progress" class="circle-progress" cx="65" cy="65" r="58"></circle>
-                </svg>
-                <div class="circle-content">
-                    <span id="circle-percentage" class="circle-percentage">0%</span>
-                    <span class="circle-label">Completed</span>
-                </div>
+    <main>
+        <section class="controls-card">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search questions..." aria-label="Search questions">
+                <button class="btn-reset" id="resetBtn">Reset</button>
             </div>
 
-            <!-- Horizontal Progress Bar -->
-            <div class="bar-container">
-                <div class="bar-header">
-                    <span class="bar-title">Time Progress</span>
-                    <span id="bar-value" class="bar-value">0% completed</span>
-                </div>
-                <div class="bar-track" role="progressbar" id="progress-bar-aria" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                    <div id="bar-fill" class="bar-fill"></div>
-                </div>
+            <div class="categories-wrapper" id="categoriesContainer">
+                <button class="chip active" data-category="All">All</button>
+                <button class="chip" data-category="Computer Basics">Computer Basics</button>
+                <button class="chip" data-category="Hardware">Hardware</button>
+                <button class="chip" data-category="Internet & Networking">Internet & Networking</button>
+                <button class="chip" data-category="Web Development">Web Development</button>
+                <button class="chip" data-category="Programming">Programming</button>
+                <button class="chip" data-category="Databases">Databases</button>
+                <button class="chip" data-category="Cybersecurity">Cybersecurity</button>
+                <button class="chip" data-category="AI & Machine Learning">AI & Machine Learning</button>
+                <button class="chip" data-category="Software Development">Software Development</button>
             </div>
 
-        </section>
-
-        <!-- Date Information Cards -->
-        <section aria-label="Date Details" class="date-cards-grid anim-element delay-4">
-            <div class="date-card">
-                <div class="date-icon" aria-hidden="true">🌱</div>
-                <div class="date-info">
-                    <span class="date-card-label">Start Date</span>
-                    <span class="date-card-value">8 July 2026</span>
-                </div>
-            </div>
-            <div class="date-card">
-                <div class="date-icon" aria-hidden="true">🎯</div>
-                <div class="date-info">
-                    <span class="date-card-label">End Date</span>
-                    <span class="date-card-value">10 November 2026</span>
-                </div>
+            <div class="status-bar">
+                <span>Showing questions</span>
+                <span class="badge-count" id="questionCounter">40 Questions</span>
             </div>
         </section>
 
-        <!-- Dynamic Motivational Message -->
-        <div id="motivational-message" class="motivational-box anim-element delay-5" role="status">
-            Every second brings you closer.
+        <section class="qa-container" id="qaContainer"></section>
+
+        <div class="no-results" id="noResults">
+            <p>No matching tech questions found.</p>
         </div>
-
     </main>
 
-    <!-- JavaScript Engine -->
+    <footer>
+        <p>&copy; LearnX — Simplified Technology Concepts</p>
+    </footer>
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- CONSTANTS & CONFIGURATION ---
-            const START_DATE = new Date(2026, 6, 8, 0, 0, 0).getTime(); // 8 July 2026
-            const TARGET_DATE = new Date(2026, 10, 10, 23, 59, 59, 999).getTime(); // 10 Nov 2026
-            const TOTAL_DURATION = TARGET_DATE - START_DATE;
+        // Data Set: All 40 Questions and Answers categorized
+        const qaData = [
+            { id: 1, category: "Computer Basics", q: "What is a computer?", a: "A computer is an electronic device that processes data and performs tasks according to instructions." },
+            { id: 2, category: "Hardware", q: "What is hardware?", a: "Hardware refers to the physical parts of a computer, such as the CPU, RAM, keyboard, and monitor." },
+            { id: 3, category: "Computer Basics", q: "What is software?", a: "Software is a set of programs and instructions that tells a computer what to do." },
+            { id: 4, category: "Computer Basics", q: "What is an operating system?", a: "An operating system manages computer hardware and software. Examples include Windows, Linux, macOS, Android, and iOS." },
+            { id: 5, category: "Hardware", q: "What is a CPU?", a: "CPU stands for Central Processing Unit. It processes instructions and performs calculations." },
+            { id: 6, category: "Hardware", q: "What is RAM?", a: "RAM is temporary memory used by a computer to store data and programs that are currently in use." },
+            { id: 7, category: "Hardware", q: "What is ROM?", a: "ROM is memory that stores data that generally remains available even when the computer is turned off." },
+            { id: 8, category: "Hardware", q: "What is an SSD?", a: "SSD stands for Solid-State Drive. It stores data and is generally faster than a traditional HDD." },
+            { id: 9, category: "Hardware", q: "What is a hard disk (HDD)?", a: "An HDD is a storage device that uses magnetic disks to store data." },
+            { id: 10, category: "Hardware", q: "What is a GPU?", a: "GPU stands for Graphics Processing Unit. It is designed to process graphics and parallel workloads efficiently." },
+            { id: 11, category: "Internet & Networking", q: "What is an IP address?", a: "An IP address is a numerical address used to identify a device on a network." },
+            { id: 12, category: "Internet & Networking", q: "What is the internet?", a: "The internet is a worldwide network of interconnected computers and devices that communicate using standard protocols." },
+            { id: 13, category: "Internet & Networking", q: "What is Wi-Fi?", a: "Wi-Fi is a wireless networking technology that allows devices to connect to a network." },
+            { id: 14, category: "Internet & Networking", q: "What is Bluetooth?", a: "Bluetooth is a short-range wireless technology used to connect devices and exchange data." },
+            { id: 15, category: "Internet & Networking", q: "What is a web browser?", a: "A web browser is software used to access and view websites, such as Chrome, Firefox, Safari, and Edge." },
+            { id: 16, category: "Internet & Networking", q: "What is a search engine?", a: "A search engine helps users find information on the internet. Examples include Google and Bing." },
+            { id: 17, category: "Web Development", q: "What is a website?", a: "A website is a collection of web pages and resources available through the internet under a web address." },
+            { id: 18, category: "Web Development", q: "What is a URL?", a: "URL stands for Uniform Resource Locator. It is the address used to locate a resource on the web." },
+            { id: 19, category: "Web Development", q: "What is HTML?", a: "HTML stands for HyperText Markup Language. It provides the structure of web pages." },
+            { id: 20, category: "Web Development", q: "What is CSS?", a: "CSS stands for Cascading Style Sheets. It controls the appearance and layout of web pages." },
+            { id: 21, category: "Web Development", q: "What is JavaScript?", a: "JavaScript is a programming language commonly used to make websites interactive and dynamic." },
+            { id: 22, category: "Programming", q: "What is programming?", a: "Programming is the process of writing instructions that computers can execute to perform tasks." },
+            { id: 23, category: "Programming", q: "What is an algorithm?", a: "An algorithm is a step-by-step procedure for solving a problem or completing a task." },
+            { id: 24, category: "Programming", q: "What is a programming language?", a: "A programming language is a formal language used to write instructions for computers, such as Python, Java, C++, and JavaScript." },
+            { id: 25, category: "Programming", q: "What is Python?", a: "Python is a popular, high-level programming language used in web development, automation, data science, AI, and many other areas." },
+            { id: 26, category: "Databases", q: "What is a database?", a: "A database is a system used to store, organize, manage, and retrieve data." },
+            { id: 27, category: "Databases", q: "What is SQL?", a: "SQL stands for Structured Query Language. It is commonly used to work with data in relational databases." },
+            { id: 28, category: "Software Development", q: "What is an API?", a: "API stands for Application Programming Interface. It allows different software systems to communicate with each other." },
+            { id: 29, category: "Internet & Networking", q: "What is cloud computing?", a: "Cloud computing provides computing resources such as storage, servers, and applications over a network, usually the internet." },
+            { id: 30, category: "Cybersecurity", q: "What is cybersecurity?", a: "Cybersecurity is the practice of protecting systems, networks, applications, and data from digital threats." },
+            { id: 31, category: "Cybersecurity", q: "What is malware?", a: "Malware is malicious software designed to damage systems, steal information, disrupt operations, or gain unauthorized access." },
+            { id: 32, category: "Cybersecurity", q: "What is phishing?", a: "Phishing is a cyberattack that uses deceptive messages or websites to trick people into revealing sensitive information." },
+            { id: 33, category: "Cybersecurity", q: "What is a computer virus?", a: "A computer virus is a type of malicious software that can replicate by attaching itself to files or programs." },
+            { id: 34, category: "Cybersecurity", q: "What is a firewall?", a: "A firewall monitors and controls network traffic based on security rules to help protect systems from unauthorized access." },
+            { id: 35, category: "Cybersecurity", q: "What is encryption?", a: "Encryption converts readable data into a protected form so that unauthorized people cannot easily understand it." },
+            { id: 36, category: "AI & Machine Learning", q: "What is Artificial Intelligence (AI)?", a: "AI is technology that enables computers to perform tasks involving capabilities such as learning, reasoning, language understanding, and pattern recognition." },
+            { id: 37, category: "AI & Machine Learning", q: "What is Machine Learning?", a: "Machine Learning is a branch of AI where systems learn patterns from data to make predictions or decisions." },
+            { id: 38, category: "Software Development", q: "What is Git?", a: "Git is a version-control system used to track changes in files and help developers collaborate on software projects." },
+            { id: 39, category: "Internet & Networking", q: "What is a server?", a: "A server is a computer or software system that provides resources or services to other computers or applications over a network." },
+            { id: 40, category: "Software Development", q: "What is the difference between frontend and backend?", a: "Frontend is the part of an application users see and interact with, while backend handles things such as server-side logic, databases, and application services." }
+        ];
 
-            const CIRCLE_RADIUS = 58;
-            const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * CIRCLE_RADIUS;
+        // Global State Variables
+        let selectedCategory = "All";
+        let searchQuery = "";
 
-            // --- DOM CACHING ---
-            const dom = {
-                days: document.getElementById('days'),
-                hours: document.getElementById('hours'),
-                minutes: document.getElementById('minutes'),
-                seconds: document.getElementById('seconds'),
-                circleProgress: document.getElementById('circle-progress'),
-                circlePercentage: document.getElementById('circle-percentage'),
-                barFill: document.getElementById('bar-fill'),
-                barValue: document.getElementById('bar-value'),
-                progressBarAria: document.getElementById('progress-bar-aria'),
-                motivationalMessage: document.getElementById('motivational-message'),
-                completionMessage: document.getElementById('completion-message'),
-                canvasConfetti: document.getElementById('celebration-canvas'),
-                canvasBg: document.getElementById('bg-particles-canvas')
-            };
+        // DOM Elements
+        const qaContainer = document.getElementById("qaContainer");
+        const searchInput = document.getElementById("searchInput");
+        const resetBtn = document.getElementById("resetBtn");
+        const categoriesContainer = document.getElementById("categoriesContainer");
+        const questionCounter = document.getElementById("questionCounter");
+        const noResults = document.getElementById("noResults");
 
-            const prevValues = { days: null, hours: null, minutes: null, seconds: null, msg: '' };
-            const pad = (num) => String(num).padStart(2, '0');
+        // Render Questions to DOM
+        function renderQuestions() {
+            qaContainer.innerHTML = "";
 
-            // --- AMBIENT BACKGROUND CANVAS PARTICLES ---
-            (function initBgParticles() {
-                const ctx = dom.canvasBg.getContext('2d');
-                let width = dom.canvasBg.width = window.innerWidth;
-                let height = dom.canvasBg.height = window.innerHeight;
+            const filteredData = qaData.filter(item => {
+                const matchesCategory = selectedCategory === "All" || item.category === selectedCategory;
+                const matchesSearch = item.q.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                      item.a.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
 
-                window.addEventListener('resize', () => {
-                    width = dom.canvasBg.width = window.innerWidth;
-                    height = dom.canvasBg.height = window.innerHeight;
+            // Update Counter
+            questionCounter.textContent = `${filteredData.length} Question${filteredData.length === 1 ? '' : 's'}`;
+
+            // Show/Hide No Results Box
+            if (filteredData.length === 0) {
+                noResults.style.display = "block";
+            } else {
+                noResults.style.display = "none";
+            }
+
+            // Build Card Nodes
+            filteredData.forEach(item => {
+                const card = document.createElement("article");
+                card.className = "qa-card";
+                
+                card.innerHTML = `
+                    <div class="qa-question">
+                        <div class="qa-question-text">
+                            <span class="user-avatar">Q</span>
+                            <span>${item.q} <span class="qa-category-tag">${item.category}</span></span>
+                        </div>
+                        <span class="toggle-icon">+</span>
+                    </div>
+                    <div class="qa-answer-wrapper">
+                        <div class="qa-answer">
+                            <span class="bot-avatar">LX</span>
+                            <div>${item.a}</div>
+                        </div>
+                    </div>
+                `;
+
+                // Mobile fallback: click/tap toggle for devices without hover
+                card.addEventListener("click", () => {
+                    card.classList.toggle("open");
                 });
 
-                const particles = Array.from({ length: 45 }, () => ({
-                    x: Math.random() * width,
-                    y: Math.random() * height,
-                    r: Math.random() * 3 + 1,
-                    color: `rgba(34, 197, 94, ${Math.random() * 0.25 + 0.05})`,
-                    vx: Math.random() * 0.4 - 0.2,
-                    vy: Math.random() * 0.5 + 0.1
-                }));
+                qaContainer.appendChild(card);
+            });
+        }
 
-                function drawBg() {
-                    ctx.clearRect(0, 0, width, height);
-                    particles.forEach(p => {
-                        p.x += p.vx;
-                        p.y -= p.vy; // Floating upwards
-                        if (p.y < -10) { p.y = height + 10; p.x = Math.random() * width; }
-                        if (p.x < 0 || p.x > width) p.vx *= -1;
-
-                        ctx.beginPath();
-                        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                        ctx.fillStyle = p.color;
-                        ctx.fill();
-                    });
-                    requestAnimationFrame(drawBg);
-                }
-                drawBg();
-            })();
-
-            // --- VALUE ANIMATION HANDLER ---
-            function updateCardValue(element, key, newValueStr) {
-                if (prevValues[key] !== newValueStr) {
-                    element.textContent = newValueStr;
-                    prevValues[key] = newValueStr;
-                    element.classList.remove('num-animate');
-                    void element.offsetWidth; // Force Reflow
-                    element.classList.add('num-animate');
-                }
-            }
-
-            // --- DYNAMIC MOTIVATIONAL MESSAGES ---
-            function getMotivationalText(daysRemaining) {
-                if (daysRemaining > 60) return "The journey has just begun 🌱";
-                if (daysRemaining >= 30) return "Keep going — you're getting closer!";
-                if (daysRemaining >= 7) return "The final stretch is here.";
-                if (daysRemaining > 0) return "Almost there! 🎉";
-                return "The countdown is complete! 🎉";
-            }
-
-            function updateMotivationalText(newMsg) {
-                if (prevValues.msg !== newMsg) {
-                    prevValues.msg = newMsg;
-                    dom.motivationalMessage.style.opacity = '0';
-                    dom.motivationalMessage.style.transform = 'translateY(6px)';
-                    setTimeout(() => {
-                        dom.motivationalMessage.textContent = newMsg;
-                        dom.motivationalMessage.style.opacity = '1';
-                        dom.motivationalMessage.style.transform = 'translateY(0)';
-                    }, 300);
-                }
-            }
-
-            // --- PROGRESS DISPLAY UPDATER ---
-            function updateProgressUI(percentage) {
-                const formattedPercentage = percentage.toFixed(1);
-
-                // Horizontal Bar Fill
-                dom.barFill.style.width = `${percentage}%`;
-                dom.barValue.textContent = `${Math.round(percentage)}% completed`;
-                dom.progressBarAria.setAttribute('aria-valuenow', formattedPercentage);
-
-                // Circular Stroke Fill
-                const offset = CIRCLE_CIRCUMFERENCE - (percentage / 100) * CIRCLE_CIRCUMFERENCE;
-                dom.circleProgress.style.strokeDashoffset = offset;
-                dom.circlePercentage.textContent = `${Math.round(percentage)}%`;
-            }
-
-            // --- CONFETTI & CELEBRATION ENGINE ---
-            function triggerCelebration() {
-                dom.canvasConfetti.style.display = 'block';
-                const ctx = dom.canvasConfetti.getContext('2d');
-                let width = dom.canvasConfetti.width = window.innerWidth;
-                let height = dom.canvasConfetti.height = window.innerHeight;
-
-                const particles = Array.from({ length: 140 }, () => ({
-                    x: Math.random() * width,
-                    y: Math.random() * height - height,
-                    size: Math.random() * 8 + 4,
-                    color: ['#16a34a', '#22c55e', '#4ade80', '#86efac', '#bbf7d0', '#ffffff'][Math.floor(Math.random() * 6)],
-                    speedY: Math.random() * 3.5 + 2.5,
-                    speedX: Math.random() * 2.5 - 1.25,
-                    rotation: Math.random() * 360,
-                    rotSpeed: Math.random() * 4 - 2
-                }));
-
-                function animateConfetti() {
-                    ctx.clearRect(0, 0, width, height);
-                    particles.forEach(p => {
-                        p.y += p.speedY;
-                        p.x += p.speedX;
-                        p.rotation += p.rotSpeed;
-
-                        if (p.y > height) { p.y = -20; p.x = Math.random() * width; }
-
-                        ctx.save();
-                        ctx.translate(p.x, p.y);
-                        ctx.rotate((p.rotation * Math.PI) / 180);
-                        ctx.fillStyle = p.color;
-                        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
-                        ctx.restore();
-                    });
-                    requestAnimationFrame(animateConfetti);
-                }
-                animateConfetti();
-            }
-
-            // --- MAIN TICK LOOP ---
-            function tick() {
-                const now = Date.now();
-                const remainingTime = TARGET_DATE - now;
-
-                if (remainingTime <= 0) {
-                    updateCardValue(dom.days, 'days', '00');
-                    updateCardValue(dom.hours, 'hours', '00');
-                    updateCardValue(dom.minutes, 'minutes', '00');
-                    updateCardValue(dom.seconds, 'seconds', '00');
-
-                    updateProgressUI(100);
-                    updateMotivationalText(getMotivationalText(0));
-
-                    dom.completionMessage.style.display = 'block';
-                    triggerCelebration();
-                    clearInterval(timerInterval);
-                    return;
-                }
-
-                const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-
-                const elapsedTime = Math.max(0, now - START_DATE);
-                const progressPercentage = Math.min(100, (elapsedTime / TOTAL_DURATION) * 100);
-
-                updateCardValue(dom.days, 'days', pad(days));
-                updateCardValue(dom.hours, 'hours', pad(hours));
-                updateCardValue(dom.minutes, 'minutes', pad(minutes));
-                updateCardValue(dom.seconds, 'seconds', pad(seconds));
-
-                updateProgressUI(progressPercentage);
-                updateMotivationalText(getMotivationalText(days));
-            }
-
-            tick();
-            const timerInterval = setInterval(tick, 1000);
+        // Live Search Handler
+        searchInput.addEventListener("input", (e) => {
+            searchQuery = e.target.value;
+            renderQuestions();
         });
+
+        // Category Filter Handler
+        categoriesContainer.addEventListener("click", (e) => {
+            if (e.target.classList.contains("chip")) {
+                // Update CSS Active Class
+                document.querySelectorAll(".chip").forEach(chip => chip.classList.remove("active"));
+                e.target.classList.add("active");
+
+                // Update Filter State
+                selectedCategory = e.target.getAttribute("data-category");
+                renderQuestions();
+            }
+        });
+
+        // Reset Button Handler
+        resetBtn.addEventListener("click", () => {
+            searchInput.value = "";
+            searchQuery = "";
+            selectedCategory = "All";
+
+            document.querySelectorAll(".chip").forEach(chip => {
+                chip.classList.toggle("active", chip.getAttribute("data-category") === "All");
+            });
+
+            renderQuestions();
+        });
+
+        // Initial Render on Load
+        renderQuestions();
     </script>
 </body>
 </html>
