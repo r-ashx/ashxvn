@@ -6,7 +6,485 @@
   <title>Growth With Mentor | 1:1 Life & Self-Improvement Mentorship</title>
   <meta name="description" content="Personal guidance and mentorship to help you gain clarity, build discipline, improve your mindset, and create meaningful personal growth." />
 
-  <!-- Google Fonts & Lucide Icons -->
+  <!-- Google Fonts & Lucide Icons --><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mastery Roadmap: Tech & Soft Skills System</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+    @page {
+      size: A4 portrait;
+      margin: 12mm 10mm;
+      background-color: #f8fafc;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+      color: #1e293b;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Page container setup */
+    .page {
+      page-break-after: always;
+      max-width: 800px;
+      margin: 0 auto 40px auto;
+    }
+    .page:last-child {
+      page-break-after: avoid;
+      margin-bottom: 0;
+    }
+
+    /* Header Banner */
+    .header-banner {
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      color: #ffffff;
+    }
+
+    .header-tech {
+      background: linear-gradient(135deg, #0f172a 0%, #0369a1 100%);
+      box-shadow: 0 4px 12px rgba(3, 105, 161, 0.15);
+    }
+
+    .header-soft {
+      background: linear-gradient(135deg, #0f172a 0%, #047857 100%);
+      box-shadow: 0 4px 12px rgba(4, 120, 87, 0.15);
+    }
+
+    .header-banner h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 20pt;
+      font-weight: 800;
+      margin: 0 0 4px 0;
+      letter-spacing: -0.5px;
+    }
+
+    .header-banner p {
+      font-size: 9.5pt;
+      margin: 0;
+      opacity: 0.9;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* 2-Column Grid Layout */
+    .grid-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 12px;
+      margin-top: -12px;
+    }
+
+    .grid-table td {
+      width: 50%;
+      vertical-align: top;
+      padding: 0;
+    }
+
+    /* Skill Card Design */
+    .card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+      break-inside: avoid;
+    }
+
+    .card-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 11.5pt;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 8px 0;
+      padding-bottom: 6px;
+      border-bottom: 1.5px solid #f1f5f9;
+    }
+
+    .section-block {
+      margin-bottom: 6px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 7.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-bottom: 4px;
+    }
+
+    .badge-learn { background-color: #e0f2fe; color: #0369a1; }
+    .badge-practice { background-color: #fef3c7; color: #b45309; }
+
+    .content-text {
+      font-size: 9pt;
+      line-height: 1.4;
+      color: #334155;
+      margin: 0;
+    }
+
+    ul.content-list {
+      margin: 0;
+      padding-left: 14px;
+      font-size: 8.8pt;
+      color: #334155;
+    }
+
+    ul.content-list li {
+      margin-bottom: 2px;
+      line-height: 1.35;
+    }
+
+    .workflow-box {
+      background-color: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-family: monospace;
+      font-size: 8.5pt;
+      font-weight: 600;
+      color: #0f172a;
+      margin: 4px 0;
+      text-align: center;
+    }
+
+    /* Highlight Footer Boxes */
+    .highlight-box {
+      border-radius: 5px;
+      padding: 6px 10px;
+      margin-top: 6px;
+    }
+
+    .goal-box {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-left: 3.5px solid #0284c7;
+    }
+
+    .goal-title {
+      font-size: 7.5pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #0369a1;
+      letter-spacing: 0.5px;
+      margin-bottom: 1px;
+    }
+
+    .goal-text {
+      font-size: 8.8pt;
+      font-weight: 600;
+      color: #0c4a6e;
+      margin: 0;
+    }
+
+    .adopt-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-left: 3.5px solid #16a34a;
+    }
+
+    .adopt-title {
+      font-size: 7.5pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #15803d;
+      letter-spacing: 0.5px;
+      margin-bottom: 1px;
+    }
+
+    .adopt-text {
+      font-size: 8.8pt;
+      font-weight: 600;
+      color: #166534;
+      margin: 0;
+    }
+
+    .note-text {
+      font-size: 8pt;
+      color: #64748b;
+      font-style: italic;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PAGE 1: TECH SKILLS -->
+  <div class="page">
+    <div class="header-banner header-tech">
+      <h1>💻 TECH SKILLS — YOUR SYSTEM</h1>
+      <p>Core Technical Proficiency & Software Engineering Roadmap</p>
+    </div>
+
+    <table class="grid-table">
+      <tr>
+        <!-- Column 1 -->
+        <td>
+          <!-- 1. Computer Fundamentals -->
+          <div class="card">
+            <h2 class="card-title">1. 🖥️ Computer Fundamentals</h2>
+            <div class="section-block">
+              <span class="badge badge-learn">Learn</span>
+              <ul class="content-list">
+                <li>Computer & Internet Fundamentals</li>
+                <li>File & Data Management</li>
+                <li>Cybersecurity Basics</li>
+                <li>Office Tools — Word, Excel, PowerPoint</li>
+                <li>AI Literacy</li>
+              </ul>
+            </div>
+            <div class="highlight-box goal-box">
+              <div class="goal-title">Goal</div>
+              <p class="goal-text">Understand how computers, data, and the internet work.</p>
+            </div>
+          </div>
+
+          <!-- 3. JavaScript -->
+          <div class="card">
+            <h2 class="card-title">3. ⚡ JavaScript</h2>
+            <div class="section-block">
+              <span class="badge badge-learn">Learn</span>
+              <p class="content-text">Variables, functions, arrays, objects, DOM, events, ES6+, APIs, async/await.</p>
+            </div>
+            <div class="highlight-box goal-box">
+              <div class="goal-title">Goal</div>
+              <p class="goal-text">Build interactive web apps and master modern JavaScript.</p>
+            </div>
+          </div>
+
+          <!-- 5. SQL -->
+          <div class="card">
+            <h2 class="card-title">5. 🗃️ SQL</h2>
+            <div class="section-block">
+              <span class="badge badge-learn">Learn</span>
+              <p class="content-text">SELECT, filtering, JOINs, GROUP BY, subqueries, CTEs, window functions, database basics.</p>
+            </div>
+            <div class="highlight-box goal-box">
+              <div class="goal-title">Goal</div>
+              <p class="goal-text">Work confidently with real databases and data structures.</p>
+            </div>
+          </div>
+        </td>
+
+        <!-- Column 2 -->
+        <td>
+          <!-- 2. HTML + CSS -->
+          <div class="card">
+            <h2 class="card-title">2. 🌐 HTML + CSS</h2>
+            <div class="section-block">
+              <span class="badge badge-learn">Learn</span>
+              <p class="content-text">HTML structure, forms, Flexbox, Grid, responsive design.</p>
+            </div>
+            <div class="highlight-box goal-box">
+              <div class="goal-title">Goal</div>
+              <p class="goal-text">Build clean, responsive web pages from scratch.</p>
+            </div>
+          </div>
+
+          <!-- 4. Python -->
+          <div class="card">
+            <h2 class="card-title">4. 🐍 Python</h2>
+            <div class="section-block">
+              <span class="badge badge-learn">Learn</span>
+              <p class="content-text">Syntax, functions, lists/dictionaries, OOP basics, file handling, exceptions, APIs, basic automation.</p>
+            </div>
+            <div class="highlight-box goal-box">
+              <div class="goal-title">Goal</div>
+              <p class="goal-text">Solve complex problems and build automation scripts.</p>
+            </div>
+          </div>
+
+          <!-- 6. Git + GitHub -->
+          <div class="card">
+            <h2 class="card-title">6. 🔧 Git + GitHub</h2>
+            <div class="section-block">
+              <span class="badge badge-learn">Learn</span>
+              <p class="content-text">Repositories, commits, push/pull, branches, merging, pull requests, README.</p>
+            </div>
+            <div class="highlight-box goal-box">
+              <div class="goal-title">Goal</div>
+              <p class="goal-text">Manage version control and showcase projects professionally.</p>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- PAGE 2: SOFT SKILLS -->
+  <div class="page">
+    <div class="header-banner header-soft">
+      <h1>🧠 SOFT SKILLS — YOUR SYSTEM</h1>
+      <p>Core Soft Skills & Behavioral Execution System</p>
+    </div>
+
+    <table class="grid-table">
+      <tr>
+        <!-- Column 1 -->
+        <td>
+          <!-- 1. Communication -->
+          <div class="card">
+            <h2 class="card-title">1. 🗣️ Communication</h2>
+            <div class="section-block">
+              <span class="badge badge-learn">Learn</span>
+              <p class="content-text">Clear speaking, explaining ideas, asking questions, professional conversation.</p>
+            </div>
+            <div class="section-block">
+              <span class="badge badge-practice">Practice</span>
+              <ul class="content-list">
+                <li>Explain one topic aloud for 5–10 minutes.</li>
+                <li>Use short, clear sentences.</li>
+                <li>Record yourself occasionally and review.</li>
+              </ul>
+            </div>
+            <div class="highlight-box adopt-box">
+              <div class="adopt-title">Adopt</div>
+              <p class="adopt-text">Think → Speak clearly → Stop</p>
+            </div>
+          </div>
+
+          <!-- 3. Logic Building -->
+          <div class="card">
+            <h2 class="card-title">3. 🧠 Logic Building</h2>
+            <div class="section-block">
+              <span class="badge badge-learn">Learn</span>
+              <p class="content-text">Step-by-step thinking and cause → effect relationships.</p>
+            </div>
+            <div class="section-block">
+              <span class="badge badge-practice">Practice</span>
+              <ul class="content-list">
+                <li>Coding problems & logical puzzles</li>
+                <li>Ask “Why?” and “How?” in everyday situations</li>
+              </ul>
+            </div>
+            <div class="highlight-box adopt-box">
+              <div class="adopt-title">Adopt</div>
+              <p class="adopt-text">What → Why → How → Result</p>
+            </div>
+          </div>
+
+          <!-- 5. Networking -->
+          <div class="card">
+            <h2 class="card-title">5. 🤝 Networking</h2>
+            <div class="section-block">
+              <span class="badge badge-learn">Learn</span>
+              <p class="content-text">Build genuine professional relationships.</p>
+            </div>
+            <div class="section-block">
+              <span class="badge badge-practice">Practice</span>
+              <ul class="content-list">
+                <li>Talk to seniors & professionals.</li>
+                <li>Ask useful questions & share your work.</li>
+                <li>Help others when possible & stay connected.</li>
+              </ul>
+            </div>
+            <div class="highlight-box adopt-box">
+              <div class="adopt-title">Adopt</div>
+              <p class="adopt-text">Give value → Build trust → Stay connected</p>
+            </div>
+            <p class="note-text">Note: Networking is not simply asking people for referrals.</p>
+          </div>
+
+          <!-- 7. Negotiation & Pricing -->
+          <div class="card">
+            <h2 class="card-title">7. 💰 Negotiation & Pricing</h2>
+            <div class="section-block">
+              <span class="badge badge-learn">Learn</span>
+              <p class="content-text">Understand value, cost & fair pricing.</p>
+            </div>
+            <div class="section-block">
+              <span class="badge badge-practice">Practice</span>
+              <p class="content-text">Discuss prices confidently and handle objections.</p>
+            </div>
+            <div class="highlight-box adopt-box">
+              <div class="adopt-title">Adopt</div>
+              <p class="adopt-text">Value → Price → Explain → Negotiate</p>
+            </div>
+          </div>
+        </td>
+
+        <!-- Column 2 -->
+        <td>
+          <!-- 2. Problem Solving -->
+          <div class="card">
+            <h2 class="card-title">2. 🧩 Problem Solving</h2>
+            <div class="section-block">
+              <span class="badge badge-learn">Learn</span>
+              <p class="content-text">Break problems into smaller parts and solve systematically.</p>
+            </div>
+            <div class="section-block">
+              <span class="badge badge-practice">Practice</span>
+              <div class="workflow-box">Problem → Cause → Options → Test → Solution</div>
+              <p class="content-text" style="font-size: 8.2pt; color: #475569; margin-top: 3px;">Try solving the problem yourself before searching for an answer.</p>
+            </div>
+            <div class="highlight-box adopt-box">
+              <div class="adopt-title">Adopt</div>
+              <p class="adopt-text">Don't react immediately. Understand first.</p>
+            </div>
+          </div>
+
+          <!-- 4. Listening -->
+          <div class="card">
+            <h2 class="card-title">4. 👂 Listening</h2>
+            <div class="section-block">
+              <span class="badge badge-learn">Learn</span>
+              <p class="content-text">Understand what the other person actually means.</p>
+            </div>
+            <div class="section-block">
+              <span class="badge badge-practice">Practice</span>
+              <div class="workflow-box">Listen → Understand → Pause → Respond</div>
+              <p class="content-text" style="font-size: 8.2pt; color: #475569; margin-top: 3px;">Don't interrupt or prepare your response while speaking.</p>
+            </div>
+            <div class="highlight-box adopt-box">
+              <div class="adopt-title">Adopt</div>
+              <p class="adopt-text">Understand first, respond second.</p>
+            </div>
+          </div>
+
+          <!-- 6. Observation -->
+          <div class="card">
+            <h2 class="card-title">6. 👁️ Observation</h2>
+            <div class="section-block">
+              <span class="badge badge-learn">Learn</span>
+              <p class="content-text">Notice people, situations, and your own behavior carefully.</p>
+            </div>
+            <div class="section-block">
+              <span class="badge badge-practice">Practice (Post-situation)</span>
+              <ul class="content-list">
+                <li>What happened? / What did I think?</li>
+                <li>What did the other person do?</li>
+                <li>What was the result?</li>
+              </ul>
+            </div>
+            <div class="highlight-box adopt-box">
+              <div class="adopt-title">Adopt</div>
+              <p class="adopt-text">Observe → Understand → Learn → Improve</p>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+</body>
+</html>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
