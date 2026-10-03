@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Ashx-AUTHENTICATION</title>
+  <title>Ashx - Access Portal</title>
   <style>
     /* ==========================================================================
-       RESET & CORE RESPONSIVE VARIABLES
+       RESET & CORE STYLES
        ========================================================================== */
     * {
       margin: 0;
@@ -20,8 +20,8 @@
     :root {
       --primary-red: #ff0000;
       --dark-red: #b30000;
-      --card-bg: rgba(255, 255, 255, 0.85);
-      --card-border: rgba(255, 0, 0, 0.4);
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --card-border: rgba(255, 0, 0, 0.3);
     }
 
     html, body {
@@ -31,92 +31,38 @@
     }
 
     body {
-      background-color: #ffffff;
+      background-color: #f8f9fa;
       color: #000000;
       min-height: 100vh;
-      min-height: -webkit-fill-available;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
     }
 
-    /* ==========================================================================
-       DYNAMIC ANIMATED BACKGROUND LAYERS
-       ========================================================================== */
-    #bg-canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-      pointer-events: none;
-    }
-
+    /* Clean subtle background grid */
     .bg-grid {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-size: clamp(30px, 5vw, 50px) clamp(30px, 5vw, 50px);
+      background-size: 40px 40px;
       background-image: 
-        linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+        linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
       z-index: 1;
       pointer-events: none;
     }
 
-    .bg-blob {
+    .bg-glow {
       position: absolute;
+      width: 400px;
+      height: 400px;
       border-radius: 50%;
-      filter: blur(clamp(40px, 8vw, 70px));
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    .bg-blob-1 {
-      top: 10%;
-      left: 10%;
-      width: clamp(250px, 45vw, 500px);
-      height: clamp(250px, 45vw, 500px);
-      background: radial-gradient(circle, rgba(255, 0, 0, 0.22) 0%, rgba(255, 255, 255, 0) 70%);
-      animation: floatBlob1 10s ease-in-out infinite alternate;
-    }
-
-    .bg-blob-2 {
-      bottom: 10%;
-      right: 10%;
-      width: clamp(280px, 50vw, 550px);
-      height: clamp(280px, 50vw, 550px);
-      background: radial-gradient(circle, rgba(255, 60, 60, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
-      animation: floatBlob2 12s ease-in-out infinite alternate-reverse;
-    }
-
-    .bg-blob-3 {
-      top: 50%;
-      left: 50%;
-      width: clamp(200px, 35vw, 400px);
-      height: clamp(200px, 35vw, 400px);
-      transform: translate(-50%, -50%);
       background: radial-gradient(circle, rgba(255, 0, 0, 0.12) 0%, rgba(255, 255, 255, 0) 70%);
-      animation: pulseBlob 6s ease-in-out infinite alternate;
-    }
-
-    @keyframes floatBlob1 {
-      0% { transform: translate(0px, 0px) scale(1); }
-      100% { transform: translate(40px, -30px) scale(1.15); }
-    }
-
-    @keyframes floatBlob2 {
-      0% { transform: translate(0px, 0px) scale(1); }
-      100% { transform: translate(-30px, 40px) scale(1.2); }
-    }
-
-    @keyframes pulseBlob {
-      0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
-      100% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.9; }
+      pointer-events: none;
+      z-index: 1;
     }
 
     #alert-overlay {
@@ -142,189 +88,139 @@
     }
 
     /* ==========================================================================
-       RESPONSIVE 3D CARD PERSPECTIVE & GLASSMORPHISM
+       CONTAINER & CLEAN CARD (NO UNNECESSARY FLOATING)
        ========================================================================== */
     .perspective-container {
-      perspective: 1200px;
       z-index: 10;
       width: 100%;
-      max-width: clamp(300px, 90vw, 460px);
-      padding: clamp(12px, 3vw, 24px);
-      animation: cardFadeIn 0.8s ease-out forwards;
-    }
-
-    @keyframes cardFadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      max-width: 440px;
+      padding: 20px;
     }
 
     .auth-card {
       background: var(--card-bg);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      border-radius: clamp(20px, 4vw, 32px);
-      padding: clamp(25px, 6vw, 35px) clamp(18px, 5vw, 30px);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 35px 28px;
       text-align: center;
       border: 1.5px solid var(--card-border);
       box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.08),
-        0 8px 16px rgba(0, 0, 0, 0.04),
-        0 0 30px rgba(255, 0, 0, 0.25);
-      transform-style: preserve-3d;
-      transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease, border-color 0.3s ease;
-      animation: cardFloat 6s ease-in-out infinite alternate;
+        0 20px 40px rgba(0, 0, 0, 0.06),
+        0 0 25px rgba(255, 0, 0, 0.15);
+      transition: all 0.3s ease;
       position: relative;
     }
 
-    @keyframes cardFloat {
-      0% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
-      100% { transform: translateY(-6px) rotateX(1deg) rotateY(-1deg); }
-    }
-
-    .auth-card:hover {
-      border-color: rgba(255, 0, 0, 0.8);
-      box-shadow: 
-        0 25px 50px rgba(0, 0, 0, 0.12),
-        0 0 40px rgba(255, 0, 0, 0.35);
-    }
-
     .shake {
-      animation: shakeCard 0.5s cubic-bezier(.36,.07,.19,.97) both !important;
+      animation: shakeCard 0.4s cubic-bezier(.36,.07,.19,.97) both;
     }
 
     @keyframes shakeCard {
-      10%, 90% { transform: translate3d(-4px, 0, 0); }
-      20%, 80% { transform: translate3d(6px, 0, 0); }
-      30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
-      40%, 60% { transform: translate3d(8px, 0, 0); }
+      10%, 90% { transform: translate3d(-3px, 0, 0); }
+      20%, 80% { transform: translate3d(5px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+      40%, 60% { transform: translate3d(6px, 0, 0); }
     }
 
-    /* ==========================================================================
-       ICON & TYPOGRAPHY
-       ========================================================================== */
+    /* Header Icon */
     .icon-container {
-      width: clamp(56px, 12vw, 72px);
-      height: clamp(56px, 12vw, 72px);
-      margin: 0 auto clamp(16px, 3vw, 24px);
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 18px;
       background: #ffffff;
       border: 1.5px solid rgba(255, 0, 0, 0.3);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06), 0 0 20px rgba(255, 0, 0, 0.2);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05), 0 0 15px rgba(255, 0, 0, 0.15);
       transition: all 0.3s ease;
     }
 
     .icon-container svg {
-      width: clamp(24px, 5vw, 32px);
-      height: clamp(24px, 5vw, 32px);
+      width: 28px;
+      height: 28px;
       fill: none;
       stroke: #000000;
       stroke-width: 2.2;
       stroke-linecap: round;
       stroke-linejoin: round;
-      transition: all 0.3s ease;
     }
-
-    .auth-card:hover .icon-container {
-      border-color: var(--primary-red);
-      transform: scale(1.05);
-    }
-
-    .auth-card:hover .icon-container svg { stroke: var(--primary-red); }
 
     h1.title {
-      font-size: clamp(0.95rem, 3.5vw, 1.35rem);
+      font-size: 1.25rem;
       font-weight: 800;
-      letter-spacing: clamp(0.5px, 0.2vw, 1.5px);
+      letter-spacing: 1px;
       text-transform: uppercase;
       color: #000000;
-      margin-bottom: 6px;
-      width: 100%;
-      word-wrap: break-word;
-      text-align: center;
+      margin-bottom: 4px;
     }
 
     p.subtitle {
-      font-size: clamp(0.7rem, 2.5vw, 0.85rem);
+      font-size: 0.8rem;
       color: rgba(0, 0, 0, 0.55);
       letter-spacing: 1px;
       text-transform: uppercase;
-      margin-bottom: clamp(20px, 4vw, 30px);
+      margin-bottom: 24px;
       font-weight: 600;
     }
 
-    /* ==========================================================================
-       RESPONSIVE INPUT FIELDS
-       ========================================================================== */
+    /* Inputs */
     .digit-container {
       display: flex;
       justify-content: center;
-      gap: clamp(6px, 2.2vw, 12px);
-      margin-bottom: clamp(18px, 4vw, 24px);
+      gap: 10px;
+      margin-bottom: 20px;
       width: 100%;
     }
 
     .digit-box {
-      width: clamp(42px, 12vw, 56px);
-      height: clamp(52px, 14vw, 64px);
+      width: 50px;
+      height: 58px;
       background: #ffffff;
-      border: 1.5px solid rgba(0, 0, 0, 0.12);
-      border-radius: clamp(10px, 2.5vw, 14px);
-      font-size: clamp(1.3rem, 4vw, 1.8rem);
+      border: 1.5px solid rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      font-size: 1.5rem;
       font-weight: 700;
       color: #000000;
       text-align: center;
       outline: none;
-      transition: all 0.25s ease;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+      transition: all 0.2s ease;
       caret-color: var(--primary-red);
     }
 
     .digit-box:focus {
       border-color: var(--primary-red);
-      box-shadow: 
-        0 0 18px rgba(255, 0, 0, 0.4),
-        0 4px 12px rgba(255, 0, 0, 0.15);
-      transform: translateY(-2px);
+      box-shadow: 0 0 12px rgba(255, 0, 0, 0.3);
     }
 
     .input-error {
       border-color: var(--primary-red) !important;
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.5) !important;
       background-color: rgba(255, 0, 0, 0.03);
     }
 
-    /* ==========================================================================
-       RESPONSIVE BUTTON
-       ========================================================================== */
+    /* Buttons */
     .verify-btn {
       width: 100%;
-      padding: clamp(12px, 3vw, 16px);
+      padding: 14px;
       background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%);
       border: none;
-      border-radius: clamp(10px, 2.5vw, 14px);
+      border-radius: 12px;
       color: #ffffff;
-      font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+      font-size: 0.9rem;
       font-weight: 700;
-      letter-spacing: clamp(1.5px, 0.4vw, 3px);
+      letter-spacing: 2px;
       text-transform: uppercase;
       cursor: pointer;
       outline: none;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      box-shadow: 0 10px 20px rgba(255, 0, 0, 0.3);
+      transition: all 0.2s ease;
+      box-shadow: 0 8px 18px rgba(255, 0, 0, 0.25);
     }
 
     .verify-btn:hover:not(:disabled) {
-      box-shadow: 0 14px 28px rgba(255, 0, 0, 0.45);
-      transform: translateY(-2px);
-    }
-
-    .verify-btn:active:not(:disabled) {
-      transform: translateY(1px) scale(0.98);
+      box-shadow: 0 10px 22px rgba(255, 0, 0, 0.35);
+      transform: translateY(-1px);
     }
 
     .verify-btn:disabled {
@@ -334,129 +230,22 @@
       box-shadow: none;
     }
 
-    .ripple {
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.5);
-      transform: scale(0);
-      animation: rippleAnim 0.6s linear;
-      pointer-events: none;
-    }
-
-    @keyframes rippleAnim {
-      to { transform: scale(4); opacity: 0; }
-    }
-
-    /* ==========================================================================
-       ATTRACTIVE & CLEAN POST-AUTH LINKS CONTAINER
-       ========================================================================== */
-    .portal-links-section {
-      max-height: 0;
-      opacity: 0;
-      overflow: hidden;
-      transform: translateY(15px);
-      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-      margin-top: 0;
-    }
-
-    .portal-links-section.show {
-      max-height: 300px;
-      opacity: 1;
-      transform: translateY(0);
-      margin-top: 20px;
-      padding-top: 16px;
-      border-top: 1px solid rgba(0, 200, 83, 0.3);
-    }
-
-    .portal-header {
-      font-size: 0.72rem;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      color: #00a843;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    .portal-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
-    .portal-card {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 14px;
-      background: rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      border-radius: 12px;
-      color: #111111;
-      text-decoration: none;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
-      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    }
-
-    .portal-card svg {
-      width: 14px;
-      height: 14px;
-      stroke: #666666;
-      stroke-width: 2.2;
-      fill: none;
-      transition: all 0.3s ease;
-    }
-
-    .portal-card:hover {
-      background: #000000;
-      color: #ffffff;
-      border-color: #000000;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
-    }
-
-    .portal-card:hover svg {
-      stroke: var(--primary-red);
-      transform: translateX(3px);
-    }
-
-    /* ==========================================================================
-       STATUS MESSAGES & TIMERS
-       ========================================================================== */
+    /* Status Messages */
     .status-message {
-      min-height: 24px;
-      margin-top: clamp(14px, 3vw, 20px);
-      font-size: clamp(0.75rem, 2.2vw, 0.85rem);
+      min-height: 22px;
+      margin-top: 16px;
+      font-size: 0.8rem;
       font-weight: 700;
       letter-spacing: 0.8px;
       text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
     }
 
-    .status-message.error {
-      color: #d30000;
-      animation: pulseError 0.8s infinite alternate;
-    }
-
+    .status-message.error { color: #d30000; }
     .status-message.success { color: #008000; }
 
-    @keyframes pulseError {
-      0% { opacity: 0.85; }
-      100% { opacity: 1; transform: scale(1.02); }
-    }
-
     .attempts-tracker {
-      margin-top: clamp(10px, 2vw, 14px);
-      font-size: clamp(0.68rem, 2vw, 0.75rem);
+      margin-top: 10px;
+      font-size: 0.72rem;
       font-weight: 600;
       color: rgba(0, 0, 0, 0.4);
       letter-spacing: 1px;
@@ -465,119 +254,136 @@
     .timer-display {
       color: var(--primary-red);
       font-weight: 700;
-      font-size: clamp(0.75rem, 2.2vw, 0.85rem);
+      font-size: 0.8rem;
       margin-top: 8px;
       display: none;
-      letter-spacing: 1px;
-    }
-
-    .success-checkmark {
-      width: clamp(16px, 3.5vw, 20px);
-      height: clamp(16px, 3.5vw, 20px);
-      display: inline-block;
-    }
-
-    .success-checkmark svg {
-      width: 100%;
-      height: 100%;
-      fill: none;
-      stroke: #008000;
-      stroke-width: 3;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      stroke-dasharray: 24;
-      stroke-dashoffset: 24;
-      animation: drawCheck 0.4s ease-in-out forwards;
-    }
-
-    @keyframes drawCheck {
-      to { stroke-dashoffset: 0; }
     }
 
     /* ==========================================================================
-       MEDIA QUERY BREAKPOINTS
+       AUTHENTICATED LINKS SECTION (CLEAN & MODERN BUTTONS)
        ========================================================================== */
-    @media (max-width: 480px) {
-      .auth-card { animation: none; }
-      .portal-grid { grid-template-columns: 1fr; }
+    #links-container {
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.4s ease;
+      margin-top: 10px;
     }
 
-    @media (max-height: 580px) {
-      .auth-card { padding: 16px 20px; }
-      .icon-container { width: 44px; height: 44px; margin-bottom: 10px; }
-      p.subtitle { margin-bottom: 14px; }
-      .digit-box { height: 46px; }
+    #links-container.show {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    @media (min-width: 1920px) {
-      .perspective-container { max-width: 520px; }
+    .link-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 14px 20px;
+      background: #ffffff;
+      border: 1.5px solid rgba(0, 0, 0, 0.08);
+      border-radius: 14px;
+      color: #111111;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+    }
+
+    .link-btn:hover {
+      border-color: var(--primary-red);
+      background: rgba(255, 0, 0, 0.02);
+      color: var(--primary-red);
+      box-shadow: 0 6px 16px rgba(255, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .link-btn .arrow-icon {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      fill: none;
+      transition: transform 0.2s ease;
+    }
+
+    .link-btn:hover .arrow-icon {
+      transform: translateX(4px);
     }
   </style>
 </head>
 <body>
 
-  <!-- Animated Background Layers -->
+  <!-- Clean Background -->
   <div class="bg-grid"></div>
-  <div class="bg-blob bg-blob-1"></div>
-  <div class="bg-blob bg-blob-2"></div>
-  <div class="bg-blob bg-blob-3"></div>
-
-  <!-- Responsive Particle Canvas -->
-  <canvas id="bg-canvas"></canvas>
+  <div class="bg-glow"></div>
 
   <!-- Security Flash Overlay -->
   <div id="alert-overlay"></div>
 
-  <!-- Main Auth Card -->
+  <!-- Main Card -->
   <div class="perspective-container">
     <div class="auth-card" id="card">
       
-      <div class="icon-container">
+      <!-- Lock Header -->
+      <div class="icon-container" id="icon-box">
         <svg id="lock-icon" viewBox="0 0 24 24">
           <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
           <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
         </svg>
       </div>
 
-      <h1 class="title">Ash X AUTHENTICATION</h1>
-      <p class="subtitle">Enter Secret Code</p>
+      <h1 class="title" id="main-title">Ash X Authentication</h1>
+      <p class="subtitle" id="main-subtitle">Enter Secret Code</p>
 
-      <div class="digit-container" id="digit-container">
-        <input type="text" class="digit-box" maxlength="1" autocomplete="off" inputmode="text" autofocus>
-        <input type="text" class="digit-box" maxlength="1" autocomplete="off" inputmode="text">
-        <input type="text" class="digit-box" maxlength="1" autocomplete="off" inputmode="text">
-        <input type="text" class="digit-box" maxlength="1" autocomplete="off" inputmode="text">
+      <!-- Code Form Section -->
+      <div id="auth-section">
+        <div class="digit-container">
+          <input type="text" class="digit-box" maxlength="1" autocomplete="off" inputmode="text" autofocus>
+          <input type="text" class="digit-box" maxlength="1" autocomplete="off" inputmode="text">
+          <input type="text" class="digit-box" maxlength="1" autocomplete="off" inputmode="text">
+          <input type="text" class="digit-box" maxlength="1" autocomplete="off" inputmode="text">
+        </div>
+
+        <button class="verify-btn" id="verify-btn">VERIFY</button>
+
+        <div class="status-message" id="status-message"></div>
+        <div class="attempts-tracker" id="attempts-tracker">ATTEMPTS LEFT: <span id="attempts-left">3</span></div>
+        <div class="timer-display" id="timer-display">SYSTEM LOCKED: <span id="timer-count">10</span>s</div>
       </div>
 
-      <button class="verify-btn" id="verify-btn">VERIFY</button>
-
-      <div class="status-message" id="status-message"></div>
-      <div class="attempts-tracker" id="attempts-tracker">ATTEMPTS LEFT: <span id="attempts-left">3</span></div>
-      <div class="timer-display" id="timer-display">SYSTEM LOCKED: <span id="timer-count">10</span>s</div>
-
-      <!-- Clean Links Portal (Reveals After Verification) -->
-      <div class="portal-links-section" id="portal-links">
-        <div class="portal-header">
-          <span>Unlocked Portals</span>
-        </div>
-        <div class="portal-grid">
-          <a href="https://ashxvn.vercel.app/@sh/Countdown.html" class="portal-card" target="_blank" rel="noopener noreferrer">
-            <span>Countdown</span>
-            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
-          </a>
-          <a href="https://ashxvn.vercel.app/@sh/Learning.html" class="portal-card" target="_blank" rel="noopener noreferrer">
-            <span>Learning</span>
-            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
-          </a>
-          <a href="https://ashxvn.vercel.app/@sh/XLearn.html" class="portal-card" target="_blank" rel="noopener noreferrer">
-            <span>XLearn</span>
-            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
-          </a>
-          <a href="https://ashxvn.vercel.app/@sh/studio.html" class="portal-card" target="_blank" rel="noopener noreferrer">
-            <span>Studio</span>
-            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
-          </a>
-        </div>
+      <!-- Links Container (Revealed after success) -->
+      <div id="links-container">
+        <a href="https://ashx-eight.vercel.app/" target="_blank" class="link-btn">
+          <span>Portfolio</span>
+          <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="https://ashxvn.vercel.app/Listen.html" target="_blank" class="link-btn">
+          <span>Listen</span>
+          <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="https://ashxvn.vercel.app/4u/YTPlay.html" target="_blank" class="link-btn">
+          <span>YT Player</span>
+          <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="https://ashxvn.vercel.app/4u/Watch.html" target="_blank" class="link-btn">
+          <span>Watch</span>
+          <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="https://ashxvn.vercel.app/4u/more.html" target="_blank" class="link-btn">
+          <span>More</span>
+          <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="https://ashxvn.vercel.app/4u/YTPlay.html" target="_blank" class="link-btn">
+          <span>Learning</span>
+          <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
       </div>
 
     </div>
@@ -588,9 +394,6 @@
   </audio>
 
   <script>
-    /* ==========================================================================
-       CONFIG & STATE
-       ========================================================================== */
     const CONFIG = {
       SECRET_CODE: "@5hx",
       MAX_ATTEMPTS: 3,
@@ -611,176 +414,13 @@
     const alertOverlay = document.getElementById('alert-overlay');
     const alertAudio = document.getElementById('alert-audio');
     const lockIcon = document.getElementById('lock-icon');
-    const portalLinks = document.getElementById('portal-links');
+    const authSection = document.getElementById('auth-section');
+    const linksContainer = document.getElementById('links-container');
+    const mainTitle = document.getElementById('main-title');
+    const mainSubtitle = document.getElementById('main-subtitle');
+    const iconBox = document.getElementById('icon-box');
 
-    /* ==========================================================================
-       ADAPTIVE BACKGROUND CANVAS
-       ========================================================================== */
-    const canvas = document.getElementById('bg-canvas');
-    const ctx = canvas.getContext('2d');
-
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
-
-    let particleCount = width < 600 ? 30 : 60;
-    let shapeCount = width < 600 ? 6 : 12;
-
-    window.addEventListener('resize', () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-      particleCount = width < 600 ? 30 : 60;
-    });
-
-    let mouse = { x: width / 2, y: height / 2 };
-    
-    function updateMousePos(x, y) {
-      mouse.x = x;
-      mouse.y = y;
-    }
-
-    document.addEventListener('mousemove', (e) => updateMousePos(e.clientX, e.clientY));
-    document.addEventListener('touchmove', (e) => {
-      if(e.touches.length > 0) {
-        updateMousePos(e.touches[0].clientX, e.touches[0].clientY);
-      }
-    }, { passive: true });
-
-    class Particle {
-      constructor() { this.reset(); }
-      reset() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.size = Math.random() * 2 + 0.5;
-        this.speedY = -(Math.random() * 0.7 + 0.2);
-        this.speedX = (Math.random() - 0.5) * 0.4;
-        this.opacity = Math.random() * 0.6 + 0.2;
-        this.color = Math.random() > 0.4 ? '#ff0000' : '#888888';
-      }
-      update() {
-        this.y += this.speedY;
-        this.x += this.speedX;
-        if (this.y < -10 || this.x < -10 || this.x > width + 10) {
-          this.reset();
-          this.y = height + 10;
-        }
-      }
-      draw() {
-        ctx.save();
-        ctx.globalAlpha = this.opacity;
-        ctx.fillStyle = this.color;
-        if (this.color === '#ff0000') {
-          ctx.shadowBlur = 6;
-          ctx.shadowColor = '#ff0000';
-        }
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-    }
-
-    class Shape3D {
-      constructor() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.size = Math.random() * 25 + 15;
-        this.rotX = Math.random() * Math.PI;
-        this.rotY = Math.random() * Math.PI;
-        this.rotSpeedX = (Math.random() - 0.5) * 0.01;
-        this.rotSpeedY = (Math.random() - 0.5) * 0.01;
-        this.speedY = (Math.random() - 0.5) * 0.3;
-        this.speedX = (Math.random() - 0.5) * 0.3;
-
-        this.vertices = [
-          [-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1],
-          [-1, -1, 1],  [1, -1, 1],  [1, 1, 1],  [-1, 1, 1]
-        ];
-        this.edges = [
-          [0,1],[1,2],[2,3],[3,0],
-          [4,5],[5,6],[6,7],[7,4],
-          [0,4],[1,5],[2,6],[3,7]
-        ];
-      }
-
-      update() {
-        this.rotX += this.rotSpeedX;
-        this.rotY += this.rotSpeedY;
-        this.x += this.speedX;
-        this.y += this.speedY;
-
-        if (this.x < 0 || this.x > width) this.speedX *= -1;
-        if (this.y < 0 || this.y > height) this.speedY *= -1;
-      }
-
-      draw() {
-        ctx.save();
-        ctx.strokeStyle = 'rgba(255, 0, 0, 0.18)';
-        ctx.lineWidth = 1;
-
-        const dx = (mouse.x - width / 2) * 0.015;
-        const dy = (mouse.y - height / 2) * 0.015;
-
-        const projected = [];
-        this.vertices.forEach(v => {
-          let y1 = v[1] * Math.cos(this.rotX) - v[2] * Math.sin(this.rotX);
-          let z1 = v[1] * Math.sin(this.rotX) + v[2] * Math.cos(this.rotX);
-
-          let x2 = v[0] * Math.cos(this.rotY) + z1 * Math.sin(this.rotY);
-          let z2 = -v[0] * Math.sin(this.rotY) + z1 * Math.cos(this.rotY);
-
-          const fov = 280;
-          const scale = fov / (fov + z2 * this.size);
-
-          const px = x2 * this.size * scale + this.x + dx;
-          const py = y1 * this.size * scale + this.y + dy;
-
-          projected.push([px, py]);
-        });
-
-        this.edges.forEach(edge => {
-          ctx.beginPath();
-          ctx.moveTo(projected[edge[0]][0], projected[edge[0]][1]);
-          ctx.lineTo(projected[edge[1]][0], projected[edge[1]][1]);
-          ctx.stroke();
-        });
-        ctx.restore();
-      }
-    }
-
-    const particles = Array.from({ length: 60 }, () => new Particle());
-    const shapes = Array.from({ length: 12 }, () => new Shape3D());
-
-    function animateCanvas() {
-      ctx.clearRect(0, 0, width, height);
-      for (let i = 0; i < particleCount; i++) {
-        particles[i].update();
-        particles[i].draw();
-      }
-      for (let i = 0; i < shapeCount; i++) {
-        shapes[i].update();
-        shapes[i].draw();
-      }
-      requestAnimationFrame(animateCanvas);
-    }
-    animateCanvas();
-
-    /* Parallax Effect */
-    if (window.innerWidth > 768) {
-      document.addEventListener('mousemove', (e) => {
-        if (isLocked) return;
-        const xAxis = (window.innerWidth / 2 - e.pageX) / 35;
-        const yAxis = (window.innerHeight / 2 - e.pageY) / 35;
-        card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-      });
-
-      document.addEventListener('mouseleave', () => {
-        card.style.transform = `rotateY(0deg) rotateX(0deg)`;
-      });
-    }
-
-    /* ==========================================================================
-       INPUT CONTROLS & NAVIGATION
-       ========================================================================== */
+    /* Input Handling */
     inputs[0].focus();
 
     inputs.forEach((input, index) => {
@@ -836,27 +476,9 @@
       if (!isLocked) inputs[0].focus();
     }
 
-    verifyBtn.addEventListener('click', function (e) {
-      const circle = document.createElement('span');
-      const diameter = Math.max(this.clientWidth, this.clientHeight);
-      const radius = diameter / 2;
-      const rect = this.getBoundingClientRect();
+    verifyBtn.addEventListener('click', handleVerification);
 
-      circle.style.width = circle.style.height = `${diameter}px`;
-      circle.style.left = `${e.clientX - rect.left - radius}px`;
-      circle.style.top = `${e.clientY - rect.top - radius}px`;
-      circle.classList.add('ripple');
-
-      const ripple = this.getElementsByClassName('ripple')[0];
-      if (ripple) ripple.remove();
-
-      this.appendChild(circle);
-      handleVerification();
-    });
-
-    /* ==========================================================================
-       AUTHENTICATION LOGIC & LINK REVEAL
-       ========================================================================== */
+    /* Verification Logic */
     function handleVerification() {
       if (isLocked) return;
 
@@ -876,30 +498,24 @@
     }
 
     function processSuccess() {
-      statusMsg.className = "status-message success";
-      statusMsg.innerHTML = `
-        <span class="success-checkmark">
-          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-        </span>
-        Access Granted
-      `;
-
-      card.style.borderColor = "#00a843";
-      card.style.boxShadow = "0 20px 40px rgba(0, 0, 0, 0.08), 0 0 30px rgba(0, 200, 83, 0.35)";
+      showStatus("ACCESS GRANTED", "success");
+      
+      card.style.borderColor = "#008000";
+      card.style.boxShadow = "0 15px 35px rgba(0, 128, 0, 0.15)";
 
       lockIcon.innerHTML = `
         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
         <path d="M7 11V4a5 5 0 0 1 9.9-1"></path>
       `;
-      lockIcon.style.stroke = "#00a843";
+      lockIcon.style.stroke = "#008000";
+      iconBox.style.borderColor = "#008000";
 
-      inputs.forEach(i => { i.disabled = true; i.classList.remove('input-error'); });
-      verifyBtn.disabled = true;
-
-      /* Smoothly Reveal Portal Links */
       setTimeout(() => {
-        portalLinks.classList.add('show');
-      }, 300);
+        authSection.style.display = 'none';
+        mainTitle.innerText = "Dashboard Links";
+        mainSubtitle.innerText = "Select an option below";
+        linksContainer.classList.add('show');
+      }, 600);
     }
 
     function processFailure() {
@@ -922,7 +538,7 @@
 
       inputs.forEach(i => {
         i.classList.add('input-error');
-        setTimeout(() => i.classList.remove('input-error'), 1200);
+        setTimeout(() => i.classList.remove('input-error'), 1000);
       });
     }
 
