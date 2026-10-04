@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusLab • Learn • Focus • Build</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0f172a',
+                        darkCard: '#1e293b',
+                        darkBorder: '#334155',
+                        accent: {
+                            DEFAULT: '#6366f1',
+                            hover: '#4f46e5',
+                            light: '#818cf8',
+                            subtle: 'rgba(99, 102, 241, 0.1)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        /* Custom scrollbar for sleek modern aesthetic */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(100, 116, 139, 0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 116, 139, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-darkBg dark:text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-white/80 dark:bg-darkBg/80 border-b border-slate-200 dark:border-darkBorder transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
+                    <i class="fa-solid fa-brain text-lg"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-indigo-600 to-violet-500 bg-clip-text text-transparent">FocusLab</span>
+                    <span class="hidden sm:inline-block ml-2 text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-darkCard px-2 py-0.5 rounded-full border border-slate-200 dark:border-darkBorder">Learn • Focus • Build</span>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <!-- Search Button / Quick Input toggle -->
+                <div class="relative hidden md:block">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-search text-xs"></i>
+                    </span>
+                    <input type="text" id="searchInput" placeholder="Search resources..." class="pl-9 pr-4 py-1.5 text-sm bg-slate-100 dark:bg-darkCard border border-slate-200 dark:border-darkBorder rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 w-64 transition-all text-slate-800 dark:text-slate-100">
+                </div>
+
+                <!-- Theme Toggle Button -->
+                <button id="themeToggleBtn" aria-label="Toggle Theme" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-darkCard border border-slate-200 dark:border-darkBorder flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
+                    <i id="themeIcon" class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-10">
+
+        <!-- Hero Section with Stats -->
+        <section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-900 via-slate-900 to-slate-950 text-white p-8 sm:p-12 shadow-2xl border border-indigo-500/20">
+            <div class="absolute -right-12 -bottom-12 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-12 -top-12 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="relative z-10 max-w-2xl">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-semibold mb-4 border border-indigo-500/30">
+                    <i class="fa-solid fa-sparkles"></i>
+                    <span>Intelligent Learning Workspace</span>
+                </div>
+                <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4">Learn With Intention.</h1>
+                <p class="text-slate-300 text-base sm:text-lg mb-8 leading-relaxed">
+                    Organize high-signal educational resources, master focus through dedicated timers, and build long-term retention systems without distractions.
+                </p>
+
+                <!-- Quick Stats Grid -->
+                <div class="grid grid-cols-3 gap-4 pt-4 border-t border-slate-800">
+                    <div>
+                        <span class="block text-2xl sm:text-3xl font-bold text-white" id="statTotal">7</span>
+                        <span class="text-xs text-slate-400 font-medium">Total Resources</span>
+                    </div>
+                    <div>
+                        <span class="block text-2xl sm:text-3xl font-bold text-indigo-400" id="statCompleted">0</span>
+                        <span class="text-xs text-slate-400 font-medium">Completed</span>
+                    </div>
+                    <div>
+                        <span class="block text-2xl sm:text-3xl font-bold text-violet-400" id="statProgress">0%</span>
+                        <span class="text-xs text-slate-400 font-medium">Overall Progress</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Dashboard Split: Resources vs Utilities (Pomodoro & Notes) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left 2 Columns: Category Filter & Resource Cards -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Mobile Search Bar -->
+                <div class="relative md:hidden">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-search text-xs"></i>
+                    </span>
+                    <input type="text" id="mobileSearchInput" placeholder="Search resources..." class="w-full pl-9 pr-4 py-2.5 text-sm bg-white dark:bg-darkCard border border-slate-200 dark:border-darkBorder rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100">
+                </div>
+
+                <!-- Category Navigation Pills -->
+                <div class="flex items-center space-x-2 overflow-x-auto pb-2 scrollbar-none" id="categoryNav">
+                    <button data-category="All" class="category-btn px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all bg-indigo-600 text-white shadow-md shadow-indigo-500/20">
+                        All Resources
+                    </button>
+                    <button data-category="Human Behavior & Mentalism" class="category-btn px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all bg-white dark:bg-darkCard text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-darkBorder hover:border-indigo-500">
+                        Human Behavior & Mentalism
+                    </button>
+                    <button data-category="Focus" class="category-btn px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all bg-white dark:bg-darkCard text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-darkBorder hover:border-indigo-500">
+                        Focus
+                    </button>
+                    <button data-category="Build Systems" class="category-btn px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all bg-white dark:bg-darkCard text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-darkBorder hover:border-indigo-500">
+                        Build Systems
+                    </button>
+                </div>
+
+                <!-- Resource Cards Grid -->
+                <div id="resourcesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Cards injected via JavaScript -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="hidden text-center py-16 bg-white dark:bg-darkCard rounded-3xl border border-slate-200 dark:border-darkBorder p-8">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 text-2xl">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-1">No resources found</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Try adjusting your search query or selecting a different category filter.</p>
+                </div>
+            </div>
+
+            <!-- Right 1 Column: Focus Mode (Pomodoro), My Progress & Learning Notes -->
+            <div class="space-y-6">
+
+                <!-- Focus Mode / Pomodoro Timer Section -->
+                <div class="bg-white dark:bg-darkCard rounded-3xl p-6 border border-slate-200 dark:border-darkBorder shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
+                                <i class="fa-solid fa-clock"></i>
+                            </div>
+                            <h2 class="font-bold text-lg text-slate-800 dark:text-slate-100">Focus Session</h2>
+                        </div>
+                        <span id="timerStatusBadge" class="text-xs font-medium px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">Ready</span>
+                    </div>
+
+                    <!-- Presets -->
+                    <div class="grid grid-cols-3 gap-2 mb-6">
+                        <button onclick="setTimerPreset(25)" class="timer-preset-btn py-1.5 text-xs font-semibold rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-900/50 hover:bg-indigo-100 transition-colors">25 min</button>
+                        <button onclick="setTimerPreset(50)" class="timer-preset-btn py-1.5 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-darkBorder hover:bg-slate-200 transition-colors">50 min</button>
+                        <button onclick="setTimerPreset(90)" class="timer-preset-btn py-1.5 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-darkBorder hover:bg-slate-200 transition-colors">90 min</button>
+                    </div>
+
+                    <!-- Timer Display -->
+                    <div class="text-center py-6 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800 mb-6">
+                        <div id="timerDisplay" class="text-5xl font-black tracking-tight text-slate-800 dark:text-slate-100 font-mono">25:00</div>
+                        <p id="timerMessage" class="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">Select start to begin deep work session.</p>
+                    </div>
+
+                    <!-- Timer Controls -->
+                    <div class="flex items-center space-x-2">
+                        <button id="timerStartBtn" onclick="toggleTimer()" class="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold text-sm shadow-lg shadow-indigo-600/20 transition-all flex items-center justify-center space-x-2">
+                            <i id="timerPlayIcon" class="fa-solid fa-play"></i>
+                            <span id="timerStartText">Start</span>
+                        </button>
+                        <button onclick="resetTimer()" class="px-4 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-semibold text-sm transition-colors">
+                            <i class="fa-solid fa-rotate-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- My Progress Card -->
+                <div class="bg-white dark:bg-darkCard rounded-3xl p-6 border border-slate-200 dark:border-darkBorder shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <h2 class="font-bold text-lg text-slate-800 dark:text-slate-100">My Progress</h2>
+                        </div>
+                        <span id="progressPercentageText" class="text-sm font-bold text-emerald-600 dark:text-emerald-400">0%</span>
+                    </div>
+                    
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-slate-100 dark:bg-slate-800 h-3 rounded-full overflow-hidden mb-4">
+                        <div id="progressBarFill" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800">
+                            <span class="block text-xl font-bold text-slate-800 dark:text-slate-100" id="completedCountDisplay">0</span>
+                            <span class="text-xs text-slate-500 dark:text-slate-400">Completed Videos</span>
+                        </div>
+                        <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800">
+                            <span class="block text-xl font-bold text-slate-800 dark:text-slate-100" id="remainingCountDisplay">7</span>
+                            <span class="text-xs text-slate-500 dark:text-slate-400">Remaining</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Learning Notes Section -->
+                <div class="bg-white dark:bg-darkCard rounded-3xl p-6 border border-slate-200 dark:border-darkBorder shadow-sm flex flex-col">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 rounded-lg bg-violet-500/10 text-violet-600 dark:text-violet-400 flex items-center justify-center font-bold">
+                                <i class="fa-solid fa-pen-nib"></i>
+                            </div>
+                            <h2 class="font-bold text-lg text-slate-800 dark:text-slate-100">Learning Notes</h2>
+                        </div>
+                        <span id="saveStatus" class="text-xs font-medium text-emerald-600 dark:text-emerald-400 opacity-0 transition-opacity flex items-center space-x-1">
+                            <i class="fa-solid fa-check text-[10px]"></i>
+                            <span>Saved</span>
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Jot down quick takeaways, insights, or mental models while you study. Autosaved locally.</p>
+                    <textarea id="notesArea" rows="6" placeholder="Type your notes here..." class="w-full p-3 text-sm bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100 resize-none transition-colors"></textarea>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 dark:border-darkBorder bg-white/50 dark:bg-darkBg/50 backdrop-blur-md mt-16 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+            <div class="flex items-center space-x-2 mb-2 sm:mb-0">
+                <span class="font-bold text-slate-700 dark:text-slate-300">FocusLab</span>
+                <span>•</span>
+                <span>Learn intentionally. Build consistently.</span>
+            </div>
+            <div>
+                <span>Designed for deep focus & personal mastery.</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Data Store for Educational Videos
+        const resourcesData = [
+            {
+                id: '4jwUXV4QaTw',
+                title: 'Former FBI Agent Explains How to Read Body Language',
+                category: 'Human Behavior & Mentalism',
+                description: 'Master non-verbal cues and micro-expressions directly from an expert counterintelligence investigator.',
+                duration: '18 min'
+            },
+            {
+                id: 'W3P3rT0j2gQ',
+                title: 'Reading Minds Through Body Language',
+                category: 'Human Behavior & Mentalism',
+                description: 'Uncover psychological techniques used to observe hidden intentions and unspoken social signals.',
+                duration: '15 min'
+            },
+            {
+                id: 'XduJC5-rX_0',
+                title: 'Everything about Mind Reading & Mentalism | Suhani Shah',
+                category: 'Human Behavior & Mentalism',
+                description: 'Explore the fascinating intersection of cognitive psychology, perception management, and mentalism.',
+                duration: '22 min'
+            },
+            {
+                id: 'h3M00JI8Iwo',
+                title: 'The Art of Reading Minds | Oz Pearlman | TED',
+                category: 'Human Behavior & Mentalism',
+                description: 'A captivating TED talk demonstrating intuition, psychological illusion, and deep focus.',
+                duration: '14 min'
+            },
+            {
+                id: 'E0CUX5RfI1k',
+                title: "Neuroscientist Explains: Why You Can't Focus Anymore (and 6 Fixes)",
+                category: 'Focus',
+                description: 'Understand dopamine loops, attention residue, and actionable neurological tactics to reclaim deep focus.',
+                duration: '16 min'
+            },
+            {
+                id: 'GDMmxmn-p8I',
+                title: 'How I Organize My Entire Life Using Just One Notebook',
+                category: 'Build Systems',
+                description: 'A minimalist analog productivity framework for organizing tasks, reflections, and lifelong learning.',
+                duration: '20 min'
+            },
+            {
+                id: 'Rvey9g0VgY0',
+                title: 'I Learned a System for Remembering Everything',
+                category: 'Build Systems',
+                description: 'Discover robust personal knowledge management systems designed for long-term retention and recall.',
+                duration: '19 min'
+            }
+        ];
+
+        // State variables
+        let currentCategory = 'All';
+        let searchQuery = '';
+        let completedResources = JSON.parse(localStorage.getItem('focuslab_completed')) || [];
+
+        // Timer variables
+        let timerDuration = 25 * 60; // in seconds
+        let timerTimeLeft = timerDuration;
+        let timerInterval = null;
+        let isTimerRunning = false;
+        let activeTimerMinutes = 25;
+
+        // Initialization on window load
+        window.onload = function() {
+            initTheme();
+            initNotes();
+            renderResources();
+            updateStats();
+            
+            // Search listeners
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                searchQuery = e.target.value.toLowerCase();
+                document.getElementById('mobileSearchInput').value = searchQuery;
+                renderResources();
+            });
+
+            document.getElementById('mobileSearchInput').addEventListener('input', (e) => {
+                searchQuery = e.target.value.toLowerCase();
+                document.getElementById('searchInput').value = searchQuery;
+                renderResources();
+            });
+
+            // Category buttons listener
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.category-btn').forEach(b => {
+                        b.classList.remove('bg-indigo-600', 'text-white', 'shadow-md', 'shadow-indigo-500/20');
+                        b.classList.add('bg-white', 'dark:bg-darkCard', 'text-slate-600', 'dark:text-slate-300', 'border', 'border-slate-200', 'dark:border-darkBorder');
+                    });
+                    btn.classList.remove('bg-white', 'dark:bg-darkCard', 'text-slate-600', 'dark:text-slate-300', 'border', 'border-slate-200', 'dark:border-darkBorder');
+                    btn.classList.add('bg-indigo-600', 'text-white', 'shadow-md', 'shadow-indigo-500/20');
+                    
+                    currentCategory = btn.getAttribute('data-category');
+                    renderResources();
+                });
+            });
+        };
+
+        // Theme management
+        function initTheme() {
+            const savedTheme = localStorage.getItem('focuslab_theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedTheme === 'light' || (!savedTheme && !prefersDark)) {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('themeIcon').className = 'fa-solid fa-sun';
+            } else {
+                document.documentElement.classList.add('dark');
+                document.getElementById('themeIcon').className = 'fa-solid fa-moon';
+            }
+
+            document.getElementById('themeToggleBtn').addEventListener('click', () => {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('focuslab_theme', 'light');
+                    document.getElementById('themeIcon').className = 'fa-solid fa-sun';
+                    showToast('Switched to Light Mode', 'info');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('focuslab_theme', 'dark');
+                    document.getElementById('themeIcon').className = 'fa-solid fa-moon';
+                    showToast('Switched to Dark Mode', 'info');
+                }
+            });
+        }
+
+        // Render Resource Cards
+        function renderResources() {
+            const grid = document.getElementById('resourcesGrid');
+            const emptyState = document.getElementById('emptyState');
+            grid.innerHTML = '';
+
+            const filtered = resourcesData.filter(item => {
+                const matchesCategory = currentCategory === 'All' || item.category === currentCategory;
+                const matchesSearch = item.title.toLowerCase().includes(searchQuery) || item.description.toLowerCase().includes(searchQuery);
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            filtered.forEach(item => {
+                const isCompleted = completedResources.includes(item.id);
+                const thumbnailUrl = `https://img.youtube.com/vi/${item.id}/hqdefault.jpg`;
+                const youtubeWatchUrl = `https://youtu.be/${item.id}`;
+
+                const card = document.createElement('div');
+                card.className = `group bg-white dark:bg-darkCard rounded-3xl border border-slate-200 dark:border-darkBorder overflow-hidden shadow-sm hover:shadow-xl hover:border-indigo-500/50 transition-all duration-300 flex flex-col justify-between ${isCompleted ? 'ring-2 ring-emerald-500/20' : ''}`;
+                
+                card.innerHTML = `
+                    <div>
+                        <!-- Thumbnail Header -->
+                        <div class="relative aspect-video bg-slate-900 overflow-hidden">
+                            <img src="${thumbnailUrl}" alt="${item.title}" onerror="this.src='https://placehold.co/600x400/1e293b/ffffff?text=FocusLab'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-80"></div>
+                            
+                            <!-- Category Badge -->
+                            <div class="absolute top-3 left-3">
+                                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-900/80 backdrop-blur-md text-indigo-300 border border-indigo-500/30">
+                                    ${item.category}
+                                </span>
+                            </div>
+
+                            <!-- Duration Badge -->
+                            <div class="absolute bottom-3 right-3">
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-medium bg-black/60 backdrop-blur-md text-white">
+                                    <i class="fa-regular fa-clock mr-1"></i> ${item.duration}
+                                </span>
+                            </div>
+
+                            <!-- Play Overlay Button -->
+                            <a href="${youtubeWatchUrl}" target="_blank" rel="noopener noreferrer" class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-xs">
+                                <div class="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg transform scale-90 group-hover:scale-100 transition-transform">
+                                    <i class="fa-solid fa-play ml-0.5"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Content Body -->
+                        <div class="p-5">
+                            <h3 class="font-bold text-base text-slate-800 dark:text-slate-100 mb-2 line-clamp-2 group-hover:text-indigo-500 transition-colors">
+                                ${item.title}
+                            </h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed mb-4">
+                                ${item.description}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Card Actions -->
+                    <div class="px-5 pb-5 pt-0 flex items-center justify-between border-t border-slate-100 dark:border-slate-800/60 pt-4">
+                        <button onclick="toggleComplete('${item.id}')" class="flex items-center space-x-2 text-xs font-semibold px-3 py-2 rounded-xl transition-all ${isCompleted ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'}">
+                            <i class="fa-solid ${isCompleted ? 'fa-circle-check' : 'fa-circle'}"></i>
+                            <span>${isCompleted ? 'Completed' : 'Mark Complete'}</span>
+                        </button>
+
+                        <a href="${youtubeWatchUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-1.5 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">
+                            <span>Watch YouTube</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Toggle Resource Completion
+        function toggleComplete(id) {
+            const index = completedResources.indexOf(id);
+            const resource = resourcesData.find(r => r.id === id);
+            
+            if (index > -1) {
+                completedResources.splice(index, 1);
+                showToast(`Marked "${resource.title.substring(0, 25)}..." as incomplete`, 'info');
+            } else {
+                completedResources.push(id);
+                showToast(`Great job! Completed "${resource.title.substring(0, 25)}..."`, 'success');
+            }
+
+            localStorage.setItem('focuslab_completed', JSON.stringify(completedResources));
+            renderResources();
+            updateStats();
+        }
+
+        // Update Statistics
+        function updateStats() {
+            const total = resourcesData.length;
+            const completed = completedResources.length;
+            const percentage = Math.round((completed / total) * 100);
+
+            document.getElementById('statTotal').innerText = total;
+            document.getElementById('statCompleted').innerText = completed;
+            document.getElementById('statProgress').innerText = percentage + '%';
+
+            document.getElementById('progressPercentageText').innerText = percentage + '%';
+            document.getElementById('progressBarFill').style.width = percentage + '%';
+            document.getElementById('completedCountDisplay').innerText = completed;
+            document.getElementById('remainingCountDisplay').innerText = total - completed;
+        }
+
+        // Pomodoro Timer Logic
+        function setTimerPreset(minutes) {
+            if (isTimerRunning) {
+                pauseTimer();
+            }
+            activeTimerMinutes = minutes;
+            timerDuration = minutes * 60;
+            timerTimeLeft = timerDuration;
+            updateTimerDisplay();
+            
+            // Highlight active preset button
+            document.querySelectorAll('.timer-preset-btn').forEach(btn => {
+                btn.className = 'timer-preset-btn py-1.5 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-darkBorder hover:bg-slate-200 transition-colors';
+            });
+            event.target.className = 'timer-preset-btn py-1.5 text-xs font-semibold rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-900/50 hover:bg-indigo-100 transition-colors';
+            showToast(`Timer set to ${minutes} minutes`, 'info');
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timerTimeLeft / 60);
+            const secs = timerTimeLeft % 60;
+            document.getElementById('timerDisplay').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function toggleTimer() {
+            if (isTimerRunning) {
+                pauseTimer();
+            } else {
+                startTimer();
+            }
+        }
+
+        function startTimer() {
+            isTimerRunning = true;
+            document.getElementById('timerStartText').innerText = 'Pause';
+            document.getElementById('timerPlayIcon').className = 'fa-solid fa-pause';
+            document.getElementById('timerStatusBadge').innerText = 'In Progress';
+            document.getElementById('timerStatusBadge').className = 'text-xs font-medium px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30';
+            document.getElementById('timerMessage').innerText = 'Stay focused. Eliminate all distractions.';
+
+            timerInterval = setInterval(() => {
+                if (timerTimeLeft > 0) {
+                    timerTimeLeft--;
+                    updateTimerDisplay();
+                } else {
+                    clearInterval(timerInterval);
+                    isTimerRunning = false;
+                    document.getElementById('timerStartText').innerText = 'Start';
+                    document.getElementById('timerPlayIcon').className = 'fa-solid fa-play';
+                    document.getElementById('timerStatusBadge').innerText = 'Completed';
+                    document.getElementById('timerStatusBadge').className = 'text-xs font-medium px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30';
+                    document.getElementById('timerMessage').innerText = 'Session complete! Take a well-deserved break.';
+                    showToast('Focus session completed! Amazing work.', 'success');
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            isTimerRunning = false;
+            clearInterval(timerInterval);
+            document.getElementById('timerStartText').innerText = 'Resume';
+            document.getElementById('timerPlayIcon').className = 'fa-solid fa-play';
+            document.getElementById('timerStatusBadge').innerText = 'Paused';
+            document.getElementById('timerStatusBadge').className = 'text-xs font-medium px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30';
+            document.getElementById('timerMessage').innerText = 'Timer paused. Ready when you are.';
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            timerTimeLeft = activeTimerMinutes * 60;
+            updateTimerDisplay();
+            document.getElementById('timerStartText').innerText = 'Start';
+            document.getElementById('timerPlayIcon').className = 'fa-solid fa-play';
+            document.getElementById('timerStatusBadge').innerText = 'Ready';
+            document.getElementById('timerStatusBadge').className = 'text-xs font-medium px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400';
+            document.getElementById('timerMessage').innerText = 'Select start to begin deep work session.';
+        }
+
+        // Learning Notes Autosave Logic
+        function initNotes() {
+            const notesArea = document.getElementById('notesArea');
+            const savedNotes = localStorage.getItem('focuslab_notes');
+            if (savedNotes) {
+                notesArea.value = savedNotes;
+            }
+
+            let saveTimeout;
+            notesArea.addEventListener('input', () => {
+                clearTimeout(saveTimeout);
+                const notes = notesArea.value;
+                localStorage.setItem('focuslab_notes', notes);
+
+                // Show saving indicator
+                const status = document.getElementById('saveStatus');
+                status.style.opacity = '1';
+                status.innerHTML = '<i class="fa-solid fa-spinner animate-spin text-[10px]"></i><span>Saving...</span>';
+
+                saveTimeout = setTimeout(() => {
+                    status.innerHTML = '<i class="fa-solid fa-check text-[10px]"></i><span>Saved</span>';
+                    setTimeout(() => {
+                        status.style.opacity = '0';
+                    }, 2000);
+                }, 600);
+            });
+        }
+
+        // Toast Notification System
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            let bgClass = 'bg-slate-900 text-white border-slate-700';
+            let icon = 'fa-circle-info text-indigo-400';
+            
+            if (type === 'success') {
+                bgClass = 'bg-slate-900 text-white border-emerald-500/40';
+                icon = 'fa-circle-check text-emerald-400';
+            }
+
+            toast.className = `pointer-events-auto flex items-center space-x-3 px-4 py-3 rounded-2xl shadow-2xl border text-sm font-medium transition-all transform translate-y-2 opacity-0 ${bgClass}`;
+            toast.innerHTML = `
+                <i class="fa-solid ${icon} text-base"></i>
+                <span>${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            // Animate in
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
