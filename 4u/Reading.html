@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Focus & Learning Systems Blueprint</title>
+  <style>
+    :root {
+      /* Palette: Deep Obsidian, Slate, Emerald Green, Amber & Gold */
+      --bg-dark: #0b0f19;
+      --bg-card: #151d2a;
+      --bg-card-hover: #1c2638;
+      --bg-code: #070a10;
+      
+      --accent-emerald: #10b981;
+      --accent-emerald-glow: rgba(16, 185, 129, 0.15);
+      --accent-amber: #f59e0b;
+      --accent-amber-glow: rgba(245, 158, 11, 0.15);
+      --accent-indigo: #6366f1;
+      
+      --text-main: #f8fafc;
+      --text-subtle: #cbd5e1;
+      --text-muted: #64748b;
+      
+      --border-color: #243044;
+      --border-highlight: #334155;
+      
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      
+      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.65;
+      padding: 2.5rem 1rem;
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(245, 158, 11, 0.04) 0%, transparent 40%);
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.85rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-emerald);
+      background: var(--accent-emerald-glow);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 9999px;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.025em;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1.15rem;
+      font-weight: 400;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-top: 2rem;
+      background-color: var(--bg-card);
+      padding: 0.4rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .tab-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+    }
+
+    .tab-btn.active {
+      background-color: var(--accent-emerald);
+      color: #042f2e;
+      box-shadow: var(--shadow-sm);
+      font-weight: 700;
+    }
+
+    .tab-btn.active.amber-mode {
+      background-color: var(--accent-amber);
+      color: #451a03;
+    }
+
+    .content-section {
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .content-section.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--border-highlight);
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--accent-emerald);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .learning-theme h2 {
+      color: var(--accent-amber);
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 1.25rem 0 0.5rem 0;
+      color: var(--text-main);
+    }
+
+    p, ul, ol {
+      color: var(--text-subtle);
+      font-size: 1rem;
+      margin-bottom: 0.85rem;
+    }
+
+    p strong, ul strong, ol strong {
+      color: var(--text-main);
+    }
+
+    ul, ol {
+      padding-left: 1.4rem;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    li::marker {
+      color: var(--text-muted);
+    }
+
+    blockquote {
+      background-color: var(--accent-emerald-glow);
+      border-left: 4px solid var(--accent-emerald);
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      font-style: italic;
+      color: var(--text-main);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 1.05rem;
+    }
+
+    .learning-theme blockquote {
+      background-color: var(--accent-amber-glow);
+      border-left-color: var(--accent-amber);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.25rem 0;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    th, td {
+      padding: 0.85rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    th {
+      background-color: var(--bg-code);
+      color: var(--accent-emerald);
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .learning-theme th {
+      color: var(--accent-amber);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:nth-child(even) td {
+      background-color: rgba(255, 255, 255, 0.015);
+    }
+
+    pre {
+      background-color: var(--bg-code);
+      padding: 1.25rem;
+      border-radius: var(--radius-sm);
+      overflow-x: auto;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      font-size: 0.9rem;
+      color: var(--accent-emerald);
+      margin: 1rem 0;
+      border: 1px solid var(--border-color);
+      line-height: 1.5;
+    }
+
+    .learning-theme pre {
+      color: var(--accent-amber);
+    }
+
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(21, 29, 42, 0) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin: 1.25rem 0;
+    }
+
+    .learning-theme .highlight-box {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(21, 29, 42, 0) 100%);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 1.5rem 0.75rem;
+      }
+      h1 {
+        font-size: 1.85rem;
+      }
+      nav {
+        width: 100%;
+      }
+      .tab-btn {
+        flex: 1;
+        justify-content: center;
+        padding: 0.6rem 0.5rem;
+        font-size: 0.85rem;
+      }
+      .card {
+        padding: 1.25rem;
+      }
+      th, td {
+        padding: 0.6rem 0.75rem;
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <span class="badge">System Protocol</span>
+      <h1>Cognitive Execution Blueprint</h1>
+      <p class="subtitle">Environment Control & Knowledge Extraction Framework</p>
+      <nav>
+        <button class="tab-btn active" id="btn-focus" onclick="switchTab('focus')">⚡ Part 1: Focus System</button>
+        <button class="tab-btn" id="btn-learning" onclick="switchTab('learning')">📚 Part 2: Learning System</button>
+      </nav>
+    </header>
+
+    <main id="focus" class="content-section active">
+
+      <div class="card highlight-box">
+        <h2>⚡ Core Philosophy</h2>
+        <p><strong>Main Idea:</strong> Remove distractions and engineer your environment so focus happens naturally—rather than attempting to force productivity through willpower.</p>
+        <blockquote>"Don't try to become a person who can resist every distraction. Build an environment where distractions have fewer opportunities to reach you."</blockquote>
+      </div>
+
+      <div class="card">
+        <h2>1. 🔔 Control Notifications</h2>
+        <p><strong>Problem:</strong> Constant interruptions fragment attention and train compulsive check behavior.</p>
+        <p><strong>Action Protocol:</strong></p>
+        <ul>
+          <li>Disable news, social media, shopping, and non-essential app alerts.</li>
+          <li>Restrict active notifications to an exclusive <strong>VIP contact list</strong>.</li>
+        </ul>
+        <blockquote>Your phone should notify you when YOU need it, not whenever an app wants your attention.</blockquote>
+      </div>
+
+      <div class="card">
+        <h2>2. 📱 Phone Environment Protocol</h2>
+        <h3>A. Turn Phone Grayscale</h3>
+        <p>Removing color reduces screen stimulation and diminishes dopamine triggers.</p>
+        <h3>B. Physical Separation</h3>
+        <p><strong>Out of sight → fewer attention checks → deeper concentration.</strong></p>
+        <ul>
+          <li><strong>Optimal:</strong> Place your phone in a separate room during deep work.</li>
+          <li><strong>Minimum:</strong> Store it completely behind you and out of reach.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>3. 🎯 Define Daily MITs (Most Important Tasks)</h2>
+        <p>Avoid beginning the day reactively by checking messages or social feeds first thing.</p>
+        <p>Select <strong>1–3 Most Important Tasks</strong> each morning by asking:</p>
+        <blockquote>“What will my future self thank me for?”</blockquote>
+        <ul>
+          <li>Write your MITs on a physical card or piece of paper.</li>
+          <li><strong>Fresh Start Rule:</strong> Throw away unfinished task sheets at day's end—don't carry guilt into tomorrow.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>4. 🚫 Stop Task-Switching</h2>
+        <p>Multitasking is rapid attention switching that depletes cognitive battery.</p>
+        <div class="highlight-box">
+          <p><strong>Execution Rule:</strong> Whole-ass one thing rather than half-ass two things.</p>
+        </div>
+        <p><strong>Sequence:</strong> Single Task → Complete → True Break → Next Task.</p>
+      </div>
+
+      <div class="card">
+        <h2>5. ⚡ Focus Sprints & Parking Lot</h2>
+        <ol>
+          <li><strong>Schedule strictly:</strong> Set specific time windows (e.g., 7:00–7:45 PM).</li>
+          <li><strong>Deconstruct:</strong> Break large goals into 5–15 minute concrete micro-actions.</li>
+          <li><strong>Parking Lot:</strong> When random thoughts occur ("check email", "buy item"), write them on a paper log without acting on them immediately.</li>
+          <li><strong>True Brain Breaks:</strong> Rest without inputs—walk, stretch, or hydrate. Avoid scrolling.</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h2>6. 🕐 Peak Biological Alignment</h2>
+        <p>Identify your 2–3 hour peak biological energy window and strictly reserve it for high-leverage cognitive work.</p>
+      </div>
+
+      <div class="card">
+        <h2>⭐ Action Matrix</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>System</th>
+              <th>Action Required</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1</strong></td>
+              <td>Notifications</td>
+              <td>Turn off non-VIP alerts.</td>
+            </tr>
+            <tr>
+              <td><strong>2</strong></td>
+              <td>Phone</td>
+              <td>Grayscale + physically out of sight.</td>
+            </tr>
+            <tr>
+              <td><strong>3</strong></td>
+              <td>MITs</td>
+              <td>Select 1–3 daily priorities on paper.</td>
+            </tr>
+            <tr>
+              <td><strong>4</strong></td>
+              <td>Focus</td>
+              <td>Single-task sequentially; zero tabs.</td>
+            </tr>
+            <tr>
+              <td><strong>5</strong></td>
+              <td>Sprint</td>
+              <td>Timed blocks using a Parking Lot list.</td>
+            </tr>
+            <tr>
+              <td><strong>6</strong></td>
+              <td>Schedule</td>
+              <td>Protect your peak biological hours.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+
+    <main id="learning" class="content-section learning-theme">
+
+      <div class="card highlight-box">
+        <h2>📚 Core Philosophy</h2>
+        <p><strong>Main Idea:</strong> Human memory is naturally imperfect. Build an external system to capture, organize, and execute ideas instead of relying on memory alone.</p>
+        <blockquote>"Don't try to remember everything you consume; build a system that captures important ideas, organizes them, and helps you use them."</blockquote>
+      </div>
+
+      <div class="card">
+        <h2>1. 📖 Reading ≠ Learning</h2>
+        <p>Speed-reading without retention yields minimal value. If a book provides 1–2 life-changing ideas that you actively execute, it has fulfilled its purpose.</p>
+        <p><strong>Mindset Shift:</strong> Optimize for <em>understanding and real-world application</em> over consumption speed.</p>
+      </div>
+
+      <div class="card">
+        <h2>2. 🗂️ The 3-Stage Knowledge System</h2>
+        <h3>Stage 1: Capture While Reading</h3>
+        <p>Highlight key insights, make margins notes, and record triggers. Capture ideas, not whole paragraphs.</p>
+        
+        <h3>Stage 2: Revisit & Compress</h3>
+        <p>After finishing a source, review raw notes and filter them down to the essential takeaways.</p>
+        
+        <h3>Stage 3: Categorize into External Brain</h3>
+        <p>Store organized notes into clear categories (e.g., <code>🧠 Mind</code>, <code>💼 Career</code>, <code>📚 Learning</code>, <code>🧑‍🤝‍🧑 People</code>, <code>💰 Finance</code>).</p>
+      </div>
+
+      <div class="card">
+        <h2>3. 🔄 Knowledge Pipeline</h2>
+        <pre>
+📖 READ
+  ↓
+✍️ TAKE NOTES
+  ↓
+🧠 THINK & FILTER
+  ↓
+🗂️ CATEGORIZE
+  ↓
+🛠️ APPLY TO REAL LIFE
+  ↓
+💡 LONG-TERM RETENTION</pre>
+      </div>
+
+      <div class="card">
+        <h2>4. 🛠️ The 3-Level Action System</h2>
+        <ul>
+          <li><strong>Level 1 (Capture):</strong> Save ideas that are surprising, practical, or directly relevant.</li>
+          <li><strong>Level 2 (Compress):</strong> Distill 20–30 raw notes down to 5 vital takeaways.</li>
+          <li><strong>Level 3 (Apply):</strong> Ask: <em>"What explicit action will I take because of this?"</em> and execute.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>🔥 10 Essential Rules</h2>
+        <ol>
+          <li>Reading does not automatically mean learning.</li>
+          <li>Forgetting details is a normal brain function.</li>
+          <li>Single breakthrough ideas justify an entire book.</li>
+          <li>Take notes actively while reading.</li>
+          <li>Revisit and compress notes post-reading.</li>
+          <li>Organize knowledge into structured categories.</li>
+          <li>Application locks knowledge into long-term memory.</li>
+          <li>Prioritize depth of understanding over reading speed.</li>
+          <li>Store details outside your brain (External Brain).</li>
+          <li>Start imperfectly—refine your system over time.</li>
+        </ol>
+      </div>
+
+    </main>
+
+  </div>
+
+  <script>
+    function switchTab(tabId) {
+      const focusSection = document.getElementById('focus');
+      const learningSection = document.getElementById('learning');
+      const btnFocus = document.getElementById('btn-focus');
+      const btnLearning = document.getElementById('btn-learning');
+
+      if (tabId === 'focus') {
+        learningSection.classList.remove('active');
+        btnLearning.classList.remove('active', 'amber-mode');
+        
+        focusSection.classList.add('active');
+        btnFocus.classList.add('active');
+      } else {
+        focusSection.classList.remove('active');
+        btnFocus.classList.remove('active');
+        
+        learningSection.classList.add('active');
+        btnLearning.classList.add('active', 'amber-mode');
+      }
+    }
+  </script>
+</body>
+</html>
