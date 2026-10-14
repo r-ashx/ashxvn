@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Night Shift Countdown 🌙</title>
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #070A18;
+            --bg-card: rgba(15, 20, 42, 0.78);
+            --border-glass: rgba(139, 92, 246, 0.3);
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --neon-violet: #8B5CF6;
+            --electric-purple: #A855F7;
+            --cyber-cyan: #06B6D4;
+            --bright-magenta: #EC4899;
+            --accent-red: #F43F5E;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- Interactive & Dynamic Ambient Canvas Background --- */
+        .bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* Ambient Plasma Glow Orbs */
+        .nebula-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -3;
+            pointer-events: none;
+            opacity: 0.55;
+            will-change: transform;
+        }
+
+        .orb-violet {
+            top: -15%;
+            left: -10%;
+            width: 55vw;
+            height: 55vw;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.6) 0%, transparent 70%);
+            animation: orbFloat1 20s ease-in-out infinite alternate;
+        }
+
+        .orb-cyan {
+            bottom: -20%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.5) 0%, transparent 70%);
+            animation: orbFloat2 24s ease-in-out infinite alternate;
+        }
+
+        .orb-magenta {
+            top: 40%;
+            left: 30%;
+            width: 45vw;
+            height: 45vw;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.35) 0%, transparent 70%);
+            animation: orbFloat3 18s ease-in-out infinite alternate;
+        }
+
+        @keyframes orbFloat1 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(60px, 50px) scale(1.12); }
+        }
+
+        @keyframes orbFloat2 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-70px, -60px) scale(1.18); }
+        }
+
+        @keyframes orbFloat3 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-50px, 70px) scale(0.88); }
+        }
+
+        /* Meteor / Shooting Star Effect */
+        .meteor {
+            position: fixed;
+            height: 2px;
+            background: linear-gradient(90deg, #FFFFFF, rgba(255, 255, 255, 0));
+            transform: rotate(-45deg);
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0;
+            animation: meteorAnim 6s ease-in-out infinite;
+        }
+
+        @keyframes meteorAnim {
+            0% {
+                transform: translateX(0) translateY(0) rotate(-45deg);
+                opacity: 1;
+                width: 0px;
+            }
+            15% { width: 160px; }
+            30% {
+                transform: translateX(-700px) translateY(700px) rotate(-45deg);
+                opacity: 0;
+                width: 0px;
+            }
+            100% { opacity: 0; }
+        }
+
+        /* --- Main App Container & Glassmorphism Card --- */
+        .app-container {
+            width: 100%;
+            max-width: 500px;
+            padding: 24px;
+            z-index: 1;
+        }
+
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(32px);
+            -webkit-backdrop-filter: blur(32px);
+            border: 1px solid var(--border-glass);
+            border-radius: 32px;
+            padding: 44px 36px;
+            box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.9),
+                        0 0 50px rgba(139, 92, 246, 0.15);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--cyber-cyan), var(--bright-magenta), transparent);
+        }
+
+        /* Screen Transitions */
+        .screen {
+            display: none;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .screen.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Typography & Headings */
+        .title-group {
+            margin-bottom: 28px;
+        }
+
+        h1 {
+            font-size: 2.1rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            margin-bottom: 10px;
+            color: var(--text-main);
+            background: linear-gradient(135deg, #FFFFFF 20%, var(--cyber-cyan) 65%, var(--electric-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 0.98rem;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        /* --- Redesigned Form & Action Button --- */
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 18px 24px;
+            background: rgba(7, 10, 24, 0.75);
+            border: 2px solid rgba(139, 92, 246, 0.25);
+            border-radius: 18px;
+            color: var(--text-main);
+            font-size: 1.05rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(148, 163, 184, 0.45);
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--cyber-cyan);
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.3);
+            background: rgba(7, 10, 24, 0.92);
+        }
+
+        /* Premium Shimmer Button */
+        .btn-shimmer {
+            width: 100%;
+            padding: 18px 28px;
+            background: linear-gradient(135deg, var(--neon-violet) 0%, var(--bright-magenta) 50%, var(--cyber-cyan) 100%);
+            background-size: 200% auto;
+            border: none;
+            border-radius: 18px;
+            color: #FFFFFF;
+            font-size: 1.08rem;
+            font-weight: 700;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 10px 30px -5px rgba(139, 92, 246, 0.5);
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-shimmer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn-shimmer:hover {
+            background-position: right center;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px -5px rgba(236, 72, 153, 0.6);
+        }
+
+        .btn-shimmer:hover::before {
+            left: 100%;
+        }
+
+        .btn-shimmer:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-main);
+            box-shadow: none;
+            margin-top: 16px;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            filter: none;
+        }
+
+        /* Message Boxes */
+        .message-box {
+            background: rgba(7, 10, 24, 0.7);
+            border: 1px solid rgba(244, 63, 94, 0.35);
+            border-radius: 20px;
+            padding: 24px 20px;
+            margin-bottom: 24px;
+            color: #FEE2E2;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            box-shadow: inset 0 0 18px rgba(244, 63, 94, 0.12);
+        }
+
+        .message-box.notice {
+            border-color: rgba(6, 182, 212, 0.35);
+            color: var(--text-main);
+            box-shadow: inset 0 0 18px rgba(6, 182, 212, 0.12);
+        }
+
+        .access-note {
+            margin-top: 12px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px dashed rgba(244, 63, 94, 0.25);
+            padding-top: 10px;
+        }
+
+        /* Shake Animation */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        .shake {
+            animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        }
+
+        /* --- Countdown Display Grid --- */
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 26px 0;
+        }
+
+        .time-card {
+            background: rgba(7, 10, 24, 0.85);
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 18px;
+            padding: 16px 8px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .time-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyber-cyan), var(--bright-magenta));
+        }
+
+        .time-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 2px;
+            text-shadow: 0 0 15px rgba(139, 92, 246, 0.6);
+        }
+
+        .time-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-top: 22px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background: rgba(7, 10, 24, 0.85);
+            border-radius: 50px;
+            overflow: hidden;
+            border: 1px solid rgba(148, 163, 184, 0.15);
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--cyber-cyan), var(--bright-magenta));
+            border-radius: 50px;
+            transition: width 1s linear;
+            box-shadow: 0 0 12px var(--bright-magenta);
+        }
+
+        /* Local Time Display */
+        .local-clock {
+            margin-top: 20px;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Dynamic Animated Ambient Plasma & Star Background -->
+    <div class="nebula-orb orb-violet"></div>
+    <div class="nebula-orb orb-cyan"></div>
+    <div class="nebula-orb orb-magenta"></div>
+    
+    <div class="meteor" style="top: 12%; left: 85%; animation-delay: 0.8s;"></div>
+    <div class="meteor" style="top: 48%; left: 92%; animation-delay: 3.6s;"></div>
+    
+    <canvas class="bg-canvas" id="starCanvas"></canvas>
+
+    <div class="app-container">
+        <!-- SCREEN 1: Welcome & Name Input -->
+        <div id="screenWelcome" class="glass-card screen active">
+            <div class="title-group">
+                <h1>Welcome to Night Shift 🌙</h1>
+                <p class="subtitle">Enter your name to continue</p>
+            </div>
+            
+            <div class="input-group">
+                <input type="text" id="nameInput" placeholder="Enter your name..." autocomplete="off">
+            </div>
+
+            <button class="btn-shimmer" id="submitNameBtn">
+                Let's Go ✨
+            </button>
+        </div>
+
+        <!-- SCREEN 2: Unauthorized Access -->
+        <div id="screenUnauthorized" class="glass-card screen">
+            <div class="title-group">
+                <h1>Access Restricted</h1>
+            </div>
+
+            <div class="message-box" id="unauthorizedMsg">
+                <!-- Dynamically filled via JS -->
+            </div>
+
+            <button class="btn-shimmer btn-secondary" id="backToWelcomeBtn">
+                🔄 Try Another Name
+            </button>
+        </div>
+
+        <!-- SCREEN 3: Authorized Outside Hours (Notice) -->
+        <div id="screenNotice" class="glass-card screen">
+            <div class="title-group">
+                <h1 id="noticeGreeting">Hey Ashwin! 🌤️</h1>
+            </div>
+
+            <div class="message-box notice">
+                The Night Shift Countdown is available only from 11:00 PM to 7:00 AM.
+            </div>
+
+            <div class="local-clock" id="noticeClock">
+                Current local time: --:--:--
+            </div>
+
+            <button class="btn-shimmer btn-secondary" id="noticeBackBtn">
+                Switch User / Back
+            </button>
+        </div>
+
+        <!-- SCREEN 4: Active Countdown -->
+        <div id="screenCountdown" class="glass-card screen">
+            <div class="title-group">
+                <h1 id="countdownTitle">Ashwin's Night Shift Countdown 🌙</h1>
+                <p class="subtitle">Time remaining until 7:00 AM</p>
+            </div>
+
+            <div class="countdown-grid">
+                <div class="time-card">
+                    <div class="time-value" id="hoursVal">00</div>
+                    <div class="time-label">Hours</div>
+                </div>
+                <div class="time-card">
+                    <div class="time-value" id="minsVal">00</div>
+                    <div class="time-label">Minutes</div>
+                </div>
+                <div class="time-card">
+                    <div class="time-value" id="secsVal">00</div>
+                    <div class="time-label">Seconds</div>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span>Night Shift Progress</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <div class="local-clock" id="activeClock">
+                Local Time: --:--:--
+            </div>
+
+            <button class="btn-shimmer btn-secondary" id="countdownBackBtn">
+                Switch User / Back
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- Interactive Multi-Node Starfield Canvas ---
+        const canvas = document.getElementById('starCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let stars = [];
+        let mouseX = 0, mouseY = 0;
+
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        for (let i = 0; i < 160; i++) {
+            stars.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                radius: Math.random() * 1.6 + 0.3,
+                alpha: Math.random() * 0.7 + 0.3,
+                speed: Math.random() * 0.14 + 0.03,
+                pulseSpeed: Math.random() * 0.02 + 0.01
+            });
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX - width / 2) * 0.0003;
+            mouseY = (e.clientY - height / 2) * 0.0003;
+        });
+
+        function animateStars() {
+            ctx.clearRect(0, 0, width, height);
+            stars.forEach(star => {
+                star.y -= star.speed;
+                if (star.y < 0) star.y = height;
+                star.alpha += Math.sin(Date.now() * star.pulseSpeed) * 0.004;
+                
+                ctx.beginPath();
+                ctx.arc(star.x + mouseX * 45, star.y + mouseY * 45, star.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(248, 250, 252, ${Math.max(0.15, Math.min(1, star.alpha))})`;
+                ctx.fill();
+            });
+            requestAnimationFrame(animateStars);
+        }
+        animateStars();
+
+        // --- Navigation Logic & Time Engine ---
+        const screens = {
+            welcome: document.getElementById('screenWelcome'),
+            unauthorized: document.getElementById('screenUnauthorized'),
+            notice: document.getElementById('screenNotice'),
+            countdown: document.getElementById('screenCountdown')
+        };
+
+        function switchScreen(screenKey) {
+            Object.values(screens).forEach(screen => {
+                screen.classList.remove('active');
+            });
+            setTimeout(() => {
+                screens[screenKey].classList.add('active');
+            }, 50);
+        }
+
+        let verifiedUser = null;
+        let activeInterval = null;
+
+        const nameInput = document.getElementById('nameInput');
+        const submitNameBtn = document.getElementById('submitNameBtn');
+        const unauthorizedMsg = document.getElementById('unauthorizedMsg');
+        const backToWelcomeBtn = document.getElementById('backToWelcomeBtn');
+        const noticeGreeting = document.getElementById('noticeGreeting');
+        const noticeClock = document.getElementById('noticeClock');
+        const noticeBackBtn = document.getElementById('noticeBackBtn');
+        const countdownTitle = document.getElementById('countdownTitle');
+        const activeClock = document.getElementById('activeClock');
+        const countdownBackBtn = document.getElementById('countdownBackBtn');
+
+        // --- Permitted Time Window: 11:00 PM (23:00) to 7:00 AM (07:00) ---
+        function checkTimeWindow() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            const totalSecs = hours * 3600 + minutes * 60 + seconds;
+
+            const startSecs = 23 * 3600; // 11:00 PM
+            const endSecs = 7 * 3600;    // 7:00 AM
+
+            const isWithinShift = (totalSecs >= startSecs) || (totalSecs < endSecs);
+            return { isWithinShift, now, totalSecs };
+        }
+
+        // --- Handle User Verification ---
+        function handleVerification() {
+            const rawName = nameInput.value.trim();
+            if (!rawName) {
+                nameInput.classList.add('shake');
+                setTimeout(() => nameInput.classList.remove('shake'), 400);
+                return;
+            }
+
+            const normalizedName = rawName.toLowerCase();
+            // Case-insensitive check for Ashwin & Ashvin
+            if (normalizedName === 'ashwin' || normalizedName === 'ashvin') {
+                verifiedUser = rawName.charAt(0).toUpperCase() + rawName.slice(1).toLowerCase();
+                evaluateAndRouteUser();
+            } else {
+                // Display unauthorized error with actual user input
+                unauthorizedMsg.innerHTML = `
+                    Sorry <strong>${rawName}</strong>, you are not the user. 💔
+                    <div class="access-note">🔒 Note: Only Ashvin has access to this portal.</div>
+                `;
+                switchScreen('unauthorized');
+                const card = screens.unauthorized.querySelector('.glass-card') || screens.unauthorized;
+                card.classList.add('shake');
+                setTimeout(() => card.classList.remove('shake'), 400);
+            }
+        }
+
+        submitNameBtn.addEventListener('click', handleVerification);
+        nameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleVerification();
+        });
+
+        backToWelcomeBtn.addEventListener('click', resetToWelcome);
+        noticeBackBtn.addEventListener('click', resetToWelcome);
+        countdownBackBtn.addEventListener('click', resetToWelcome);
+
+        function resetToWelcome() {
+            nameInput.value = '';
+            verifiedUser = null;
+            stopCountdown();
+            switchScreen('welcome');
+        }
+
+        // --- Route Authorized Users ---
+        function evaluateAndRouteUser() {
+            if (!verifiedUser) return;
+
+            const { isWithinShift, now } = checkTimeWindow();
+            const timeString = now.toLocaleTimeString();
+
+            if (isWithinShift) {
+                countdownTitle.innerText = `${verifiedUser}'s Night Shift Countdown 🌙`;
+                switchScreen('countdown');
+                startCountdownEngine();
+            } else {
+                noticeGreeting.innerText = `Hey ${verifiedUser}! 🌤️`;
+                noticeClock.innerText = `Current local time: ${timeString}`;
+                switchScreen('notice');
+                startNoticeClock();
+            }
+        }
+
+        function startNoticeClock() {
+            stopCountdown();
+            activeInterval = setInterval(() => {
+                const { isWithinShift, now } = checkTimeWindow();
+                noticeClock.innerText = `Current local time: ${now.toLocaleTimeString()}`;
+                
+                if (isWithinShift && screens.notice.classList.contains('active')) {
+                    evaluateAndRouteUser();
+                }
+            }, 1000);
+        }
+
+        // --- Live Countdown Engine ---
+        function startCountdownEngine() {
+            stopCountdown();
+
+            function updateTimer() {
+                const now = new Date();
+                const hours = now.getHours();
+                const minutes = now.getMinutes();
+                const seconds = now.getSeconds();
+                const totalSecs = hours * 3600 + minutes * 60 + seconds;
+
+                const startSecs = 23 * 3600;
+                const endSecs = 7 * 3600;
+
+                if (!((totalSecs >= startSecs) || (totalSecs < endSecs))) {
+                    evaluateAndRouteUser();
+                    return;
+                }
+
+                let targetDate = new Date(now);
+                if (hours >= 23) {
+                    targetDate.setDate(targetDate.getDate() + 1);
+                }
+                targetDate.setHours(7, 0, 0, 0);
+
+                const diffMs = targetDate - now;
+                if (diffMs <= 0) {
+                    evaluateAndRouteUser();
+                    return;
+                }
+
+                const diffSecs = Math.floor(diffMs / 1000);
+                const remHours = Math.floor(diffSecs / 3600);
+                const remMins = Math.floor((diffSecs % 3600) / 60);
+                const remSecs = diffSecs % 60;
+
+                document.getElementById('hoursVal').innerText = String(remHours).padStart(2, '0');
+                document.getElementById('minsVal').innerText = String(remMins).padStart(2, '0');
+                document.getElementById('secsVal').innerText = String(remSecs).padStart(2, '0');
+                activeClock.innerText = `Local Time: ${now.toLocaleTimeString()}`;
+
+                let elapsedSecs = 0;
+                if (totalSecs >= 23 * 3600) {
+                    elapsedSecs = totalSecs - (23 * 3600);
+                } else {
+                    elapsedSecs = totalSecs + 3600;
+                }
+                const totalShiftSecs = 8 * 3600;
+                let progress = (elapsedSecs / totalShiftSecs) * 100;
+                progress = Math.max(0, Math.min(100, progress));
+
+                document.getElementById('progressPercent').innerText = `${Math.floor(progress)}%`;
+                document.getElementById('progressFill').style.width = `${progress}%`;
+            }
+
+            updateTimer();
+            activeInterval = setInterval(updateTimer, 1000);
+        }
+
+        function stopCountdown() {
+            if (activeInterval) {
+                clearInterval(activeInterval);
+                activeInterval = null;
+            }
+        }
+    </script>
+</body>
+</html>
