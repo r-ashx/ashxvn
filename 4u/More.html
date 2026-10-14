@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Learning Notes — Raj Shamani × Dr. Sahar Yousef</title>
+  <style>
+    :root {
+      /* Light Palette */
+      --bg-color: #f8f9fa;
+      --card-bg: #ffffff;
+      --text-color: #212529;
+      --text-muted: #6c757d;
+      --border-color: #e9ecef;
+      --accent-color: #2563eb;
+      --accent-hover: #1d4ed8;
+      --accent-light: #eff6ff;
+      --header-bg: rgba(255, 255, 255, 0.95);
+      --sidebar-bg: #f1f5f9;
+      --highlight-bg: #fef08a;
+      --highlight-color: #000000;
+
+      /* Box Colors */
+      --note-bg: #eff6ff;
+      --note-border: #3b82f6;
+      --warning-bg: #fffbeeb;
+      --warning-border: #f59e0b;
+      --tip-bg: #f0fdf4;
+      --tip-border: #22c55e;
+      --def-bg: #faf5ff;
+      --def-border: #a855f7;
+
+      /* Typography */
+      --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      --font-code: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      --base-font-size: 16px;
+      --line-height: 1.7;
+      --max-content-width: 850px;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-color: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --accent-color: #3b82f6;
+      --accent-hover: #60a5fa;
+      --accent-light: #1e293b;
+      --header-bg: rgba(15, 23, 42, 0.95);
+      --sidebar-bg: #1e293b;
+      --highlight-bg: #854d0e;
+      --highlight-color: #ffffff;
+
+      --note-bg: #1e3a8a33;
+      --note-border: #3b82f6;
+      --warning-bg: #78350f33;
+      --warning-border: #f59e0b;
+      --tip-bg: #064e3b33;
+      --tip-border: #22c55e;
+      --def-bg: #581c8733;
+      --def-border: #a855f7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-main);
+      font-size: var(--base-font-size);
+      line-height: var(--line-height);
+      color: var(--text-color);
+      background-color: var(--bg-color);
+      transition: background-color 0.2s ease, color 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Reading Progress Bar */
+    #progress-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: transparent;
+      z-index: 1001;
+    }
+
+    #progress-bar {
+      height: 100%;
+      background: var(--accent-color);
+      width: 0%;
+      transition: width 0.1s;
+    }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--header-bg);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.5rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      height: 60px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-color);
+      white-space: nowrap;
+    }
+
+    .toggle-sidebar-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-color);
+      font-size: 1.25rem;
+      cursor: pointer;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-grow: 1;
+      justify-content: flex-end;
+    }
+
+    .search-box {
+      position: relative;
+      max-width: 320px;
+      width: 100%;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.4rem 0.75rem 0.4rem 2rem;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-color);
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--accent-color);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.6rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .search-stats {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      margin-left: 0.25rem;
+    }
+
+    .btn-group {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 2px;
+    }
+
+    .btn {
+      background: transparent;
+      border: none;
+      color: var(--text-color);
+      padding: 0.3rem 0.6rem;
+      font-size: 0.85rem;
+      border-radius: 4px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--border-color);
+    }
+
+    /* Layout */
+    .app-container {
+      display: flex;
+      flex: 1;
+    }
+
+    /* Sidebar */
+    aside {
+      width: 280px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border-color);
+      padding: 1.25rem 1rem;
+      position: sticky;
+      top: 60px;
+      height: calc(100vh - 60px);
+      overflow-y: auto;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+
+    .toc-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      font-weight: 700;
+    }
+
+    .toc-list {
+      list-style: none;
+    }
+
+    .toc-item {
+      margin-bottom: 0.25rem;
+    }
+
+    .toc-link {
+      display: block;
+      padding: 0.35rem 0.6rem;
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 0.875rem;
+      border-radius: 4px;
+      line-height: 1.4;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .toc-link:hover {
+      background: var(--card-bg);
+      color: var(--accent-color);
+    }
+
+    .toc-link.active {
+      background: var(--accent-color);
+      color: #ffffff !important;
+      font-weight: 500;
+    }
+
+    .toc-link.level-h2 { padding-left: 0.6rem; font-weight: 600; }
+    .toc-link.level-h3 { padding-left: 1.25rem; font-size: 0.825rem; opacity: 0.9; }
+
+    /* Main Area */
+    main {
+      flex: 1;
+      padding: 2.5rem 1.5rem 4rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .content-wrapper {
+      width: 100%;
+      max-width: var(--max-content-width);
+    }
+
+    .meta-info {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+    }
+
+    /* Typography & Content Formatting */
+    .content h1 {
+      font-size: 2.25rem;
+      line-height: 1.25;
+      margin-bottom: 1rem;
+      color: var(--text-color);
+      letter-spacing: -0.02em;
+    }
+
+    .content h2 {
+      font-size: 1.5rem;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-color);
+      scroll-margin-top: 80px;
+    }
+
+    .content h3 {
+      font-size: 1.2rem;
+      margin-top: 1.75rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-color);
+      scroll-margin-top: 80px;
+    }
+
+    .content p {
+      margin-bottom: 1.25rem;
+    }
+
+    .content ul, .content ol {
+      margin-bottom: 1.25rem;
+      padding-left: 1.5rem;
+    }
+
+    .content li {
+      margin-bottom: 0.4rem;
+    }
+
+    .content blockquote {
+      border-left: 4px solid var(--accent-color);
+      padding: 0.5rem 0 0.5rem 1rem;
+      margin: 1.25rem 0;
+      color: var(--text-muted);
+      font-style: italic;
+      background: var(--accent-light);
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* Highlight Boxes */
+    .info-box {
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      border-radius: 6px;
+      border-left: 4px solid;
+    }
+
+    .info-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .box-note {
+      background: var(--note-bg);
+      border-color: var(--note-border);
+    }
+
+    .box-warning {
+      background: var(--warning-bg);
+      border-color: var(--warning-border);
+    }
+
+    .box-tip {
+      background: var(--tip-bg);
+      border-color: var(--tip-border);
+    }
+
+    .box-definition {
+      background: var(--def-bg);
+      border-color: var(--def-border);
+    }
+
+    .box-title {
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* Code Blocks */
+    .code-container {
+      position: relative;
+      margin: 1.5rem 0;
+    }
+
+    pre {
+      background: #1e293b;
+      color: #f8fafc;
+      padding: 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: var(--font-code);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    [data-theme="dark"] pre {
+      background: #0f172a;
+      border: 1px solid var(--border-color);
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #f8fafc;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+    }
+
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      margin: 1.5rem 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+    }
+
+    th {
+      background: var(--sidebar-bg);
+      font-weight: 600;
+    }
+
+    /* Search Highlights */
+    mark.search-highlight {
+      background-color: var(--highlight-bg);
+      color: var(--highlight-color);
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+
+    mark.search-highlight.current {
+      outline: 2px solid var(--accent-color);
+    }
+
+    /* Back to top */
+    #back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--accent-color);
+      color: #ffffff;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s, visibility 0.2s, transform 0.2s;
+      z-index: 900;
+    }
+
+    #back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    #back-to-top:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Responsive Overlay */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 999;
+    }
+
+    /* Media Queries */
+    @media (max-width: 868px) {
+      .toggle-sidebar-btn {
+        display: block;
+      }
+
+      aside {
+        position: fixed;
+        left: 0;
+        top: 60px;
+        bottom: 0;
+        z-index: 1000;
+        transform: translateX(-100%);
+        box-shadow: 4px 0 12px rgba(0,0,0,0.1);
+      }
+
+      aside.open {
+        transform: translateX(0);
+      }
+
+      .sidebar-overlay.open {
+        display: block;
+      }
+
+      header {
+        padding: 0.5rem 1rem;
+      }
+
+      .search-box {
+        max-width: 180px;
+      }
+
+      main {
+        padding: 1.5rem 1rem 3rem;
+      }
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        font-size: 12pt;
+        line-height: 1.5;
+      }
+
+      header, aside, #progress-container, #back-to-top, .sidebar-overlay, .copy-btn, .btn-group, .search-box {
+        display: none !important;
+      }
+
+      .app-container {
+        display: block !important;
+      }
+
+      main {
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+
+      .content-wrapper {
+        max-width: 100% !important;
+      }
+
+      .content h1 {
+        font-size: 20pt;
+        page-break-before: avoid;
+      }
+
+      .content h2 {
+        font-size: 15pt;
+        border-bottom: 1px solid #000;
+        page-break-after: avoid;
+      }
+
+      .content h3 {
+        font-size: 13pt;
+        page-break-after: avoid;
+      }
+
+      .info-box, blockquote, pre, table {
+        page-break-inside: avoid;
+        border: 1px solid #ccc !important;
+        background: #fff !important;
+        color: #000 !important;
+      }
+
+      a {
+        text-decoration: none;
+        color: #000;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="progress-container">
+    <div id="progress-bar"></div>
+  </div>
+
+  <header>
+    <div class="brand">
+      <button class="toggle-sidebar-btn" id="toggle-sidebar" aria-label="Toggle Navigation Table of Contents">☰</button>
+      <h1>My Learning Notes</h1>
+    </div>
+
+    <div class="header-controls">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="Search notes... ('/' to focus)" aria-label="Search content">
+      </div>
+      <span class="search-stats" id="search-stats"></span>
+
+      <div class="btn-group">
+        <button class="btn" id="font-decrease" title="Decrease font size">A-</button>
+        <button class="btn" id="font-reset" title="Reset font size">A</button>
+        <button class="btn" id="font-increase" title="Increase font size">A+</button>
+      </div>
+
+      <button class="btn" id="theme-toggle" title="Toggle theme">🌙</button>
+      <button class="btn" id="print-btn" title="Print notes">🖨️</button>
+    </div>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="app-container">
+    <aside id="sidebar">
+      <div class="toc-title">Table of Contents</div>
+      <nav>
+        <ul class="toc-list" id="toc-list">
+          <!-- Populated dynamically -->
+        </ul>
+      </nav>
+    </aside>
+
+    <main>
+      <div class="content-wrapper">
+        <div class="meta-info">
+          <span id="read-time">⏱️ Reading time: ...</span>
+          <span id="progress-text">📊 Progress: 0%</span>
+        </div>
+        <article class="content" id="main-content">
+          <!-- Content rendered here dynamically -->
+        </article>
+      </div>
+    </main>
+  </div>
+
+  <button id="back-to-top" title="Back to top" aria-label="Back to top">↑</button>
+
+  <script>
+    // Raw Content Storage
+    const rawContent = `🧠 RAJ SHAMANI × DR. SAHAR YOUSEF
+Complete Learning Breakdown
+
+1. THE BIG IDEA — "LEARN THE BIOLOGICAL LAWS OF YOUR BRAIN"
+
+Most people think productivity means:
+
+Work harder → work longer → achieve more.
+
+Dr. Sahar challenges this.
+
+Her idea is:
+
+Understand your brain → work WITH it → achieve more with less wasted energy.
+
+She says people can be extremely busy while still failing to achieve their goals because they're ignoring how motivation, focus, distraction and energy actually work.
+
+Think about it like this:
+
+Bad approach:
+"I'll force myself to work 10 hours."
+
+Better approach:
+"How does my brain maintain attention? What destroys it? How do I protect it?"
+
+That's a completely different mindset.
+
+2. YOUR BRAIN IS NOT FIXED 🧠
+
+One of the most important ideas in the interview is neuroplasticity.
+
+Your brain isn't permanently locked into:
+- your current attention span
+- your current habits
+- your current memory
+- your current way of thinking
+- your current level of discipline
+
+The transcript emphasizes that the brain is dynamic and can change based on training, thoughts, feelings and habits.
+
+Therefore:
+What you repeatedly do → strengthens certain neural patterns.
+
+So if you repeatedly:
+📱 Scroll → scroll becomes easier
+😰 Worry → worrying becomes easier
+🏃 Exercise → exercising becomes easier
+📚 Focus → focusing becomes easier
+
+This is why your daily behavior matters so much.
+
+3. THE MOST IMPORTANT DIFFERENCE: BELIEF
+
+Raj asks what differentiates people who achieve extraordinary things.
+
+Dr. Sahar's answer is essentially:
+Belief.
+
+She describes highly successful people as often having a belief that obstacles aren't permanent walls.
+
+Average mindset:
+"There's a wall. I can't."
+
+High-agency mindset:
+"There's a wall. Where's the door?"
+
+The point isn't that you should believe anything magically becomes possible.
+
+The useful lesson is:
+Don't automatically interpret difficulty as impossibility.
+
+Instead ask:
+"What can I do about this?"
+
+She specifically recommends redirecting the mind when it starts telling a victim-oriented story.
+
+4. YOUR IDENTITY BECOMES A FILTER
+
+This is one of the deepest lessons in the entire video.
+
+Suppose you repeatedly tell yourself:
+"I'm bad at talking to people."
+
+Your brain starts noticing evidence that supports that story.
+
+Someone doesn't reply → "See, people don't like me."
+Someone gives short answer → "See, I'm awkward."
+
+But if your identity becomes:
+"I'm becoming confident and better at communication."
+
+You start noticing different evidence:
+Someone talks to you → opportunity.
+Someone gives feedback → learning.
+Someone responds positively → evidence of progress.
+
+The transcript explains this through the Default Mode Network (DMN), described in the conversation as the brain's "storyteller" and associated with autobiographical identity and self-narration.
+
+5. THE DMN — YOUR BRAIN'S "STORYTELLER"
+
+Dr. Sahar gives a useful mental model.
+
+DEFINITION: Default Mode Network (DMN)
+DMN = Story Studio. It asks: Who am I? What am I capable of? What happened to me? What's possible for me? What kind of person am I?
+
+The problem is that you can carry old stories for years.
+
+For example:
+"I'm unlucky."
+"People like me don't become successful."
+"I'm not disciplined."
+"I always procrastinate."
+"I'm terrible at relationships."
+
+The key question is:
+Is this story helping me?
+
+If not, you need to challenge and replace it.
+
+The transcript explicitly suggests examining which stories you're carrying and whether they're helping you become healthier, happier and more capable of achieving your goals.
+
+6. PRIMING — WHY YOUR MINDSET CHANGES WHAT YOU NOTICE
+
+This is fascinating.
+
+Imagine you're thinking:
+"I want to improve my career."
+
+Suddenly you start noticing:
+- useful people
+- ideas
+- opportunities
+- skills you need
+- information related to your goal
+
+Those things may have existed before. But you weren't paying attention to them.
+
+That's the concept of priming discussed in the video.
+
+The interview explains that repeatedly reviewing your desired story can influence what you attend to and what opportunities you notice.
+
+Simple formula:
+Belief → Attention → What you notice → Behavior → Results
+
+So: Change the story → change what you look for.
+
+7. BUT DON'T CONFUSE BELIEF WITH DELUSION ⚠️
+
+WARNING: Don't Confuse Belief with Delusion
+Belief isn't magic. Belief changes what you attempt, what you notice and how persistently you act.
+
+For example:
+
+Belief A: "I'm terrible at business."
+→ avoid opportunities
+→ don't learn
+→ give up quickly
+
+Belief B: "I'm not good at business YET, but I can learn."
+→ study
+→ experiment
+→ seek feedback
+→ continue
+
+Same person. Different behavior.
+
+8. THE 4-PART IDENTITY EXERCISE ✍️
+
+This is one of the most actionable parts of the episode. Dr. Sahar builds an identity-based framework around Raj's sleep example.
+
+Step 1 — Identity
+Ask: "What kind of person do I want to become?"
+Example: "I am the type of person who prioritizes my health because it improves my performance."
+
+Step 2 — Data
+What do you already know that supports this?
+Example: "I know that better sleep improves my ability to function."
+
+Step 3 — Benefit
+What becomes possible?
+Example: "I'll be more focused, energetic and effective."
+
+Step 4 — Habit
+Turn identity into behavior.
+Example: "I am the type of person who protects enough time for sleep."
+
+The interview demonstrates this progression from identity → facts → benefits → habit.
+
+9. DON'T SET ONLY GOALS — CREATE "IF → THEN" PLANS
+
+This is extremely useful.
+
+Weak goal:
+"I want to sleep earlier." (That's a wish.)
+
+Better:
+"When X happens, I will do Y."
+
+For example:
+WHEN: 11 PM alarm rings
+THEN: laptop closes → phone away → brush teeth → pajamas → bed routine.
+
+This is called an implementation intention in the interview. The conversation describes it as a situation-action plan, essentially an "if-then" structure.
+
+10. MAKE THE HABIT RIDICULOUSLY SMALL
+
+This is another major lesson.
+
+Don't say: "From tomorrow I'll completely transform my life."
+Instead: Make the starting action tiny.
+
+Example from the interview:
+Instead of: "I'll definitely sleep early."
+Start with: "I'll brush my teeth at 11 PM."
+Then: Brush teeth → Pajamas → Get ready → Bed.
+
+The transcript specifically recommends making the behavior as easy and small as possible.
+
+TIP: Small Habits Principle
+Small action → repeated → neural pathway strengthens → behavior becomes easier.
+
+11. WHY BAD HABITS ARE SO HARD TO BREAK
+
+This is perhaps the best section of the interview. Dr. Sahar explains that many unwanted behaviors aren't really about the behavior itself.
+
+For example, you think: "I crave Instagram."
+But underneath it might be:
+Stress → overwhelm → craving relief → Instagram → temporary distraction → guilt → more stress → Instagram again
+
+So the actual problem isn't necessarily: "I love Instagram."
+It may be: "I'm using Instagram to escape an uncomfortable emotional state."
+
+The transcript describes this cycle through feelings such as overwhelm, stress, tiredness and shame.
+
+12. THE HABIT LOOP 🔄
+
+1. Emotion ("I'm overwhelmed.")
+2. Craving ("I need relief.")
+3. Behavior ("I'll scroll.")
+4. Temporary relief ("Ahh, I don't have to think.")
+5. Problem remains (The work is still there.)
+6. Shame/guilt ("Why did I waste my time?")
+7. More negative emotion
+8. Scroll again
+
+That's the loop. And every repetition strengthens the association.
+
+13. THE SOLUTION: DON'T JUST REMOVE THE BAD HABIT
+
+This is a huge insight.
+
+If you say: "I will NEVER scroll again." — your brain still has the old pathway.
+
+Instead: Replace the behavior.
+
+Old: Stress → 📱 scrolling
+New: Stress → ⏸️ cognitive pause → 60 sec breathing → choose what to do
+
+The interview recommends a tiny replacement behavior, such as one minute of breathwork, to interrupt the automatic sequence.
+
+14. THE "60-SECOND PATTERN INTERRUPT" ⏸️
+
+This is something you can actually try.
+
+When you catch yourself automatically reaching for your phone:
+1. STOP.
+2. Ask: "What am I feeling right now?"
+3. Close your eyes for 60 seconds.
+4. Take some slow breaths.
+
+After 60 seconds: If you still genuinely want to scroll, you can choose to.
+
+The purpose isn't punishment.
+The purpose is: Create a gap between craving and action. That gap gives you back choice.
+
+15. AWARENESS COMES BEFORE CONTROL
+
+You cannot change a behavior you don't understand. So Dr. Sahar recommends:
+
+- Step 1: Notice the behavior.
+- Step 2: Identify the emotion.
+- Step 3: Identify the trigger.
+- Step 4: Pause.
+- Step 5: Choose a replacement.
+
+The transcript calls this self-knowledge and emphasizes understanding the behavior loop before trying to change it.
+
+16. DON'T ASK "WHY AM I SO UNDISCIPLINED?"
+
+Ask: "What happened immediately before I did this?"
+
+For example: Scrolling at night
+
+Don't ask: ❌ "Why am I lazy?"
+Ask: ✅ "What was I feeling before I opened Instagram?"
+
+Maybe: bored, lonely, overwhelmed, tired, anxious, avoiding work, or looking for stimulation.
+
+Now you have something you can actually work with.
+
+17. SCROLLING IS NOT NECESSARILY REST 📱
+
+You feel tired. You think: "I'll take a 20-minute break and scroll."
+
+But according to the discussion, research on breaks showed scrolling was not equivalent to a restorative break; the interview contrasts it with things such as going outside or being in nature.
+
+So: Break ≠ stimulation.
+
+A useful break might be:
+- 🚶 Walk
+- 🌳 Go outside
+- 💧 Drink water
+- 🧘 Sit quietly
+- 😌 Close your eyes
+- 🌬️ Breathe
+- ☀️ Get some natural environment exposure
+
+The goal is recovery, not another stream of information.
+
+18. BOREDOM IS PRODUCTIVE
+
+This is something people underestimate.
+
+Raj asks: How do successful people get incredible ideas?
+Dr. Sahar's answer: Be bored.
+
+When you're constantly consuming (TikTok → Instagram → YouTube → WhatsApp → email → music → notifications...), your brain has almost no empty space.
+
+The interview argues that creating space for boredom gives your own thoughts room to emerge.
+
+Try this:
+- Take a walk without your phone.
+- Sit somewhere for 10 minutes.
+- Don't consume anything.
+- Let your brain wander.
+
+You may discover: "Oh! I should actually do this..."
+
+19. THE PHONE PROBLEM IS BIGGER THAN NOTIFICATIONS
+
+This is probably the most shocking experiment in the episode.
+
+The discussion describes a study where participants performed cognitive tasks under different phone-placement conditions:
+- In another room
+- Put away in a pocket/bag
+- Visible on the table
+
+Even though the phone was turned off, performance was significantly worse when the phone remained visible.
+
+Meaning: You don't necessarily have to use the phone for it to compete for attention. Its mere presence can become an attentional cue.
+
+20. YOUR PHONE SHOULD HAVE A "PARKING LOT"
+
+Dr. Sahar's recommendation when doing serious work:
+Put the phone somewhere you cannot see it.
+
+❌ NOT: Face down beside laptop, under your notebook, or in your pocket while checking it.
+✅ INSTEAD: Another room, drawer, bag away from workspace, or dedicated phone box.
+
+The interview explicitly recommends a "parking lot" or box where you put the phone out of sight.
+
+21. DIGITAL HYGIENE 🧼📱
+
+DEFINITION: Digital Hygiene
+Having a healthy relationship with digital tools and notifications.
+
+Bad digital hygiene:
+Phone beside you, WhatsApp notifications, Instagram notifications, Email popping up, Slack messages, Multiple browser tabs, Apple Watch notifications, Constant checking.
+
+The interview identifies poor digital hygiene as a major productivity problem.
+
+22. YOUR BRAIN DOESN'T MULTITASK WELL
+
+People often say: "I'm good at multitasking."
+But the episode demonstrates the cost of switching attention.
+
+Raj completes one task in approximately: 17.72 seconds
+Then when he has to alternate between tasks: 41.35 seconds
+
+That's more than double the time in the demonstration.
+
+Lesson: Task switching has a cost. You pay in Time, Energy, and Attention.
+
+23. THE CITY-MAP MODEL OF YOUR BRAIN 🏙️
+
+Dr. Sahar creates a simplified "city" analogy for important brain networks involved in performance:
+
+| Network / Structure | Analogy | Primary Role |
+| :--- | :--- | :--- |
+| Central Executive Network (CEN) | 🏛️ City Hall (CEO) | Goal-directed thinking, focus, execution |
+| Default Mode Network (DMN) | 🎬 Story Studio | Identity, personal narrative, memories, self-story |
+| Dorsal Attention Network | 🔦 Watchtower | Spotlight that directs intentional focus |
+| Amygdala | 🚨 Alarm Tower | Emergency threat detection pulling attention away |
+| Salience Network | 📡 Dispatch Center | Detects important cues ("LOOK OVER HERE!") |
+
+This simplified brain-city model is explicitly presented in the transcript as a way of understanding goal-directed attention and distraction.
+
+24. NOW LOOK AT YOUR WORKSPACE
+
+Suppose you're trying to study Chapter 5.
+- Executive system says: "Let's study."
+- Attention system points toward: Book.
+- Suddenly: PING! WhatsApp → Attention shifts.
+- Email pops up → Attention shifts.
+- Instagram alert → Attention shifts.
+
+Your problem isn't necessarily: "I can't focus."
+Your environment is continuously asking your brain to redirect attention.
+
+25. DON'T TRY TO "TURN OFF" YOUR BRAIN
+
+You can't tell your brain: "Don't notice distractions." The brain is designed to detect potentially important things.
+
+Instead: Control the environment. Don't fight biology. Design around it.
+
+Bad: Phone visible, notifications ON, 15 tabs open, watch alerts active.
+Good: Phone away, notifications off, only necessary tabs, single task focus, defined work period.
+
+26. MORNING PHONE USE CAN STEAL YOUR ATTENTION
+
+The interview recommends avoiding your phone for roughly the first 15 minutes after waking.
+
+Why?
+Because instead of allowing your own mind to establish: "What matters today?", you immediately let the outside world tell you where to look (News, Messages, Social Media).
+
+27. YOUR FIRST 15 MINUTES MATTER
+
+Instead of: Wake → Phone → Instagram → WhatsApp → News
+Try: Wake → Water → Bathroom → Sit quietly → Think → Plan → Start
+
+Ask:
+1. What matters today?
+2. What is my #1 task?
+3. What kind of person am I becoming?
+4. What's one thing I must finish?
+
+This gives your brain a direction before the internet gives it one.
+
+28. DOPAMINE ≠ "PLEASURE CHEMICAL"
+
+The interview discusses dopamine in the context of motivation.
+
+Example:
+You're thirsty → Need → Dopamine/Motivation → Action → Water → Need satisfied.
+
+Dopamine helps recruit behavior toward satisfying a need.
+Important question: What are you repeatedly training your brain to move toward?
+
+29. THE PROBLEM WITH EMPTY REWARDS
+
+Work deadline → stress → Instagram → temporary escape → deadline still there → guilt → more stress.
+
+You got stimulation, but not resolution.
+
+Satisfying an actual need differs from behaviors that temporarily distract you without solving the underlying issue.
+
+30. THE MOST POWERFUL PRODUCTIVITY FORMULA FROM THE VIDEO
+
+IDENTITY → GOAL → IMPLEMENTATION INTENTION → ENVIRONMENT DESIGN → FOCUS → REPEATED ACTION → NEURAL PATHWAY STRENGTHENS → NEW HABIT → NEW IDENTITY
+
+31. WHAT ULTRA-SUCCESSFUL PEOPLE DO DIFFERENTLY
+
+They don't have magical brains; they make different choices about how they use them:
+- Protect attention
+- Manage energy
+- Create systems
+- Maintain strong beliefs
+- Focus on goals
+- Reduce distractions
+- Repeat useful behaviors
+- Design their environment
+
+32. THE MOST IMPORTANT LESSON FOR YOU
+
+IMPORTANT: Biological Law of Productivity
+STOP TRYING TO WIN AGAINST YOUR BRAIN. DESIGN YOUR LIFE SO YOUR BRAIN CAN WIN.
+
+- Don't say: "I'll have more discipline." → Say: "How can I make distraction harder?"
+- Don't say: "I'll focus harder." → Say: "How can I remove everything competing for my attention?"
+- Don't say: "I'll stop scrolling." → Say: "What emotion triggers my scrolling, and what's my replacement behavior?"
+- Don't say: "I'll become successful." → Say: "What identity, behavior and environment would the successful version of me have?"
+
+🎯 YOUR PRACTICAL ACTION PLAN
+
+EVERY MORNING ☀️
+First 15 minutes — NO PHONE
+Write:
+1. Who am I becoming? ("I am a focused person who keeps promises to myself.")
+2. What is my #1 goal today? ("Complete ______.")
+3. What is my most important action? ("I will ______.")
+
+DURING DEEP WORK 🧠
+- Rule 1: 📱 Phone out of sight
+- Rule 2: 🔕 Notifications OFF
+- Rule 3: 💻 Only necessary tabs
+- Rule 4: 🎯 One task at a time
+- Rule 5: ⏱️ Work in a defined block
+
+WHEN YOU FEEL THE URGE TO SCROLL 📱
+Use: PAUSE → IDENTIFY → REPLACE
+1. PAUSE: Stop for 60 seconds.
+2. IDENTIFY: "What am I feeling?" (bored, stressed, tired, overwhelmed, lonely).
+3. REPLACE: Do something tiny (60s breathing, 2-min walk, water, close eyes). Then decide.`;
+
+    // Content Parser and Renderer
+    function parseAndRenderMarkdown(text) {
+      const container = document.getElementById('main-content');
+      const lines = text.split('\n');
+      let html = '';
+      let inList = false;
+      let listType = '';
+      let inTable = false;
+      let tableHeaderDone = false;
+
+      function closeList() {
+        if (inList) {
+          html += listType === 'ul' ? '</ul>\n' : '</ol>\n';
+          inList = false;
+        }
+      }
+
+      function closeTable() {
+        if (inTable) {
+          html += '</tbody></table></div>\n';
+          inTable = false;
+          tableHeaderDone = false;
+        }
+      }
+
+      for (let i = 0; i < lines.length; i++) {
+        let line = lines[i].trim();
+
+        if (!line) {
+          closeList();
+          closeTable();
+          continue;
+        }
+
+        // Table Detection
+        if (line.startsWith('|') && line.endsWith('|')) {
+          closeList();
+          const cells = line.split('|').slice(1, -1).map(c => c.trim());
+          if (!inTable) {
+            inTable = true;
+            html += '<div class="table-container"><table><thead><tr>';
+            cells.forEach(c => html += `<th>${inlineFormat(c)}</th>`);
+            html += '</tr></thead><tbody>';
+          } else if (line.includes(':---') || line.includes('---')) {
+            // separator line, ignore
+            continue;
+          } else {
+            html += '<tr>';
+            cells.forEach(c => html += `<td>${inlineFormat(c)}</td>`);
+            html += '</tr>';
+          }
+          continue;
+        } else {
+          closeTable();
+        }
+
+        // Special Callout Boxes
+        if (line.startsWith('IMPORTANT:') || line.startsWith('WARNING:') || line.startsWith('TIP:') || line.startsWith('DEFINITION:')) {
+          closeList();
+          let type = 'note';
+          let title = 'IMPORTANT';
+          if (line.startsWith('WARNING:')) { type = 'warning'; title = 'WARNING'; }
+          if (line.startsWith('TIP:')) { type = 'tip'; title = 'TIP'; }
+          if (line.startsWith('DEFINITION:')) { type = 'definition'; title = 'DEFINITION'; }
+
+          const content = line.substring(line.indexOf(':') + 1).trim();
+          html += `<div class="info-box box-${type}">
+            <div class="box-title">${title}</div>
+            <p>${inlineFormat(content)}</p>
+          </div>`;
+          continue;
+        }
+
+        // Main Title (H1)
+        if (i === 0 && line.startsWith('🧠')) {
+          html += `<h1 id="title">${inlineFormat(line)}</h1>`;
+          continue;
+        }
+
+        // Headings
+        if (line.match(/^\d+\.\s+[A-Z\s]/) || (line.startsWith('#') && !line.startsWith('##'))) {
+          closeList();
+          const cleanText = line.replace(/^#\s*/, '');
+          const id = 'section-' + slugify(cleanText);
+          html += `<h2 id="${id}">${inlineFormat(cleanText)}</h2>`;
+          continue;
+        }
+
+        if (line.startsWith('##') || line.match(/^Step \d+/i) || line.startsWith('EVERY MORNING') || line.startsWith('DURING DEEP WORK') || line.startsWith('WHEN YOU FEEL')) {
+          closeList();
+          const cleanText = line.replace(/^##\s*/, '');
+          const id = 'subsection-' + slugify(cleanText);
+          html += `<h3 id="${id}">${inlineFormat(cleanText)}</h3>`;
+          continue;
+        }
+
+        // Bullet Lists
+        if (line.startsWith('- ') || line.startsWith('• ')) {
+          if (!inList || listType !== 'ul') {
+            closeList();
+            inList = true;
+            listType = 'ul';
+            html += '<ul>\n';
+          }
+          html += `<li>${inlineFormat(line.substring(2))}</li>\n`;
+          continue;
+        }
+
+        // Numbered Lists
+        const numMatch = line.match(/^(\d+)\.\s+(.*)/);
+        if (numMatch && !line.match(/^\d+\.\s+[A-Z\s]{4,}/)) { // exclude main numbered titles
+          if (!inList || listType !== 'ol') {
+            closeList();
+            inList = true;
+            listType = 'ol';
+            html += '<ol>\n';
+          }
+          html += `<li>${inlineFormat(numMatch[2])}</li>\n`;
+          continue;
+        }
+
+        // Regular Paragraph
+        closeList();
+        html += `<p>${inlineFormat(line)}</p>\n`;
+      }
+
+      closeList();
+      closeTable();
+
+      container.innerHTML = html;
+    }
+
+    function inlineFormat(text) {
+      return text
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/`([^`]+)`/g, '<code>$1</code>');
+    }
+
+    function slugify(text) {
+      return text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').substring(0, 50);
+    }
+
+    // TOC Generator
+    function generateTOC() {
+      const headings = document.querySelectorAll('.content h2, .content h3');
+      const tocList = document.getElementById('toc-list');
+      tocList.innerHTML = '';
+
+      headings.forEach((heading) => {
+        const li = document.createElement('li');
+        li.className = 'toc-item';
+
+        const a = document.createElement('a');
+        a.href = `#${heading.id}`;
+        a.className = `toc-link level-${heading.tagName.toLowerCase()}`;
+        a.textContent = heading.textContent.replace(/^[\d\.\s\🎯\🧠]+/, '').trim();
+        
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          heading.scrollIntoView({ behavior: 'smooth' });
+          closeMobileSidebar();
+        });
+
+        li.appendChild(a);
+        tocList.appendChild(li);
+      });
+    }
+
+    // Calculate Reading Time
+    function calculateReadingTime() {
+      const text = document.getElementById('main-content').textContent;
+      const wordCount = text.trim().split(/\s+/).length;
+      const readTime = Math.ceil(wordCount / 200);
+      document.getElementById('read-time').textContent = `⏱️ ${readTime} min read (${wordCount} words)`;
+    }
+
+    // Search Engine
+    let currentMatchIndex = -1;
+    let totalMatches = 0;
+
+    function setupSearch() {
+      const searchInput = document.getElementById('search-input');
+      const searchStats = document.getElementById('search-stats');
+
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.trim();
+        clearHighlights();
+
+        if (!query) {
+          searchStats.textContent = '';
+          return;
+        }
+
+        performSearch(query);
+      });
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key === '/' && document.activeElement !== searchInput) {
+          e.preventDefault();
+          searchInput.focus();
+        }
+        if (e.key === 'Escape') {
+          if (document.activeElement === searchInput) {
+            searchInput.blur();
+          }
+          closeMobileSidebar();
+        }
+      });
+    }
+
+    function clearHighlights() {
+      const highlights = document.querySelectorAll('mark.search-highlight');
+      highlights.forEach(mark => {
+        const parent = mark.parentNode;
+        parent.replaceChild(document.createTextNode(mark.textContent), mark);
+        parent.normalize();
+      });
+    }
+
+    function performSearch(query) {
+      const content = document.getElementById('main-content');
+      const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
+      
+      let matchCount = 0;
+
+      function highlightNode(node) {
+        if (node.nodeType === 3) { // Text node
+          const matches = node.data.match(regex);
+          if (matches) {
+            const fragment = document.createDocumentFragment();
+            let lastIdx = 0;
+            node.data.replace(regex, (match, p1, offset) => {
+              fragment.appendChild(document.createTextNode(node.data.substring(lastIdx, offset)));
+              const mark = document.createElement('mark');
+              mark.className = 'search-highlight';
+              mark.textContent = match;
+              fragment.appendChild(mark);
+              lastIdx = offset + match.length;
+              matchCount++;
+            });
+            fragment.appendChild(document.createTextNode(node.data.substring(lastIdx)));
+            node.parentNode.replaceChild(fragment, node);
+          }
+        } else if (node.nodeType === 1 && !['SCRIPT', 'STYLE', 'MARK'].includes(node.tagName)) {
+          Array.from(node.childNodes).forEach(highlightNode);
+        }
+      }
+
+      highlightNode(content);
+
+      const searchStats = document.getElementById('search-stats');
+      searchStats.textContent = matchCount > 0 ? `${matchCount} matches` : 'No matches';
+    }
+
+    function escapeRegExp(string) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    // Scroll Progress & Active Heading Indicator
+    function setupScrollHandling() {
+      const progressBar = document.getElementById('progress-bar');
+      const progressText = document.getElementById('progress-text');
+      const backToTop = document.getElementById('back-to-top');
+
+      window.addEventListener('scroll', () => {
+        const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = Math.min(Math.max((window.scrollY / totalHeight) * 100, 0), 100);
+        
+        progressBar.style.width = `${progress}%`;
+        progressText.textContent = `📊 Progress: ${Math.round(progress)}%`;
+
+        if (window.scrollY > 400) {
+          backToTop.classList.add('visible');
+        } else {
+          backToTop.classList.remove('visible');
+        }
+
+        updateActiveTOC();
+        saveReadingPosition();
+      });
+
+      backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    function updateActiveTOC() {
+      const headings = Array.from(document.querySelectorAll('.content h2, .content h3'));
+      const scrollPos = window.scrollY + 100;
+
+      let currentHeading = null;
+      for (let i = headings.length - 1; i >= 0; i--) {
+        if (headings[i].offsetTop <= scrollPos) {
+          currentHeading = headings[i];
+          break;
+        }
+      }
+
+      const links = document.querySelectorAll('.toc-link');
+      links.forEach(link => link.classList.remove('active'));
+
+      if (currentHeading) {
+        const activeLink = document.querySelector(`.toc-link[href="#${currentHeading.id}"]`);
+        if (activeLink) {
+          activeLink.classList.add('active');
+        }
+      }
+    }
+
+    // Font Size Control
+    let currentFontSize = parseInt(localStorage.getItem('preferred-font-size')) || 16;
+
+    function setupFontControls() {
+      applyFontSize(currentFontSize);
+
+      document.getElementById('font-increase').addEventListener('click', () => {
+        if (currentFontSize < 24) {
+          currentFontSize += 1;
+          applyFontSize(currentFontSize);
+        }
+      });
+
+      document.getElementById('font-decrease').addEventListener('click', () => {
+        if (currentFontSize > 12) {
+          currentFontSize -= 1;
+          applyFontSize(currentFontSize);
+        }
+      });
+
+      document.getElementById('font-reset').addEventListener('click', () => {
+        currentFontSize = 16;
+        applyFontSize(currentFontSize);
+      });
+    }
+
+    function applyFontSize(size) {
+      document.documentElement.style.setProperty('--base-font-size', `${size}px`);
+      localStorage.setItem('preferred-font-size', size);
+    }
+
+    // Dark Mode Toggle
+    function setupThemeToggle() {
+      const themeToggle = document.getElementById('theme-toggle');
+      const savedTheme = localStorage.getItem('preferred-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+      if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️';
+      }
+
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        if (currentTheme === 'dark') {
+          document.documentElement.removeAttribute('data-theme');
+          localStorage.setItem('preferred-theme', 'light');
+          themeToggle.textContent = '🌙';
+        } else {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          localStorage.setItem('preferred-theme', 'dark');
+          themeToggle.textContent = '☀️';
+        }
+      });
+    }
+
+    // Print Button
+    function setupPrint() {
+      document.getElementById('print-btn').addEventListener('click', () => {
+        window.print();
+      });
+    }
+
+    // Mobile Sidebar
+    function setupMobileSidebar() {
+      const toggleBtn = document.getElementById('toggle-sidebar');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+
+      toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('open');
+      });
+
+      overlay.addEventListener('click', closeMobileSidebar);
+    }
+
+    function closeMobileSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebar-overlay').classList.remove('open');
+    }
+
+    // Save/Restore Reading Position
+    function saveReadingPosition() {
+      localStorage.setItem('scroll-position', window.scrollY);
+    }
+
+    function restoreReadingPosition() {
+      const savedPos = localStorage.getItem('scroll-position');
+      if (savedPos && !window.location.hash) {
+        window.scrollTo(0, parseInt(savedPos));
+      }
+    }
+
+    // Initialization
+    window.addEventListener('DOMContentLoaded', () => {
+      parseAndRenderMarkdown(rawContent);
+      generateTOC();
+      calculateReadingTime();
+      setupSearch();
+      setupScrollHandling();
+      setupFontControls();
+      setupThemeToggle();
+      setupPrint();
+      setupMobileSidebar();
+      restoreReadingPosition();
+    });
+  </script>
+</body>
+</html>
