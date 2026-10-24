@@ -68,13 +68,13 @@
 </head>
 <body class="h-full bg-[#f8fafc] dark:bg-[#04070c] text-slate-800 dark:text-slate-100 transition-colors duration-300 flex flex-col antialiased">
 
-    <!-- Top Notification Banner for Persistent Reminders -->
+    <!-- Top Notification Banner for Scheduled Task Alerts -->
     <div id="persistentReminderBanner" class="hidden bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 px-3 sm:px-4 py-3 shadow-lg transition-all duration-300 z-50 flex items-center justify-between no-print font-medium">
         <div class="flex items-center space-x-2 sm:space-x-3 max-w-7xl mx-auto w-full">
-            <i class="fa-solid fa-triangle-exclamation text-lg sm:text-xl animate-bounce shrink-0"></i>
+            <i class="fa-solid fa-bell text-lg sm:text-xl animate-bounce shrink-0"></i>
             <div class="flex-1 min-w-0">
-                <span class="font-black uppercase tracking-wide text-[10px] sm:text-xs bg-black/20 px-2 py-0.5 rounded text-white">Action Required</span>
-                <span id="reminderBannerText" class="text-xs sm:text-base ml-1 sm:ml-2 truncate inline-block align-bottom max-w-[200px] sm:max-w-none text-slate-950 font-bold">You have pending tasks that need your attention!</span>
+                <span class="font-black uppercase tracking-wide text-[10px] sm:text-xs bg-black/20 px-2 py-0.5 rounded text-white">Task Due Now</span>
+                <span id="reminderBannerText" class="text-xs sm:text-base ml-1 sm:ml-2 truncate inline-block align-bottom max-w-[200px] sm:max-w-none text-slate-950 font-bold">Your scheduled task is due!</span>
             </div>
             <button onclick="dismissBanner()" class="ml-auto text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-black/20 hover:bg-black/30 text-white px-2.5 sm:px-3 py-1 rounded transition shrink-0">Dismiss</button>
         </div>
@@ -560,7 +560,7 @@
                         <i class="fa-solid fa-bell text-amber-400"></i>
                         <span>Browser Notifications & Sound</span>
                     </h3>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Enable browser push alerts and sound so tasks remind you even when watching reels or switching apps.</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Enable browser push alerts and sound so tasks remind you precisely at their scheduled time.</p>
                     <button onclick="requestNotificationPermission()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold rounded-xl text-sm transition shadow-md shadow-amber-500/20">
                         Enable Notifications & Audio Alerts
                     </button>
@@ -703,9 +703,7 @@
                 }
 
                 const now = audioCtx.currentTime;
-                
-                // Play a rich 3-note melodic chime (C5 -> E5 -> G5)
-                const notes = [523.25, 659.25, 783.99]; 
+                const notes = [523.25, 659.25, 783.99]; // C5 -> E5 -> G5 Chime
                 notes.forEach((freq, index) => {
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
@@ -741,7 +739,6 @@
             }
             document.getElementById('weeklyOffDaySelect').value = state.weeklyOffDay;
             
-            // Set default report dates
             const todayStr = new Date().toISOString().split('T')[0];
             document.getElementById('reportStartDate').value = todayStr;
             document.getElementById('reportEndDate').value = todayStr;
@@ -752,7 +749,6 @@
             updateDashboardMetrics();
             generateReport();
 
-            // Setup task schedule dropdown listener
             document.getElementById('taskScheduleInput').addEventListener('change', function(e) {
                 const wrap = document.getElementById('specificDateWrapper');
                 if (e.target.value === 'specific_date') {
@@ -762,10 +758,9 @@
                 }
             });
 
-            // Start repeating reminder checker interval (every 10 seconds for reliable alerts while multitasking/reels)
-            setInterval(checkRepeatingReminders, 10000);
+            // Check precisely every 10 seconds for scheduled task time matching
+            setInterval(checkTaskTimeReminders, 10000);
 
-            // Unlock audio context on any first document click/tap
             document.addEventListener('click', function unlockAudio() {
                 if (!audioCtx) {
                     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -873,13 +868,6 @@
                 if (isWeeklyOff) badge.classList.remove('hidden');
                 else badge.classList.add('hidden');
             }
-
-            if (isWeeklyOff) {
-                const pendingBacklog = state.tasks.filter(t => !t.completed && (t.schedule === 'weekly_off' || t.schedule === 'today'));
-                if (pendingBacklog.length > 0) {
-                    showPersistentBanner(`🎉 Weekly Off (${state.weeklyOffDay}) Reminder: You have ${pendingBacklog.length} pending task(s) accumulated! Time to clear your backlog!`);
-                }
-            }
         }
 
         function saveWeeklyOffDay() {
@@ -952,7 +940,8 @@
                     time,
                     schedule,
                     targetDate,
-                    completed: false
+                    completed: false,
+                    notifiedToday: false
                 };
                 state.tasks.push(newTask);
                 showToast("Task created successfully!");
@@ -1059,26 +1048,47 @@
             localStorage.setItem('unstoppable_ash_tasks', JSON.stringify(state.tasks));
         }
 
-        /* ==================== REPEATING REMINDERS & NOTIFICATIONS (EVERY 10S) ==================== */
-        function checkRepeatingReminders() {
-            const pendingToday = state.tasks.filter(t => !t.completed);
-            if (pendingToday.length > 0) {
-                const now = new Date();
-                const currentDayName = now.toLocaleDateString('en-US', { weekday: 'long' });
-                
-                let alertMsg = `🔔 Reminder: You have ${pendingToday.length} pending task(s) to complete.`;
-                if (currentDayName === state.weeklyOffDay) {
-                    alertMsg = `⚠️ Weekly Off Reminder: You have ${pendingToday.length} pending backlog task(s)! Clear them today.`;
+        /* ==================== PRECISE TIME & DATE TASK REMINDERS ==================== */
+        function checkTaskTimeReminders() {
+            const now = new Date();
+            const currentHours = now.getHours().toString().padStart(2, '0');
+            const currentMinutes = now.getMinutes().toString().padStart(2, '0');
+            const currentTimeStr = `${currentHours}:${currentMinutes}`;
+            const currentDateStr = now.toISOString().split('T')[0];
+            const currentDayName = now.toLocaleDateString('en-US', { weekday: 'long' });
+            const isWeeklyOff = (currentDayName === state.weeklyOffDay);
+
+            let triggeredTask = null;
+
+            state.tasks.forEach(t => {
+                if (t.completed) return;
+
+                let isMatchTime = (t.time === currentTimeStr);
+                let isMatchDate = false;
+
+                if (t.schedule === 'today' && t.targetDate === currentDateStr) {
+                    isMatchDate = true;
+                } else if (t.schedule === 'specific_date' && t.targetDate === currentDateStr) {
+                    isMatchDate = true;
+                } else if (t.schedule === 'weekly_off' && isWeeklyOff) {
+                    isMatchDate = true;
                 }
 
-                // Trigger persistent top banner & premier sound every interval
+                // If scheduled time and date match precisely, and haven't notified for this task yet today
+                if (isMatchTime && isMatchDate && !t.notifiedToday) {
+                    triggeredTask = t;
+                    t.notifiedToday = true; // Mark as notified for this occurrence
+                }
+            });
+
+            if (triggeredTask) {
+                const alertMsg = `🔔 Scheduled Task Due: "${triggeredTask.title}" (${triggeredTask.time})`;
                 showPersistentBanner(alertMsg);
                 playPremierNotificationSound();
 
-                // Trigger browser push notification if permitted
                 if (window.Notification && Notification.permission === "granted") {
-                    new Notification("Unstoppable Ash! Alert", {
-                        body: alertMsg,
+                    new Notification("Unstoppable Ash! Task Alert", {
+                        body: `Time for: ${triggeredTask.title}`,
                         icon: "https://placehold.co/128x128/f59e0b/ffffff?text=UA"
                     });
                 }
@@ -1100,7 +1110,6 @@
         }
 
         function requestNotificationPermission() {
-            // Unlock audio context on user gesture
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
@@ -1114,7 +1123,7 @@
             Notification.requestPermission().then(permission => {
                 if (permission === "granted") {
                     showToast("Notifications and sound alerts enabled successfully!");
-                    new Notification("Unstoppable Ash!", "Audio & Push alerts are now active. You will be reminded even while watching reels or doing other tasks!");
+                    new Notification("Unstoppable Ash!", "Alerts are now active. You will be notified precisely at your task times!");
                 } else {
                     showToast("Notification permission denied.");
                 }
