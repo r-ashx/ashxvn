@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Ashx - Access Portal</title>
+  <!-- Google Fonts: Inter for clean professional text & Rajdhani / Space Grotesk for bold modern headings -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+  
   <style>
     /* ==========================================================================
        RESET & CORE STYLES
@@ -12,83 +17,91 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
 
     :root {
-      --primary-red: #ff0000;
-      --dark-red: #b30000;
-      --card-bg: rgba(255, 255, 255, 0.92);
-      --card-border: rgba(255, 0, 0, 0.3);
+      --primary-red: #ff2a5f;
+      --dark-red: #c20038;
+      --bg-dark: #04060a;
+      --card-bg: rgba(12, 16, 24, 0.85);
+      --card-border: rgba(255, 42, 95, 0.28);
+      --text-main: #ffffff;
+      --text-muted: #94a3b8;
     }
 
     html, body {
       width: 100%;
-      height: 100%;
+      height: 100vh;
       overflow: hidden;
     }
 
     body {
-      background-color: #f8f9fa;
-      color: #000000;
-      min-height: 100vh;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
     }
 
-    /* Clean subtle background grid */
-    .bg-grid {
+    /* Advanced Interactive Animated Canvas Background */
+    #bg-canvas {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-size: 40px 40px;
-      background-image: 
-        linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
       z-index: 1;
       pointer-events: none;
     }
 
-    .bg-glow {
+    /* Ambient Glow Accents */
+    .ambient-glow {
       position: absolute;
-      width: 400px;
-      height: 400px;
+      width: 650px;
+      height: 650px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 0, 0, 0.12) 0%, rgba(255, 255, 255, 0) 70%);
+      background: radial-gradient(circle, rgba(255, 42, 95, 0.14) 0%, rgba(0, 0, 0, 0) 70%);
       pointer-events: none;
       z-index: 1;
+      filter: blur(60px);
+    }
+    .glow-1 { top: -220px; left: -220px; animation: pulseGlow 9s ease-in-out infinite alternate; }
+    .glow-2 { bottom: -220px; right: -220px; animation: pulseGlow 9s ease-in-out infinite alternate-reverse; }
+
+    @keyframes pulseGlow {
+      0% { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(1.25); opacity: 0.95; }
     }
 
+    /* Security Alarm Flash Overlay */
     #alert-overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle, rgba(255, 0, 0, 0.35) 0%, rgba(255, 255, 255, 0) 100%);
+      background: radial-gradient(circle, rgba(255, 0, 60, 0.45) 0%, rgba(0, 0, 0, 0) 90%);
       z-index: 5;
       pointer-events: none;
       opacity: 0;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.2s ease;
     }
 
     .flashing-active {
-      animation: flashWarning 0.8s infinite alternate;
+      animation: flashWarning 0.6s infinite alternate;
     }
 
     @keyframes flashWarning {
-      0% { opacity: 0.1; }
-      100% { opacity: 0.85; }
+      0% { opacity: 0.15; }
+      100% { opacity: 0.95; }
     }
 
     /* ==========================================================================
-       CONTAINER & CLEAN CARD (NO UNNECESSARY FLOATING)
+       CARD CONTAINER & GLASSMORPHISM
        ========================================================================== */
     .perspective-container {
       z-index: 10;
@@ -99,16 +112,17 @@
 
     .auth-card {
       background: var(--card-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 24px;
-      padding: 35px 28px;
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border-radius: 28px;
+      padding: 40px 32px;
       text-align: center;
-      border: 1.5px solid var(--card-border);
+      border: 1px solid var(--card-border);
       box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.06),
-        0 0 25px rgba(255, 0, 0, 0.15);
-      transition: all 0.3s ease;
+        0 30px 70px rgba(0, 0, 0, 0.75),
+        0 0 35px rgba(255, 42, 95, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
     }
 
@@ -117,157 +131,196 @@
     }
 
     @keyframes shakeCard {
-      10%, 90% { transform: translate3d(-3px, 0, 0); }
-      20%, 80% { transform: translate3d(5px, 0, 0); }
-      30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
-      40%, 60% { transform: translate3d(6px, 0, 0); }
+      10%, 90% { transform: translate3d(-4px, 0, 0); }
+      20%, 80% { transform: translate3d(6px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+      40%, 60% { transform: translate3d(8px, 0, 0); }
     }
 
     /* Header Icon */
     .icon-container {
-      width: 64px;
-      height: 64px;
+      width: 70px;
+      height: 70px;
       margin: 0 auto 18px;
-      background: #ffffff;
-      border: 1.5px solid rgba(255, 0, 0, 0.3);
-      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(255, 42, 95, 0.16), rgba(12, 16, 24, 0.9));
+      border: 1.5px solid rgba(255, 42, 95, 0.4);
+      border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05), 0 0 15px rgba(255, 0, 0, 0.15);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 42, 95, 0.2);
       transition: all 0.3s ease;
     }
 
     .icon-container svg {
-      width: 28px;
-      height: 28px;
+      width: 30px;
+      height: 30px;
       fill: none;
-      stroke: #000000;
+      stroke: var(--primary-red);
       stroke-width: 2.2;
       stroke-linecap: round;
       stroke-linejoin: round;
+      filter: drop-shadow(0 0 6px rgba(255, 42, 95, 0.5));
     }
 
+    /* Typography restored & polished */
     h1.title {
-      font-size: 1.25rem;
-      font-weight: 800;
-      letter-spacing: 1px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      color: #000000;
-      margin-bottom: 4px;
+      color: #ffffff;
+      margin-bottom: 6px;
     }
 
     p.subtitle {
+      font-family: 'Inter', sans-serif;
       font-size: 0.8rem;
-      color: rgba(0, 0, 0, 0.55);
-      letter-spacing: 1px;
+      color: var(--text-muted);
+      letter-spacing: 1.5px;
       text-transform: uppercase;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
       font-weight: 600;
     }
 
-    /* Inputs */
+    /* Inputs (Digit Boxes) */
     .digit-container {
       display: flex;
       justify-content: center;
-      gap: 10px;
-      margin-bottom: 20px;
+      gap: 12px;
+      margin-bottom: 22px;
       width: 100%;
     }
 
     .digit-box {
-      width: 50px;
-      height: 58px;
-      background: #ffffff;
-      border: 1.5px solid rgba(0, 0, 0, 0.15);
-      border-radius: 12px;
-      font-size: 1.5rem;
+      width: 54px;
+      height: 64px;
+      background: rgba(2, 4, 8, 0.8);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.6rem;
       font-weight: 700;
-      color: #000000;
+      color: #ffffff;
       text-align: center;
       outline: none;
-      transition: all 0.2s ease;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       caret-color: var(--primary-red);
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
     }
 
     .digit-box:focus {
       border-color: var(--primary-red);
-      box-shadow: 0 0 12px rgba(255, 0, 0, 0.3);
+      background: rgba(255, 42, 95, 0.08);
+      box-shadow: 0 0 18px rgba(255, 42, 95, 0.4), inset 0 2px 6px rgba(0, 0, 0, 0.6);
+      transform: translateY(-2px);
     }
 
     .input-error {
       border-color: var(--primary-red) !important;
-      background-color: rgba(255, 0, 0, 0.03);
+      background-color: rgba(255, 0, 60, 0.12) !important;
     }
 
     /* Buttons */
     .verify-btn {
       width: 100%;
-      padding: 14px;
+      padding: 15px;
       background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%);
       border: none;
-      border-radius: 12px;
+      border-radius: 14px;
       color: #ffffff;
+      font-family: 'Inter', sans-serif;
       font-size: 0.9rem;
       font-weight: 700;
       letter-spacing: 2px;
       text-transform: uppercase;
       cursor: pointer;
       outline: none;
-      transition: all 0.2s ease;
-      box-shadow: 0 8px 18px rgba(255, 0, 0, 0.25);
+      transition: all 0.25s ease;
+      box-shadow: 0 10px 25px rgba(255, 42, 95, 0.35);
     }
 
     .verify-btn:hover:not(:disabled) {
-      box-shadow: 0 10px 22px rgba(255, 0, 0, 0.35);
-      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(255, 42, 95, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .verify-btn:active:not(:disabled) {
+      transform: translateY(0);
     }
 
     .verify-btn:disabled {
-      background: #e0e0e0;
-      color: #999999;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
       cursor: not-allowed;
       box-shadow: none;
     }
 
-    /* Status Messages */
+    /* Status Messages & Trackers */
     .status-message {
-      min-height: 22px;
+      min-height: 24px;
       margin-top: 16px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 700;
-      letter-spacing: 0.8px;
+      letter-spacing: 1px;
       text-transform: uppercase;
     }
 
-    .status-message.error { color: #d30000; }
-    .status-message.success { color: #008000; }
+    .status-message.error { color: #ff3366; }
+    .status-message.success { color: #00f576; text-shadow: 0 0 10px rgba(0, 245, 118, 0.4); }
 
     .attempts-tracker {
       margin-top: 10px;
       font-size: 0.72rem;
       font-weight: 600;
-      color: rgba(0, 0, 0, 0.4);
-      letter-spacing: 1px;
+      color: var(--text-muted);
+      letter-spacing: 1.2px;
+    }
+
+    .attempts-tracker span {
+      color: var(--primary-red);
+      font-family: 'JetBrains Mono', monospace;
     }
 
     .timer-display {
       color: var(--primary-red);
+      font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
-      font-size: 0.8rem;
-      margin-top: 8px;
+      font-size: 0.82rem;
+      margin-top: 10px;
       display: none;
+      letter-spacing: 1px;
     }
 
     /* ==========================================================================
-       AUTHENTICATED LINKS SECTION (CLEAN & MODERN BUTTONS)
+       AUTHENTICATED LINKS SECTION (CLEAN & ATTRACTIVE CARDS)
        ========================================================================== */
     #links-container {
       display: none;
       opacity: 0;
-      transform: translateY(10px);
-      transition: all 0.4s ease;
+      transform: translateY(12px);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       margin-top: 10px;
+      max-height: 380px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    /* Custom Scrollbar for Links */
+    #links-container::-webkit-scrollbar {
+      width: 5px;
+    }
+    #links-container::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+    #links-container::-webkit-scrollbar-thumb {
+      background: rgba(255, 42, 95, 0.4);
+      border-radius: 10px;
+    }
+    #links-container::-webkit-scrollbar-thumb:hover {
+      background: var(--primary-red);
     }
 
     #links-container.show {
@@ -283,51 +336,129 @@
       align-items: center;
       justify-content: space-between;
       width: 100%;
-      padding: 14px 20px;
-      background: #ffffff;
-      border: 1.5px solid rgba(0, 0, 0, 0.08);
+      padding: 15px 20px;
+      background: rgba(18, 24, 33, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 14px;
-      color: #111111;
+      color: var(--text-main);
       text-decoration: none;
-      font-weight: 700;
-      font-size: 0.95rem;
+      font-weight: 600;
+      font-size: 0.92rem;
       letter-spacing: 0.5px;
-      transition: all 0.25s ease;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .link-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--primary-red);
+      opacity: 0;
+      transition: opacity 0.2s ease;
     }
 
     .link-btn:hover {
-      border-color: var(--primary-red);
-      background: rgba(255, 0, 0, 0.02);
-      color: var(--primary-red);
-      box-shadow: 0 6px 16px rgba(255, 0, 0, 0.15);
+      border-color: rgba(255, 42, 95, 0.6);
+      background: rgba(255, 42, 95, 0.1);
+      color: #ffffff;
+      box-shadow: 0 8px 25px rgba(255, 42, 95, 0.28);
       transform: translateY(-2px);
+    }
+
+    .link-btn:hover::before {
+      opacity: 1;
+    }
+
+    .link-content {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .link-icon-box {
+      width: 34px;
+      height: 34px;
+      background: rgba(255, 42, 95, 0.12);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .link-icon-box svg {
+      width: 17px;
+      height: 17px;
+      stroke: var(--primary-red);
+      stroke-width: 2;
+      fill: none;
     }
 
     .link-btn .arrow-icon {
       width: 18px;
       height: 18px;
-      stroke: currentColor;
-      stroke-width: 2.2;
+      stroke: var(--text-muted);
+      stroke-width: 2;
       fill: none;
-      transition: transform 0.2s ease;
+      transition: all 0.2s ease;
     }
 
     .link-btn:hover .arrow-icon {
+      stroke: var(--primary-red);
       transform: translateX(4px);
+    }
+
+    /* Badge for Coming Soon links */
+    .badge-soon {
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      background: rgba(255, 193, 7, 0.15);
+      color: #ffc107;
+      padding: 4px 9px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 193, 7, 0.35);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .link-btn.disabled-link {
+      opacity: 0.75;
+      cursor: default;
+    }
+    .link-btn.disabled-link:hover {
+      border-color: rgba(255, 255, 255, 0.08);
+      background: rgba(18, 24, 33, 0.75);
+      transform: none;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    .link-btn.disabled-link:hover::before {
+      opacity: 0;
+    }
+    .link-btn.disabled-link:hover .arrow-icon {
+      stroke: var(--text-muted);
+      transform: none;
     }
   </style>
 </head>
 <body>
 
-  <!-- Clean Background -->
-  <div class="bg-grid"></div>
-  <div class="bg-glow"></div>
+  <!-- Ambient Glow Backgrounds -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <!-- Interactive Animated Particle & Grid Canvas -->
+  <canvas id="bg-canvas"></canvas>
 
   <!-- Security Flash Overlay -->
   <div id="alert-overlay"></div>
 
-  <!-- Main Card -->
+  <!-- Main Card Container -->
   <div class="perspective-container">
     <div class="auth-card" id="card">
       
@@ -339,7 +470,7 @@
         </svg>
       </div>
 
-      <h1 class="title" id="main-title">Ash X Authentication</h1>
+      <h1 class="title" id="main-title">Ash X Portal</h1>
       <p class="subtitle" id="main-subtitle">Enter Secret Code</p>
 
       <!-- Code Form Section -->
@@ -351,37 +482,72 @@
           <input type="text" class="digit-box" maxlength="1" autocomplete="off" inputmode="text">
         </div>
 
-        <button class="verify-btn" id="verify-btn">VERIFY</button>
+        <button class="verify-btn" id="verify-btn">Verify</button>
 
         <div class="status-message" id="status-message"></div>
         <div class="attempts-tracker" id="attempts-tracker">ATTEMPTS LEFT: <span id="attempts-left">3</span></div>
         <div class="timer-display" id="timer-display">SYSTEM LOCKED: <span id="timer-count">10</span>s</div>
       </div>
 
-      <!-- Links Container (Revealed after success) -->
+      <!-- Links Container (Revealed after successful verification) -->
       <div id="links-container">
         <a href="https://ashx-eight.vercel.app/" target="_blank" class="link-btn">
-          <span>Portfolio</span>
+          <div class="link-content">
+            <div class="link-icon-box">
+              <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </div>
+            <span>Portfolio</span>
+          </div>
           <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
-        <a href="https://ashxvn.vercel.app/4u/LearnTech.html" target="_blank" class="link-btn">
-          <span>Tech Learning</span>
-          <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+
+        <a href="https://ashx-eight.vercel.app/4u/uax.html" target="_blank" class="link-btn">
+          <div class="link-content">
+            <div class="link-icon-box">
+              <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            </div>
+            <span>Uninstallable Ash</span>
+          </div>
+        <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
-        <a href="https://ashxvn.vercel.app/4u/YTPlay.html" target="_blank" class="link-btn">
-          <span>YT Player</span>
-          <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
+
         <a href="https://ashxvn.vercel.app/Listen.html" target="_blank" class="link-btn">
-          <span>Listen</span>
+          <div class="link-content">
+            <div class="link-icon-box">
+              <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+            </div>
+            <span>Listen</span>
+          </div>
           <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
-         <a href="https://ashxvn.vercel.app/4u/Night.html" target="_blank" class="link-btn">
-          <span>Night Shedulde!</span>
+
+         <a href="https://ashxvn.vercel.app/4u/YTPlay.html" target="_blank" class="link-btn">
+          <div class="link-content">
+            <div class="link-icon-box">
+              <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            </div>
+            <span>YT Player</span>
+          </div>
           <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
-         <a href="https://ashxvn.vercel.app/4u/More.html" target="_blank" class="link-btn">
-          <span>More</span>
+
+        <a href="https://ashxvn.vercel.app/4u/Night.html" target="_blank" class="link-btn">
+          <div class="link-content">
+            <div class="link-icon-box">
+              <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </div>
+            <span>Night Schedule</span>
+          </div>
+          <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+
+        <a href="https://ashxvn.vercel.app/4u/More.html" target="_blank" class="link-btn">
+          <div class="link-content">
+            <div class="link-icon-box">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+            </div>
+            <span>More</span>
+          </div>
           <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
       </div>
@@ -394,6 +560,96 @@
   </audio>
 
   <script>
+    /* ==========================================================================
+       ADVANCED DYNAMIC BACKGROUND CANVAS ANIMATION
+       ========================================================================== */
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    const particlesArray = [];
+    const numberOfParticles = Math.min(window.innerWidth > 768 ? 75 : 35, 90);
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 1.2;
+        this.vy = (Math.random() - 0.5) * 1.2;
+        this.size = Math.random() * 2.2 + 0.8;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width) this.vx = -this.vx;
+        if (this.y < 0 || this.y > canvas.height) this.vy = -this.vy;
+      }
+      draw() {
+        ctx.fillStyle = 'rgba(255, 42, 95, 0.7)';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < numberOfParticles; i++) {
+      particlesArray.push(new Particle());
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw subtle grid overlay
+      ctx.strokeStyle = 'rgba(255, 42, 95, 0.03)';
+      ctx.lineWidth = 1;
+      const gridSize = 60;
+      for (let x = 0; x < canvas.width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+      for (let y = 0; y < canvas.height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+
+      // Update and connect particles
+      for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+        particlesArray[i].draw();
+
+        for (let j = i + 1; j < particlesArray.length; j++) {
+          const dx = particlesArray[i].x - particlesArray[j].x;
+          const dy = particlesArray[i].y - particlesArray[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 130) {
+            ctx.strokeStyle = `rgba(255, 42, 95, ${0.22 * (1 - distance / 130)})`;
+            ctx.lineWidth = 1.1;
+            ctx.beginPath();
+            ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
+            ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+
+    /* ==========================================================================
+       AUTHENTICATION & SECURITY LOGIC
+       ========================================================================== */
     const CONFIG = {
       SECRET_CODE: "@5hx",
       MAX_ATTEMPTS: 3,
@@ -500,15 +756,16 @@
     function processSuccess() {
       showStatus("ACCESS GRANTED", "success");
       
-      card.style.borderColor = "#008000";
-      card.style.boxShadow = "0 15px 35px rgba(0, 128, 0, 0.15)";
+      card.style.borderColor = "rgba(0, 245, 118, 0.5)";
+      card.style.boxShadow = "0 30px 70px rgba(0, 0, 0, 0.75), 0 0 40px rgba(0, 245, 118, 0.22)";
 
       lockIcon.innerHTML = `
         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
         <path d="M7 11V4a5 5 0 0 1 9.9-1"></path>
       `;
-      lockIcon.style.stroke = "#008000";
-      iconBox.style.borderColor = "#008000";
+      lockIcon.style.stroke = "#00f576";
+      iconBox.style.borderColor = "rgba(0, 245, 118, 0.5)";
+      iconBox.style.background = "linear-gradient(135deg, rgba(0, 245, 118, 0.18), rgba(12, 16, 24, 0.9))";
 
       setTimeout(() => {
         authSection.style.display = 'none';
