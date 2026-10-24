@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Unstoppable - AXI Intelligence</title>
+    <!-- Clean & Attractive Diamond Website Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f59e0b'%3E%3Cpath d='M12 2L2 9l10 13L22 9l-10-7zm0 2.8l7.2 5.2H4.8L12 4.8zM5.8 11h12.4L12 19.4 5.8 11z'/%3E%3C/svg%3E">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -93,11 +95,10 @@
                 <div class="min-w-0">
                     <div class="flex items-center space-x-1.5">
                         <h1 class="font-black text-base sm:text-lg tracking-tight bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 bg-clip-text text-transparent truncate">
-                           A X !
+                        A X !
                         </h1>
                         <span class="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
                     </div>
-                    <!--  -->
                 </div>
             </a>
 
@@ -122,6 +123,9 @@
 
             <!-- Quick Controls -->
             <div class="flex items-center space-x-3">
+                <button onclick="playTestSound()" class="px-3 h-10 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center space-x-1.5 text-amber-400 hover:bg-amber-500/20 transition shadow-sm text-xs font-bold" title="Test Alert Sound">
+                    <i class="fa-solid fa-volume-high"></i> <span class="hidden sm:inline">Test Sound</span>
+                </button>
                 <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800 flex items-center justify-center text-amber-400 hover:bg-slate-200 dark:hover:bg-[#111c38] transition shadow-sm" title="Toggle Theme">
                     <i id="themeIcon" class="fa-solid fa-moon text-sm"></i>
                 </button>
@@ -555,11 +559,11 @@
                 <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm space-y-4">
                     <h3 class="font-bold text-slate-900 dark:text-white flex items-center space-x-2 text-sm sm:text-base">
                         <i class="fa-solid fa-bell text-amber-400"></i>
-                        <span>Browser Notifications</span>
+                        <span>Browser Notifications & Sound</span>
                     </h3>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Enable browser push alerts so tasks remind you again and again until completed.</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Enable browser push alerts and sound so tasks remind you even when watching reels or switching apps.</p>
                     <button onclick="requestNotificationPermission()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold rounded-xl text-sm transition shadow-md shadow-amber-500/20">
-                        Enable Browser Notifications
+                        Enable Notifications & Audio Alerts
                     </button>
                 </div>
 
@@ -587,14 +591,9 @@
 
     </main>
 
-    <!-- Footer -->
-    <!-- <footer class="mt-auto border-t border-slate-200 dark:border-slate-800/80 bg-white/50 dark:bg-[#04070c]/50 py-4 text-center text-xs text-slate-500">
-        <p>Unstoppable Ash! — AXI Intelligence Master Hub. Stay Unstoppable! 🌟</p>
-    </footer> -->
-
     <!-- ==================== MODALS ==================== -->
 
-    <!-- Create / Edit Task Modal -->   
+    <!-- Create / Edit Task Modal -->
     <div id="taskModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between">
@@ -692,6 +691,49 @@
             { title: "Critical Thinking Foundation", text: "Question assumptions. When faced with a roadblock in tech learning or business, break it down to first principles rather than relying solely on surface solutions." }
         ];
 
+        /* ==================== WEB AUDIO API PREMIUM NOTIFICATION SOUND ==================== */
+        let audioCtx = null;
+
+        function playPremierNotificationSound() {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
+                const now = audioCtx.currentTime;
+                
+                // Play a rich 3-note melodic chime (C5 -> E5 -> G5)
+                const notes = [523.25, 659.25, 783.99]; 
+                notes.forEach((freq, index) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + (index * 0.12));
+
+                    gain.gain.setValueAtTime(0, now + (index * 0.12));
+                    gain.gain.linearRampToValueAtTime(0.3, now + (index * 0.12) + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + (index * 0.12) + 0.6);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+
+                    osc.start(now + (index * 0.12));
+                    osc.stop(now + (index * 0.12) + 0.65);
+                });
+            } catch (e) {
+                console.log("AudioContext blocked or unavailable until user interaction:", e);
+            }
+        }
+
+        function playTestSound() {
+            playPremierNotificationSound();
+            showToast("Playing premium alert sound!");
+        }
+
         /* ==================== INITIALIZATION ==================== */
         window.onload = function() {
             if (state.darkMode) {
@@ -721,8 +763,8 @@
                 }
             });
 
-            // Start repeating reminder checker interval (every 30 seconds)
-            setInterval(checkRepeatingReminders, 30000);
+            // Start repeating reminder checker interval (every 20 seconds for high reliability)
+            setInterval(checkRepeatingReminders, 20000);
         };
 
         /* ==================== TAB NAVIGATION ==================== */
@@ -1014,15 +1056,20 @@
             if (pendingToday.length > 0) {
                 const now = new Date();
                 const currentDayName = now.toLocaleDateString('en-US', { weekday: 'long' });
+                
+                let alertMsg = `🔔 Reminder: You have ${pendingToday.length} pending task(s) to complete.`;
                 if (currentDayName === state.weeklyOffDay) {
-                    showPersistentBanner(`⚠️ Weekly Off Reminder: You have ${pendingToday.length} pending task(s) waiting for your attention! Clear your backlog today.`);
-                } else {
-                    showPersistentBanner(`🔔 Reminder: You have ${pendingToday.length} pending task(s) for today. Stay unstoppable and finish them!`);
+                    alertMsg = `⚠️ Weekly Off Reminder: You have ${pendingToday.length} pending backlog task(s)! Clear them today.`;
                 }
 
+                // Trigger persistent top banner & premier sound
+                showPersistentBanner(alertMsg);
+                playPremierNotificationSound();
+
+                // Trigger browser push notification if permitted
                 if (window.Notification && Notification.permission === "granted") {
-                    new Notification("Unstoppable Ash! Reminder", {
-                        body: `You have ${pendingToday.length} pending task(s) to finish today!`,
+                    new Notification("Unstoppable Ash! Alert", {
+                        body: alertMsg,
                         icon: "https://placehold.co/128x128/f59e0b/ffffff?text=UA"
                     });
                 }
@@ -1044,14 +1091,21 @@
         }
 
         function requestNotificationPermission() {
+            // Unlock audio context on user gesture
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            audioCtx.resume();
+            playPremierNotificationSound();
+
             if (!window.Notification) {
                 alert("Browser notifications are not supported by your browser.");
                 return;
             }
             Notification.requestPermission().then(permission => {
                 if (permission === "granted") {
-                    showToast("Browser notifications enabled successfully!");
-                    new Notification("Unstoppable Ash!", "Notifications are now active. We will keep you reminded until tasks are done!");
+                    showToast("Notifications and sound alerts enabled successfully!");
+                    new Notification("Unstoppable Ash!", "Audio & Push alerts are now active. You will be reminded even while watching reels or doing other tasks!");
                 } else {
                     showToast("Notification permission denied.");
                 }
