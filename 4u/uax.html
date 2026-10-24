@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Unstoppable - AXI Intelligence</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: {
+                            50: '#f8fafc',
+                            900: '#0f172a',
+                            950: '#04070c',
+                        },
+                        gold: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter & Cinzel for Elite Aesthetic -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .elite-font {
+            font-family: 'Cinzel', serif;
+        }
+        @keyframes pulseGold {
+            0%, 100% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 0 45px rgba(245, 158, 11, 0.7); }
+        }
+        .pulse-gold {
+            animation: pulseGold 3s infinite;
+        }
+        /* Custom scrollbar for mobile/laptop fluidity */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(245, 158, 11, 0.4);
+            border-radius: 9999px;
+        }
+        @media print {
+            body { background: white !important; color: black !important; }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+        }
+    </style>
+</head>
+<body class="h-full bg-[#f8fafc] dark:bg-[#04070c] text-slate-800 dark:text-slate-100 transition-colors duration-300 flex flex-col antialiased">
+
+    <!-- Top Notification Banner for Persistent Reminders -->
+    <div id="persistentReminderBanner" class="hidden bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 px-3 sm:px-4 py-3 shadow-lg transition-all duration-300 z-50 flex items-center justify-between no-print font-medium">
+        <div class="flex items-center space-x-2 sm:space-x-3 max-w-7xl mx-auto w-full">
+            <i class="fa-solid fa-triangle-exclamation text-lg sm:text-xl animate-bounce shrink-0"></i>
+            <div class="flex-1 min-w-0">
+                <span class="font-black uppercase tracking-wide text-[10px] sm:text-xs bg-black/20 px-2 py-0.5 rounded text-white">Action Required</span>
+                <span id="reminderBannerText" class="text-xs sm:text-base ml-1 sm:ml-2 truncate inline-block align-bottom max-w-[200px] sm:max-w-none text-slate-950 font-bold">You have pending tasks that need your attention!</span>
+            </div>
+            <button onclick="dismissBanner()" class="ml-auto text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-black/20 hover:bg-black/30 text-white px-2.5 sm:px-3 py-1 rounded transition shrink-0">Dismiss</button>
+        </div>
+    </div>
+
+    <!-- Luxury Navbar with Diamond Icon & Gold/Obsidian Theme -->
+    <header class="sticky top-0 z-40 bg-white/90 dark:bg-[#04070c]/90 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800/80 transition-colors shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Brand / Logo with Diamond Icon -->
+            <a href="#dashboard" onclick="switchTab('dashboard')" class="flex items-center space-x-3 group cursor-pointer">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 via-yellow-400 to-amber-700 p-0.5 shadow-lg shadow-amber-500/20 group-hover:scale-105 transition transform shrink-0">
+                    <div class="w-full h-full bg-white dark:bg-[#04070c] rounded-[14px] flex items-center justify-center">
+                        <i class="fa-solid fa-gem text-amber-400 text-lg group-hover:rotate-12 transition-transform duration-300"></i>
+                    </div>
+                </div>
+                <div class="min-w-0">
+                    <div class="flex items-center space-x-1.5">
+                        <h1 class="font-black text-base sm:text-lg tracking-tight bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 bg-clip-text text-transparent truncate">
+                           A X !
+                        </h1>
+                        <span class="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                    </div>
+                    <!--  -->
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Menu -->
+            <nav class="hidden md:flex items-center p-1.5 bg-slate-100/80 dark:bg-[#0b1326]/80 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl shadow-inner">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn px-4 py-2 rounded-xl text-xs lg:text-sm font-bold transition bg-amber-500 text-slate-950 shadow-md shadow-amber-500/25 flex items-center space-x-2">
+                    <i class="fa-solid fa-house"></i> <span>Dashboard</span>
+                </button>
+                <button onclick="switchTab('tasks')" id="nav-tasks" class="nav-btn px-4 py-2 rounded-xl text-xs lg:text-sm font-semibold transition text-slate-600 dark:text-slate-300 hover:text-amber-400 hover:bg-slate-200/50 dark:hover:bg-[#111c38] flex items-center space-x-2">
+                    <i class="fa-solid fa-list-check"></i> <span>Tasks</span>
+                </button>
+                <button onclick="switchTab('learning')" id="nav-learning" class="nav-btn px-4 py-2 rounded-xl text-xs lg:text-sm font-semibold transition text-slate-600 dark:text-slate-300 hover:text-amber-400 hover:bg-slate-200/50 dark:hover:bg-[#111c38] flex items-center space-x-2">
+                    <i class="fa-solid fa-graduation-cap"></i> <span>Learning</span>
+                </button>
+                <button onclick="switchTab('reports')" id="nav-reports" class="nav-btn px-4 py-2 rounded-xl text-xs lg:text-sm font-semibold transition text-slate-600 dark:text-slate-300 hover:text-amber-400 hover:bg-slate-200/50 dark:hover:bg-[#111c38] flex items-center space-x-2">
+                    <i class="fa-solid fa-chart-pie"></i> <span>Reports</span>
+                </button>
+                <button onclick="switchTab('settings')" id="nav-settings" class="nav-btn px-4 py-2 rounded-xl text-xs lg:text-sm font-semibold transition text-slate-600 dark:text-slate-300 hover:text-amber-400 hover:bg-slate-200/50 dark:hover:bg-[#111c38] flex items-center space-x-2">
+                    <i class="fa-solid fa-gear"></i> <span>Settings</span>
+                </button>
+            </nav>
+
+            <!-- Quick Controls -->
+            <div class="flex items-center space-x-3">
+                <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800 flex items-center justify-center text-amber-400 hover:bg-slate-200 dark:hover:bg-[#111c38] transition shadow-sm" title="Toggle Theme">
+                    <i id="themeIcon" class="fa-solid fa-moon text-sm"></i>
+                </button>
+                <button onclick="toggleMobileMenu()" class="md:hidden w-10 h-10 rounded-2xl bg-slate-100 dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 transition shadow-sm" aria-label="Menu">
+                    <i id="mobileMenuIcon" class="fa-solid fa-bars text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white/95 dark:bg-[#04070c]/95 backdrop-blur-2xl border-b border-slate-200 dark:border-slate-800 px-4 pt-3 pb-6 space-y-2 shadow-2xl transition-all">
+            <button onclick="switchTab('dashboard'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-semibold flex items-center space-x-3 text-slate-700 dark:text-slate-200 hover:bg-amber-50 dark:hover:bg-[#0b1326] transition">
+                <i class="fa-solid fa-house w-5 text-amber-400 text-base"></i> <span>Dashboard</span>
+            </button>
+            <button onclick="switchTab('tasks'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-semibold flex items-center space-x-3 text-slate-700 dark:text-slate-200 hover:bg-amber-50 dark:hover:bg-[#0b1326] transition">
+                <i class="fa-solid fa-list-check w-5 text-amber-400 text-base"></i> <span>Tasks Management</span>
+            </button>
+            <button onclick="switchTab('learning'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-semibold flex items-center space-x-3 text-slate-700 dark:text-slate-200 hover:bg-amber-50 dark:hover:bg-[#0b1326] transition">
+                <i class="fa-solid fa-graduation-cap w-5 text-amber-400 text-base"></i> <span>Micro-Learning Hub</span>
+            </button>
+            <button onclick="switchTab('reports'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-semibold flex items-center space-x-3 text-slate-700 dark:text-slate-200 hover:bg-amber-50 dark:hover:bg-[#0b1326] transition">
+                <i class="fa-solid fa-chart-pie w-5 text-amber-400 text-base"></i> <span>Reports & PDF</span>
+            </button>
+            <button onclick="switchTab('settings'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-semibold flex items-center space-x-3 text-slate-700 dark:text-slate-200 hover:bg-amber-50 dark:hover:bg-[#0b1326] transition">
+                <i class="fa-solid fa-gear w-5 text-amber-400 text-base"></i> <span>Settings & Backup</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8">
+
+        <!-- ==================== TAB 1: DASHBOARD ==================== -->
+        <section id="tab-dashboard" class="tab-content space-y-6 sm:space-y-8">
+            
+            <!-- Elite Manifesto & Command Banner (Gold/Obsidian Theme) -->
+            <div class="bg-gradient-to-r from-[#0d1527] via-[#101b33] to-[#070b14] rounded-3xl p-6 sm:p-10 text-white shadow-2xl relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-2 border-amber-500/40 pulse-gold">
+                <div class="absolute -right-10 -bottom-10 opacity-5 text-9xl pointer-events-none">
+                    <i class="fa-solid fa-crown text-amber-400"></i>
+                </div>
+                
+                <div class="relative z-10 max-w-2xl space-y-3">
+                    <div class="inline-flex items-center space-x-2 bg-amber-500/20 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest border border-amber-500/40 text-amber-300">
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping shrink-0"></span>
+                        <span>AXI Intelligence • Supreme Command</span>
+                    </div>
+                    
+                    <h2 class="elite-font text-xl sm:text-3xl font-black tracking-wider text-amber-300 uppercase drop-shadow-md">
+                        Unstoppable. Underrated. Uncontrollable.
+                    </h2>
+                    
+                    <blockquote class="text-slate-200 text-xs sm:text-base font-semibold italic border-l-4 border-amber-400 pl-4 py-1 leading-relaxed">
+                        “No one controls me. I stop on my terms. I was born to be the best.”
+                        <footer class="text-amber-400 font-black not-italic tracking-widest uppercase text-xs mt-1">— ASHVIN</footer>
+                    </blockquote>
+                </div>
+                
+                <!-- Ultra-Sleek Live Clock Widget -->
+                <div class="relative z-10 bg-black/70 backdrop-blur-2xl rounded-2xl p-5 border border-amber-500/35 text-left md:text-right w-full md:w-auto min-w-[240px] shadow-2xl">
+                    <div class="flex items-center justify-between md:justify-end space-x-2 text-amber-300 text-xs font-bold uppercase tracking-wider mb-1">
+                        <i class="fa-regular fa-clock text-amber-400"></i>
+                        <span id="liveDate">Loading date...</span>
+                    </div>
+                    <div id="liveClock" class="text-3xl sm:text-4xl font-black tracking-wider text-white font-mono drop-shadow">00:00:00</div>
+                    <div id="todayIsWeeklyOffBadge" class="hidden mt-2.5 inline-block bg-amber-400 text-slate-950 text-xs font-black px-3 py-1 rounded-full shadow-lg">🎉 Weekly Off Today!</div>
+                </div>
+            </div>
+
+            <!-- Current & Next Work Block Card -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Active Work Block Box -->
+                <div class="lg:col-span-2 bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-slate-900 dark:text-white flex items-center space-x-2 text-sm sm:text-base">
+                                <i class="fa-solid fa-clock text-amber-400"></i>
+                                <span>24H Routine Status</span>
+                            </h3>
+                            <span id="currentBlockStatusTag" class="px-3 py-1 rounded-full text-[10px] sm:text-xs font-extrabold bg-amber-500/10 text-amber-400 border border-amber-500/20">Active Now</span>
+                        </div>
+                        <div id="activeBlockCard" class="p-5 rounded-2xl bg-slate-50 dark:bg-[#111c38] border border-slate-100 dark:border-slate-800">
+                            <div id="activeBlockTitle" class="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">Calculating current slot...</div>
+                            <div id="activeBlockTime" class="text-xs sm:text-sm font-semibold text-amber-400 mt-1">Time: --</div>
+                            <p id="activeBlockDesc" class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2 leading-relaxed">Loading routine guidance...</p>
+                        </div>
+                    </div>
+                    <!-- Next Upcoming Block -->
+                    <div class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs sm:text-sm">
+                        <span class="text-slate-500 font-medium flex items-center"><i class="fa-solid fa-forward-step mr-1.5 text-amber-400"></i> Up Next: <strong id="nextBlockTitle" class="text-slate-800 dark:text-slate-200 ml-1">--</strong></span>
+                        <span id="nextBlockTime" class="text-xs font-bold text-slate-500 bg-slate-100 dark:bg-[#111c38] px-2.5 py-1 rounded-lg self-start sm:self-auto border border-slate-200 dark:border-slate-800">--</span>
+                    </div>
+                </div>
+
+                <!-- Quick Stats / Pending Tasks Widget -->
+                <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-slate-900 dark:text-white flex items-center space-x-2 text-sm sm:text-base">
+                                <i class="fa-solid fa-clipboard-list text-amber-400"></i>
+                                <span>Task Snapshot</span>
+                            </h3>
+                            <button onclick="switchTab('tasks')" class="text-xs font-semibold text-amber-400 hover:underline">Manage</button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 mb-4">
+                            <div class="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 text-center">
+                                <div id="statPendingCount" class="text-2xl font-black text-amber-400">0</div>
+                                <div class="text-[11px] font-medium text-slate-400 mt-0.5">Pending Today</div>
+                            </div>
+                            <div class="bg-slate-50 dark:bg-[#111c38] border border-slate-100 dark:border-slate-800 rounded-2xl p-4 text-center">
+                                <div id="statDoneCount" class="text-2xl font-black text-slate-700 dark:text-slate-300">0</div>
+                                <div class="text-[11px] font-medium text-slate-400 mt-0.5">Completed</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="openQuickAddTaskModal()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-600 hover:to-yellow-500 text-slate-950 font-extrabold rounded-xl shadow-lg shadow-amber-500/20 transition flex items-center justify-center space-x-2 text-sm">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Quick Add Task</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Routine Breakdown Reference Cards -->
+            <div>
+                <h3 class="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white mb-4">Your 24-Hour Daily Routine Breakdown</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">Fixed</span>
+                            <div class="font-bold text-slate-900 dark:text-white text-sm sm:text-base mt-2">9 PM - 8 AM</div>
+                        </div>
+                        <div class="text-xs text-slate-500 dark:text-slate-400 mt-2">Job + Travelling + Ready (11 Hours)</div>
+                    </div>
+                    <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">Rest & Care</span>
+                            <div class="font-bold text-slate-900 dark:text-white text-sm sm:text-base mt-2">9 AM - 5:30 PM</div>
+                        </div>
+                        <div class="text-xs text-slate-500 dark:text-slate-400 mt-2">Sleep (~7h) + Exercise + Ready + Personal (10 Hours)</div>
+                    </div>
+                    <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Growth</span>
+                            <div class="font-bold text-slate-900 dark:text-white text-sm sm:text-base mt-2">5:30 PM - 7:30 PM</div>
+                        </div>
+                        <div class="text-xs text-slate-500 dark:text-slate-400 mt-2">Tech Learning (2 Hours)</div>
+                    </div>
+                    <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">Business</span>
+                            <div class="font-bold text-slate-900 dark:text-white text-sm sm:text-base mt-2">7:30 PM - 8:30 PM</div>
+                        </div>
+                        <div class="text-xs text-slate-500 dark:text-slate-400 mt-2">IG Business + Personal + More (1 Hour)</div>
+                    </div>
+                    <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Fitness</span>
+                            <div class="font-bold text-slate-900 dark:text-white text-sm sm:text-base mt-2">8:30 PM - 9 PM</div>
+                        </div>
+                        <div class="text-xs text-slate-500 dark:text-slate-400 mt-2">Exercise (If time permits) (0.5 Hour)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 2: TASKS ==================== -->
+        <section id="tab-tasks" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">Task Management</h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">Add tasks with specific times for any day or pile them up for your Weekly Off backlog reminder.</p>
+                </div>
+                <button onclick="openTaskModal()" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-600 hover:to-yellow-500 text-slate-950 font-extrabold rounded-xl shadow-lg shadow-amber-500/20 transition flex items-center justify-center space-x-2 text-sm shrink-0">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Create New Task</span>
+                </button>
+            </div>
+
+            <!-- Filters & Search Bar -->
+            <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center">
+                <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 w-full md:w-auto">
+                    <button onclick="filterTaskCategory('all')" id="cat-filter-all" class="task-filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-amber-500 text-slate-950 shadow transition">All Categories</button>
+                    <button onclick="filterTaskCategory('Health')" id="cat-filter-Health" class="task-filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-[#111c38] text-slate-600 dark:text-slate-300 transition">Health</button>
+                    <button onclick="filterTaskCategory('Tech')" id="cat-filter-Tech" class="task-filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-[#111c38] text-slate-600 dark:text-slate-300 transition">Tech</button>
+                    <button onclick="filterTaskCategory('Business')" id="cat-filter-Business" class="task-filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-[#111c38] text-slate-600 dark:text-slate-300 transition">Business</button>
+                    <button onclick="filterTaskCategory('Others')" id="cat-filter-Others" class="task-filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-[#111c38] text-slate-600 dark:text-slate-300 transition">Others</button>
+                </div>
+                <div class="w-full md:w-72">
+                    <input type="text" id="taskSearchInput" oninput="renderTasks()" placeholder="Search tasks..." class="w-full px-3.5 py-2 bg-slate-50 dark:bg-[#111c38] border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:border-amber-500 text-slate-800 dark:text-slate-100">
+                </div>
+            </div>
+
+            <!-- Task List Container -->
+            <div id="taskListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Dynamically populated tasks -->
+            </div>
+        </section>
+
+        <!-- ==================== TAB 3: LEARNING ==================== -->
+        <section id="tab-learning" class="tab-content hidden space-y-6">
+            <div>
+                <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">Micro-Learning & Knowledge Hub</h2>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">Replace social media scrolling with valuable insights during your free time at job or anywhere!</p>
+            </div>
+
+            <!-- Quick Read / Focus Banner -->
+            <div class="bg-gradient-to-r from-amber-600 via-yellow-600 to-indigo-950 rounded-3xl p-6 text-white shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border border-amber-500/20">
+                <div>
+                    <span class="bg-black/30 text-[10px] sm:text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider border border-white/10 text-amber-300">Free Time Optimization</span>
+                    <h3 class="text-lg sm:text-xl font-bold mt-2">Got 10 minutes of downtime?</h3>
+                    <p class="text-amber-100 text-xs sm:text-sm mt-1 leading-relaxed">Pick a topic below to sharpen your mental models, financial intelligence, or psychological mastery.</p>
+                </div>
+                <button onclick="openRandomQuickRead()" class="px-5 py-3 bg-white text-slate-950 font-extrabold rounded-xl shadow-lg hover:bg-amber-50 transition flex items-center space-x-2 text-sm shrink-0">
+                    <i class="fa-solid fa-bolt text-amber-600"></i>
+                    <span>Random Wisdom Boost</span>
+                </button>
+            </div>
+
+            <!-- Learning Categories Grid (Beautified Cards) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Category 1 -->
+                <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center text-xl mb-4 shadow-inner">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">1. Psychology & Human Behavior</h3>
+                        <ul class="mt-4 space-y-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                            <li><a href="https://thedecisionlab.com/biases" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>The Decision Lab — Biases</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                            <li><a href="https://greatergood.berkeley.edu/" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>Greater Good Magazine</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                            <li><a href="https://greatergood.berkeley.edu/topic/compassion/definition" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>Six Habits of Compassionate People</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                            <li><a href="https://www.apa.org/topics" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>American Psychological Association</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Category 2 -->
+                <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center text-xl mb-4 shadow-inner">
+                            <i class="fa-solid fa-chess"></i>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">2. Logical Thinking & Decisions</h3>
+                        <ul class="mt-4 space-y-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                            <li><a href="https://thedecisionlab.com/" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>The Decision Lab — Index</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                            <li><a href="https://www.apa.org/pubs/journals/xlm" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>APA Journal: Learning & Memory</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                            <li><a href="https://www.criticalthinking.org/pages/defining-critical-thinking/766" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>Foundation for Critical Thinking</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                            <li><a href="https://fs.blog/mental-models/" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>Farnam Street — Mental Models</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Category 3 -->
+                <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center text-xl mb-4 shadow-inner">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">3. Money & Financial Intel</h3>
+                        <ul class="mt-4 space-y-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                            <li><a href="https://www.consumerfinance.gov/consumer-tools/budgeting/" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>CFPB — Create a Budget</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                            <li><a href="https://www.consumerfinance.gov/an-ask-cfpb/what-is-compound-interest-en-1549/" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>CFPB — Compound Interest</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                            <li><a href="https://www.investor.gov/introduction-investing" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>Investor.gov — Investing</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                            <li><a href="https://www.nerdwallet.com/finance" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>NerdWallet — Money Mgmt</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Category 4 -->
+                <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center text-xl mb-4 shadow-inner">
+                            <i class="fa-solid fa-heart-pulse"></i>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">4. Health, Sleep & Biology</h3>
+                        <ul class="mt-4 space-y-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                            <li><a href="https://www.cdc.gov/sleep/index.html" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>CDC — About Sleep</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                            <li><a href="https://www.health.harvard.edu/topics/sleep" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>Harvard Health — Sleep Impr.</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                            <li><a href="https://www.health.harvard.edu/" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>Harvard Health — Longevity</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                            <li><a href="https://www.nhs.uk/live-well/sleep-and-tiredness/self-help-tips-to-fight-fatigue/" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>NHS — Fight Fatigue</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Category 5 -->
+                <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center text-xl mb-4 shadow-inner">
+                            <i class="fa-solid fa-comments"></i>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">5. Communication & Relations</h3>
+                        <ul class="mt-4 space-y-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                            <li><a href="https://www.helpguide.org/articles/relationships/effective-communication.htm" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>HelpGuide — Active Listening</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                            <li><a href="https://www.helpguide.org/articles/relationships/all-relationships.htm" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>HelpGuide — Effective Comm.</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                            <li><a href="https://www.helpguide.org/" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>HelpGuide — Resources</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                            <li><a href="https://greatergood.berkeley.edu/" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>Greater Good — Listening</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Category 6 -->
+                <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center text-xl mb-4 shadow-inner">
+                            <i class="fa-solid fa-bullseye"></i>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">6. Focus, Discipline & Habits</h3>
+                        <ul class="mt-4 space-y-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                            <li><a href="https://www.apa.org/monitor/2019/11/habits" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>APA — Wendy Wood Habits</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                            <li><a href="https://greatergood.berkeley.edu/" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>Greater Good — Focus</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                            <li><a href="https://jamesclear.com/articles" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>James Clear — Habit Articles</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                            <li><a href="https://www.apa.org/topics/mindfulness" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#111c38] hover:bg-amber-500/10 flex items-center justify-between group transition border border-slate-100 dark:border-slate-800/60"><span>APA — Mindfulness</span> <i class="fa-solid fa-arrow-up-right-from-square text-[11px] text-amber-400 opacity-70 group-hover:opacity-100"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==================== TAB 4: REPORTS ==================== -->
+        <section id="tab-reports" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 no-print">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">Activity & Task Reports</h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">Generate clean PDF reports for 1 day, 2 days, 3 days, or custom date ranges.</p>
+                </div>
+                <button onclick="triggerPDFDownload()" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-600 hover:to-yellow-500 text-slate-950 font-extrabold rounded-xl shadow-lg shadow-amber-500/20 transition flex items-center justify-center space-x-2 text-sm shrink-0">
+                    <i class="fa-solid fa-file-arrow-down"></i>
+                    <span>Download PDF Report</span>
+                </button>
+            </div>
+
+            <!-- Report Filters -->
+            <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800/80 rounded-2xl p-5 shadow-sm no-print grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">From Date</label>
+                    <input type="date" id="reportStartDate" class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#111c38] border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:border-amber-500 text-slate-800 dark:text-slate-100">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">To Date</label>
+                    <input type="date" id="reportEndDate" class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#111c38] border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:border-amber-500 text-slate-800 dark:text-slate-100">
+                </div>
+                <div>
+                    <button onclick="generateReport()" class="w-full py-2.5 bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 text-white font-semibold rounded-xl text-sm transition">Generate Report</button>
+                </div>
+            </div>
+
+            <!-- Report Output Preview Area -->
+            <div id="reportPrintArea" class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 dark:border-slate-800 pb-6 gap-4">
+                    <div>
+                        <h1 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">Unstoppable Ash! — Performance Report</h1>
+                        <p id="reportRangeLabel" class="text-xs sm:text-sm text-slate-500 mt-1">Showing overview for all recorded tasks</p>
+                    </div>
+                    <div class="text-left sm:text-right">
+                        <div class="text-xs sm:text-sm font-bold text-amber-400">AXI Intelligence</div>
+                        <div id="reportGeneratedTime" class="text-[11px] text-slate-400 mt-0.5">Generated just now</div>
+                    </div>
+                </div>
+
+                <!-- Summary Metrics -->
+                <div class="grid grid-cols-3 gap-3 sm:gap-4">
+                    <div class="p-3 sm:p-4 rounded-2xl bg-slate-50 dark:bg-[#111c38] border border-slate-100 dark:border-slate-800 text-center sm:text-left">
+                        <div class="text-[10px] sm:text-xs text-slate-400 font-bold uppercase">Total Tasks</div>
+                        <div id="repTotalTasks" class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mt-1">0</div>
+                    </div>
+                    <div class="p-3 sm:p-4 rounded-2xl bg-slate-50 dark:bg-[#111c38] border border-slate-100 dark:border-slate-800 text-center sm:text-left">
+                        <div class="text-[10px] sm:text-xs text-slate-400 font-bold uppercase">Completed</div>
+                        <div id="repCompletedTasks" class="text-xl sm:text-2xl font-black text-amber-400 mt-1">0</div>
+                    </div>
+                    <div class="p-3 sm:p-4 rounded-2xl bg-slate-50 dark:bg-[#111c38] border border-slate-100 dark:border-slate-800 text-center sm:text-left">
+                        <div class="text-[10px] sm:text-xs text-slate-400 font-bold uppercase">Completion Rate</div>
+                        <div id="repCompletionRate" class="text-xl sm:text-2xl font-black text-yellow-400 mt-1">0%</div>
+                    </div>
+                </div>
+
+                <!-- Detailed Task Table for Report -->
+                <div>
+                    <h3 class="font-bold text-slate-900 dark:text-white mb-3 text-sm sm:text-base">Task Breakdown Log</h3>
+                    <div class="overflow-x-auto -mx-6 sm:mx-0 px-6 sm:px-0">
+                        <table class="w-full text-left text-xs sm:text-sm min-w-[550px]">
+                            <thead>
+                                <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-400 font-semibold text-[11px] uppercase">
+                                    <th class="py-3 px-3 sm:px-4">Task Name</th>
+                                    <th class="py-3 px-3 sm:px-4">Category</th>
+                                    <th class="py-3 px-3 sm:px-4">Priority</th>
+                                    <th class="py-3 px-3 sm:px-4">Time</th>
+                                    <th class="py-3 px-3 sm:px-4">Scheduled For</th>
+                                    <th class="py-3 px-3 sm:px-4">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportTableBody" class="divide-y divide-slate-100 dark:divide-slate-800/60">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 5: SETTINGS ==================== -->
+        <section id="tab-settings" class="tab-content hidden space-y-6">
+            <div>
+                <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">Settings & Customization</h2>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">Configure your weekly off day, backup data, or toggle preferences.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Weekly Off Day Setting -->
+                <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm space-y-4">
+                    <h3 class="font-bold text-slate-900 dark:text-white flex items-center space-x-2 text-sm sm:text-base">
+                        <i class="fa-solid fa-calendar-day text-amber-400"></i>
+                        <span>Weekly Off Day Configuration</span>
+                    </h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">On your Weekly Off, any pending tasks or backlog will automatically trigger a special reminder notification!</p>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Select Weekly Off Day</label>
+                        <select id="weeklyOffDaySelect" onchange="saveWeeklyOffDay()" class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#111c38] border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm font-semibold focus:outline-none focus:border-amber-500 text-slate-800 dark:text-slate-100">
+                            <option value="Sunday">Sunday</option>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Notifications Permission -->
+                <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm space-y-4">
+                    <h3 class="font-bold text-slate-900 dark:text-white flex items-center space-x-2 text-sm sm:text-base">
+                        <i class="fa-solid fa-bell text-amber-400"></i>
+                        <span>Browser Notifications</span>
+                    </h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Enable browser push alerts so tasks remind you again and again until completed.</p>
+                    <button onclick="requestNotificationPermission()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold rounded-xl text-sm transition shadow-md shadow-amber-500/20">
+                        Enable Browser Notifications
+                    </button>
+                </div>
+
+                <!-- Data Import / Export -->
+                <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm space-y-4 md:col-span-2">
+                    <h3 class="font-bold text-slate-900 dark:text-white flex items-center space-x-2 text-sm sm:text-base">
+                        <i class="fa-solid fa-database text-amber-400"></i>
+                        <span>Data Backup & Restore (JSON)</span>
+                    </h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Export all your tasks and settings to a JSON file or restore from a previous backup.</p>
+                    <div class="flex flex-wrap gap-3 sm:gap-4 pt-2">
+                        <button onclick="exportDataJSON()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-xl text-sm transition flex items-center space-x-2">
+                            <i class="fa-solid fa-download"></i>
+                            <span>Export Backup JSON</span>
+                        </button>
+                        <label class="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold rounded-xl text-sm transition cursor-pointer flex items-center space-x-2 shadow-md shadow-amber-500/20">
+                            <i class="fa-solid fa-upload"></i>
+                            <span>Import Backup JSON</span>
+                            <input type="file" id="importFileJSON" accept=".json" onchange="importDataJSON(event)" class="hidden">
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <!-- <footer class="mt-auto border-t border-slate-200 dark:border-slate-800/80 bg-white/50 dark:bg-[#04070c]/50 py-4 text-center text-xs text-slate-500">
+        <p>Unstoppable Ash! — AXI Intelligence Master Hub. Stay Unstoppable! 🌟</p>
+    </footer> -->
+
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- Create / Edit Task Modal -->   
+    <div id="taskModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between">
+                <h3 id="taskModalTitle" class="text-lg font-bold text-slate-900 dark:text-white">Create New Task</h3>
+                <button onclick="closeTaskModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#111c38] flex items-center justify-center text-slate-400 hover:text-slate-200"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="taskForm" onsubmit="handleTaskFormSubmit(event)" class="space-y-4">
+                <input type="hidden" id="editingTaskId">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Task Title *</label>
+                    <input type="text" id="taskTitleInput" required placeholder="e.g., Complete React module or IG Reel post" class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#111c38] border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:border-amber-500 text-slate-800 dark:text-slate-100">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Category *</label>
+                        <select id="taskCategoryInput" class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#111c38] border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:border-amber-500 text-slate-800 dark:text-slate-100">
+                            <option value="Health">Health</option>
+                            <option value="Tech">Tech</option>
+                            <option value="Business">Business</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Priority *</label>
+                        <select id="taskPriorityInput" class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#111c38] border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:border-amber-500 text-slate-800 dark:text-slate-100">
+                            <option value="High">High</option>
+                            <option value="Low">Low</option>
+                            <option value="Optional">Optional</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Task Time *</label>
+                        <input type="time" id="taskTimeInput" required class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#111c38] border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:border-amber-500 text-slate-800 dark:text-slate-100">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Schedule For *</label>
+                        <select id="taskScheduleInput" class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#111c38] border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:border-amber-500 text-slate-800 dark:text-slate-100">
+                            <option value="today">Today</option>
+                            <option value="weekly_off">Weekly Off Backlog</option>
+                            <option value="specific_date">Specific Date</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="specificDateWrapper" class="hidden">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Target Date</label>
+                    <input type="date" id="taskTargetDateInput" class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#111c38] border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm focus:outline-none focus:border-amber-500 text-slate-800 dark:text-slate-100">
+                </div>
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button type="button" onclick="closeTaskModal()" class="px-4 py-2.5 bg-slate-100 dark:bg-[#111c38] text-slate-600 dark:text-slate-300 font-semibold rounded-xl text-sm">Cancel</button>
+                    <button type="submit" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold rounded-xl text-sm shadow-md">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Micro-Learning Random Quick Read Modal -->
+    <div id="quickReadModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center space-x-2">
+                    <i class="fa-solid fa-lightbulb text-amber-400"></i>
+                    <span id="quickReadTitle">Quick Wisdom</span>
+                </h3>
+                <button onclick="closeQuickReadModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#111c38] flex items-center justify-center text-slate-400 hover:text-slate-200"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p id="quickReadContent" class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed"></p>
+            <div class="flex justify-end pt-2">
+                <button onclick="openRandomQuickRead()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold rounded-xl text-sm shadow">Another Insight</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application JavaScript -->
+    <script>
+        /* ==================== STATE MANAGEMENT ==================== */
+        let state = {
+            tasks: JSON.parse(localStorage.getItem('unstoppable_ash_tasks')) || [
+                { id: '1', title: 'Complete 2h Tech Learning (React / JS)', category: 'Tech', priority: 'High', time: '17:30', schedule: 'today', targetDate: new Date().toISOString().split('T')[0], completed: false },
+                { id: '2', title: 'Instagram Business Reel & Post', category: 'Business', priority: 'High', time: '19:30', schedule: 'today', targetDate: new Date().toISOString().split('T')[0], completed: false },
+                { id: '3', title: 'Maintain 7 Hours Sleep Routine', category: 'Health', priority: 'High', time: '09:00', schedule: 'today', targetDate: new Date().toISOString().split('T')[0], completed: true }
+            ],
+            weeklyOffDay: localStorage.getItem('unstoppable_ash_weekly_off') || 'Sunday',
+            darkMode: localStorage.getItem('unstoppable_ash_dark') === 'true',
+            currentCategoryFilter: 'all'
+        };
+
+        const quickReads = [
+            { title: "Cognitive Biases (The Decision Lab)", text: "Confirmation bias makes us search for information that confirms our pre-existing beliefs. Actively seek out disconfirming evidence to make sharper professional and personal decisions." },
+            { title: "Compound Interest (Financial Intelligence)", text: "Small daily improvements compound over time. Saving or investing even a small percentage consistently yields massive exponential returns over years." },
+            { title: "Sleep & Fatigue (CDC / Harvard Health)", text: "For shift workers, sleep hygiene is paramount. Keep your sleeping environment dark, cool, and quiet to achieve restorative REM and deep sleep cycles." },
+            { title: "Habit Stacking (James Clear)", text: "Build new habits by attaching them to current ones. Set up your learning material consistently right after your resting periods." },
+            { title: "Active Listening (HelpGuide)", text: "True communication is not waiting for your turn to speak. Absorb fully, reflect back, and build deeper trust in both personal and business relationships." },
+            { title: "Critical Thinking Foundation", text: "Question assumptions. When faced with a roadblock in tech learning or business, break it down to first principles rather than relying solely on surface solutions." }
+        ];
+
+        /* ==================== INITIALIZATION ==================== */
+        window.onload = function() {
+            if (state.darkMode) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('themeIcon').className = 'fa-solid fa-sun';
+            }
+            document.getElementById('weeklyOffDaySelect').value = state.weeklyOffDay;
+            
+            // Set default report dates
+            const todayStr = new Date().toISOString().split('T')[0];
+            document.getElementById('reportStartDate').value = todayStr;
+            document.getElementById('reportEndDate').value = todayStr;
+
+            initClock();
+            checkWeeklyOffStatus();
+            renderTasks();
+            updateDashboardMetrics();
+            generateReport();
+
+            // Setup task schedule dropdown listener
+            document.getElementById('taskScheduleInput').addEventListener('change', function(e) {
+                const wrap = document.getElementById('specificDateWrapper');
+                if (e.target.value === 'specific_date') {
+                    wrap.classList.remove('hidden');
+                } else {
+                    wrap.classList.add('hidden');
+                }
+            });
+
+            // Start repeating reminder checker interval (every 30 seconds)
+            setInterval(checkRepeatingReminders, 30000);
+        };
+
+        /* ==================== TAB NAVIGATION ==================== */
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = 'nav-btn px-4 py-2 rounded-xl text-xs lg:text-sm font-semibold transition text-slate-600 dark:text-slate-300 hover:text-amber-400 hover:bg-slate-200/50 dark:hover:bg-[#111c38] flex items-center space-x-2';
+            });
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            if (activeBtn) {
+                activeBtn.className = 'nav-btn px-4 py-2 rounded-xl text-xs lg:text-sm font-bold transition bg-amber-500 text-slate-950 shadow-md shadow-amber-500/25 flex items-center space-x-2';
+            }
+
+            if (tabId === 'reports') {
+                generateReport();
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const icon = document.getElementById('mobileMenuIcon');
+            menu.classList.toggle('hidden');
+            if (menu.classList.contains('hidden')) {
+                icon.className = 'fa-solid fa-bars text-sm';
+            } else {
+                icon.className = 'fa-solid fa-xmark text-sm';
+            }
+        }
+
+        /* ==================== LIVE CLOCK & ROUTINE ENGINE ==================== */
+        function initClock() {
+            updateClockAndRoutine();
+            setInterval(updateClockAndRoutine, 1000);
+        }
+
+        function updateClockAndRoutine() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            const timeStr = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
+
+            const clockEl = document.getElementById('liveClock');
+            const dateEl = document.getElementById('liveDate');
+            if (clockEl) clockEl.textContent = timeStr;
+            if (dateEl) dateEl.textContent = dateStr;
+
+            const currentMinutesOfDay = hours * 60 + minutes;
+            let currentBlock = {};
+            let nextBlock = {};
+
+            if (currentMinutesOfDay >= 1260 || currentMinutesOfDay < 480) {
+                currentBlock = { title: "Job + Travelling + Ready", time: "9:00 PM - 8:00 AM (Fixed)", desc: "Working hours, travel, and preparation. Stay alert and focused!" };
+                nextBlock = { title: "Sleep + Exercise + Personal", time: "9:00 AM - 5:30 PM" };
+            } else if (currentMinutesOfDay >= 480 && currentMinutesOfDay < 540) {
+                currentBlock = { title: "Post-Job Wind Down / Transition", time: "8:00 AM - 9:00 AM", desc: "Arrive home, unwind, and prepare for rest." };
+                nextBlock = { title: "Sleep + Exercise + Ready + Personal", time: "9:00 AM - 5:30 PM" };
+            } else if (currentMinutesOfDay >= 540 && currentMinutesOfDay < 1050) {
+                currentBlock = { title: "Sleep + Exercise + Ready + Personal", time: "9:00 AM - 5:30 PM (Target ~7h sleep)", desc: "Restorative sleep, exercise session, personal care, and getting ready." };
+                nextBlock = { title: "Tech Learning (2h)", time: "5:30 PM - 7:30 PM" };
+            } else if (currentMinutesOfDay >= 1050 && currentMinutesOfDay < 1170) {
+                currentBlock = { title: "Tech Learning (2h)", time: "5:30 PM - 7:30 PM", desc: "Dedicated deep work on tech learning, coding, and skill expansion." };
+                nextBlock = { title: "IG Business + Personal + More", time: "7:30 PM - 8:30 PM" };
+            } else if (currentMinutesOfDay >= 1170 && currentMinutesOfDay < 1230) {
+                currentBlock = { title: "IG Business + Personal + More", time: "7:30 PM - 8:30 PM", desc: "Instagram business management, posting reels, and personal tasks." };
+                nextBlock = { title: "Exercise (If time permits)", time: "8:30 PM - 9:00 PM" };
+            } else {
+                currentBlock = { title: "Exercise & Daily Prep", time: "8:30 PM - 9:00 PM", desc: "Physical workout if energy permits, getting ready for shift departure." };
+                nextBlock = { title: "Job + Travelling + Ready", time: "9:00 PM - 8:00 AM" };
+            }
+
+            const activeTitleEl = document.getElementById('activeBlockTitle');
+            const activeTimeEl = document.getElementById('activeBlockTime');
+            const activeDescEl = document.getElementById('activeBlockDesc');
+            const nextTitleEl = document.getElementById('nextBlockTitle');
+            const nextTimeEl = document.getElementById('nextBlockTime');
+
+            if (activeTitleEl) activeTitleEl.textContent = currentBlock.title;
+            if (activeTimeEl) activeTimeEl.textContent = `Time: ${currentBlock.time}`;
+            if (activeDescEl) activeDescEl.textContent = currentBlock.desc;
+            if (nextTitleEl) nextTitleEl.textContent = nextBlock.title;
+            if (nextTimeEl) nextTimeEl.textContent = nextBlock.time;
+        }
+
+        /* ==================== WEEKLY OFF & BACKLOG LOGIC ==================== */
+        function checkWeeklyOffStatus() {
+            const now = new Date();
+            const currentDayName = now.toLocaleDateString('en-US', { weekday: 'long' });
+            const isWeeklyOff = (currentDayName === state.weeklyOffDay);
+
+            const badge = document.getElementById('todayIsWeeklyOffBadge');
+            if (badge) {
+                if (isWeeklyOff) badge.classList.remove('hidden');
+                else badge.classList.add('hidden');
+            }
+
+            if (isWeeklyOff) {
+                const pendingBacklog = state.tasks.filter(t => !t.completed && (t.schedule === 'weekly_off' || t.schedule === 'today'));
+                if (pendingBacklog.length > 0) {
+                    showPersistentBanner(`🎉 Weekly Off (${state.weeklyOffDay}) Reminder: You have ${pendingBacklog.length} pending task(s) accumulated! Time to clear your backlog!`);
+                }
+            }
+        }
+
+        function saveWeeklyOffDay() {
+            const select = document.getElementById('weeklyOffDaySelect');
+            state.weeklyOffDay = select.value;
+            localStorage.setItem('unstoppable_ash_weekly_off', state.weeklyOffDay);
+            checkWeeklyOffStatus();
+            showToast(`Weekly off updated to ${state.weeklyOffDay}!`);
+        }
+
+        /* ==================== TASK MANAGEMENT ==================== */
+        function openTaskModal(taskId = null) {
+            document.getElementById('taskModal').classList.remove('hidden');
+            const titleEl = document.getElementById('taskModalTitle');
+            const form = document.getElementById('taskForm');
+            form.reset();
+            document.getElementById('specificDateWrapper').classList.add('hidden');
+
+            if (taskId) {
+                titleEl.textContent = "Edit Task";
+                const task = state.tasks.find(t => t.id === taskId);
+                if (task) {
+                    document.getElementById('editingTaskId').value = task.id;
+                    document.getElementById('taskTitleInput').value = task.title;
+                    document.getElementById('taskCategoryInput').value = task.category;
+                    document.getElementById('taskPriorityInput').value = task.priority;
+                    document.getElementById('taskTimeInput').value = task.time || '12:00';
+                    document.getElementById('taskScheduleInput').value = task.schedule;
+                    if (task.schedule === 'specific_date') {
+                        document.getElementById('specificDateWrapper').classList.remove('hidden');
+                        document.getElementById('taskTargetDateInput').value = task.targetDate;
+                    }
+                }
+            } else {
+                titleEl.textContent = "Create New Task";
+                document.getElementById('editingTaskId').value = "";
+                document.getElementById('taskTimeInput').value = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+                document.getElementById('taskTargetDateInput').value = new Date().toISOString().split('T')[0];
+            }
+        }
+
+        function openQuickAddTaskModal() {
+            openTaskModal();
+            document.getElementById('taskScheduleInput').value = 'today';
+        }
+
+        function closeTaskModal() {
+            document.getElementById('taskModal').classList.add('hidden');
+        }
+
+        function handleTaskFormSubmit(e) {
+            e.preventDefault();
+            const editingId = document.getElementById('editingTaskId').value;
+            const title = document.getElementById('taskTitleInput').value;
+            const category = document.getElementById('taskCategoryInput').value;
+            const priority = document.getElementById('taskPriorityInput').value;
+            const time = document.getElementById('taskTimeInput').value;
+            const schedule = document.getElementById('taskScheduleInput').value;
+            const targetDate = document.getElementById('taskTargetDateInput').value || new Date().toISOString().split('T')[0];
+
+            if (editingId) {
+                state.tasks = state.tasks.map(t => t.id === editingId ? { ...t, title, category, priority, time, schedule, targetDate } : t);
+                showToast("Task updated successfully!");
+            } else {
+                const newTask = {
+                    id: Date.now().toString(),
+                    title,
+                    category,
+                    priority,
+                    time,
+                    schedule,
+                    targetDate,
+                    completed: false
+                };
+                state.tasks.push(newTask);
+                showToast("Task created successfully!");
+            }
+
+            saveTasksToLocalStorage();
+            closeTaskModal();
+            renderTasks();
+            updateDashboardMetrics();
+        }
+
+        function toggleTaskComplete(id) {
+            state.tasks = state.tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+            saveTasksToLocalStorage();
+            renderTasks();
+            updateDashboardMetrics();
+        }
+
+        function deleteTask(id) {
+            if (confirm("Are you sure you want to delete this task?")) {
+                state.tasks = state.tasks.filter(t => t.id !== id);
+                saveTasksToLocalStorage();
+                renderTasks();
+                updateDashboardMetrics();
+                showToast("Task deleted.");
+            }
+        }
+
+        function filterTaskCategory(cat) {
+            state.currentCategoryFilter = cat;
+            document.querySelectorAll('.task-filter-btn').forEach(btn => {
+                btn.className = 'task-filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-[#111c38] text-slate-600 dark:text-slate-300 transition';
+            });
+            document.getElementById(`cat-filter-${cat}`).className = 'task-filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-amber-500 text-slate-950 shadow transition';
+            renderTasks();
+        }
+
+        function renderTasks() {
+            const container = document.getElementById('taskListContainer');
+            const searchQuery = document.getElementById('taskSearchInput').value.toLowerCase();
+            
+            let filtered = state.tasks.filter(t => {
+                const matchesCat = (state.currentCategoryFilter === 'all' || t.category === state.currentCategoryFilter);
+                const matchesSearch = t.title.toLowerCase().includes(searchQuery);
+                return matchesCat && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-12 text-center text-slate-400">
+                        <i class="fa-solid fa-clipboard-question text-4xl mb-3 opacity-40"></i>
+                        <p class="text-sm font-medium">No tasks found. Add a new task to get started!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(t => {
+                let priorityBadgeColor = 'bg-slate-100 text-slate-700 dark:bg-[#111c38] dark:text-slate-300';
+                if (t.priority === 'High') priorityBadgeColor = 'bg-rose-500/10 text-rose-400 border border-rose-500/20';
+                if (t.priority === 'Low') priorityBadgeColor = 'bg-blue-500/10 text-blue-400 border border-blue-500/20';
+                if (t.priority === 'Optional') priorityBadgeColor = 'bg-purple-500/10 text-purple-400 border border-purple-500/20';
+
+                let scheduleText = `Target: ${t.targetDate}`;
+                if (t.schedule === 'weekly_off') scheduleText = 'Scheduled for Weekly Off Backlog';
+                if (t.schedule === 'today') scheduleText = 'Scheduled for Today';
+
+                return `
+                    <div class="bg-white dark:bg-[#0b1326] border border-slate-200 dark:border-slate-800/80 rounded-3xl p-5 shadow-sm flex flex-col justify-between transition hover:shadow-md ${t.completed ? 'opacity-60 bg-slate-50/50 dark:bg-[#0b1326]/50' : ''}">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${priorityBadgeColor}">${t.priority} Priority</span>
+                                <span class="text-xs font-semibold text-amber-400"><i class="fa-regular fa-clock mr-1"></i> ${t.time || '12:00'}</span>
+                            </div>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-base mb-1 ${t.completed ? 'line-through text-slate-400' : ''}">${escapeHTML(t.title)}</h4>
+                            <p class="text-xs text-slate-500 mb-4"><i class="fa-regular fa-calendar mr-1"></i> ${scheduleText} &bull; <span class="font-medium text-slate-600 dark:text-slate-400">${t.category}</span></p>
+                        </div>
+                        <div class="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800">
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="toggleTaskComplete('${t.id}')" class="w-4 h-4 rounded text-amber-500 focus:ring-amber-400 bg-slate-100 dark:bg-[#111c38] border-slate-700">
+                                <span class="text-xs font-semibold text-slate-600 dark:text-slate-300">${t.completed ? 'Completed' : 'Mark Done'}</span>
+                            </label>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="openTaskModal('${t.id}')" class="p-1.5 text-slate-400 hover:text-amber-400 transition" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button onclick="deleteTask('${t.id}')" class="p-1.5 text-slate-400 hover:text-rose-400 transition" title="Delete"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateDashboardMetrics() {
+            const pending = state.tasks.filter(t => !t.completed).length;
+            const done = state.tasks.filter(t => t.completed).length;
+
+            const pendingEl = document.getElementById('statPendingCount');
+            const doneEl = document.getElementById('statDoneCount');
+            if (pendingEl) pendingEl.textContent = pending;
+            if (doneEl) doneEl.textContent = done;
+        }
+
+        function saveTasksToLocalStorage() {
+            localStorage.setItem('unstoppable_ash_tasks', JSON.stringify(state.tasks));
+        }
+
+        /* ==================== REPEATING REMINDERS & NOTIFICATIONS ==================== */
+        function checkRepeatingReminders() {
+            const pendingToday = state.tasks.filter(t => !t.completed);
+            if (pendingToday.length > 0) {
+                const now = new Date();
+                const currentDayName = now.toLocaleDateString('en-US', { weekday: 'long' });
+                if (currentDayName === state.weeklyOffDay) {
+                    showPersistentBanner(`⚠️ Weekly Off Reminder: You have ${pendingToday.length} pending task(s) waiting for your attention! Clear your backlog today.`);
+                } else {
+                    showPersistentBanner(`🔔 Reminder: You have ${pendingToday.length} pending task(s) for today. Stay unstoppable and finish them!`);
+                }
+
+                if (window.Notification && Notification.permission === "granted") {
+                    new Notification("Unstoppable Ash! Reminder", {
+                        body: `You have ${pendingToday.length} pending task(s) to finish today!`,
+                        icon: "https://placehold.co/128x128/f59e0b/ffffff?text=UA"
+                    });
+                }
+            }
+        }
+
+        function showPersistentBanner(msg) {
+            const banner = document.getElementById('persistentReminderBanner');
+            const textEl = document.getElementById('reminderBannerText');
+            if (banner && textEl) {
+                textEl.textContent = msg;
+                banner.classList.remove('hidden');
+            }
+        }
+
+        function dismissBanner() {
+            const banner = document.getElementById('persistentReminderBanner');
+            if (banner) banner.classList.add('hidden');
+        }
+
+        function requestNotificationPermission() {
+            if (!window.Notification) {
+                alert("Browser notifications are not supported by your browser.");
+                return;
+            }
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    showToast("Browser notifications enabled successfully!");
+                    new Notification("Unstoppable Ash!", "Notifications are now active. We will keep you reminded until tasks are done!");
+                } else {
+                    showToast("Notification permission denied.");
+                }
+            });
+        }
+
+        /* ==================== MICRO-LEARNING MODAL ==================== */
+        function openRandomQuickRead() {
+            const random = quickReads[Math.floor(Math.random() * quickReads.length)];
+            document.getElementById('quickReadTitle').textContent = random.title;
+            document.getElementById('quickReadContent').textContent = random.text;
+            document.getElementById('quickReadModal').classList.remove('hidden');
+        }
+
+        function closeQuickReadModal() {
+            document.getElementById('quickReadModal').classList.add('hidden');
+        }
+
+        /* ==================== REPORTS & PDF DOWNLOAD (NO PRINT) ==================== */
+        function generateReport() {
+            const startDate = document.getElementById('reportStartDate').value;
+            const endDate = document.getElementById('reportEndDate').value;
+
+            let filtered = state.tasks;
+            if (startDate && endDate) {
+                filtered = state.tasks.filter(t => t.targetDate >= startDate && t.targetDate <= endDate);
+                document.getElementById('reportRangeLabel').textContent = `Report range: ${startDate} to ${endDate}`;
+            } else {
+                document.getElementById('reportRangeLabel').textContent = `Showing all recorded tasks`;
+            }
+
+            const total = filtered.length;
+            const completed = filtered.filter(t => t.completed).length;
+            const rate = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+            document.getElementById('repTotalTasks').textContent = total;
+            document.getElementById('repCompletedTasks').textContent = completed;
+            document.getElementById('repCompletionRate').textContent = `${rate}%`;
+            document.getElementById('reportGeneratedTime').textContent = `Generated: ${new Date().toLocaleString()}`;
+
+            const tbody = document.getElementById('reportTableBody');
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-slate-400">No tasks found for this date range.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(t => `
+                <tr class="border-b border-slate-100 dark:border-slate-800/60">
+                    <td class="py-3 px-3 sm:px-4 font-semibold text-slate-900 dark:text-white">${escapeHTML(t.title)}</td>
+                    <td class="py-3 px-3 sm:px-4 text-slate-600 dark:text-slate-300">${t.category}</td>
+                    <td class="py-3 px-3 sm:px-4 text-slate-600 dark:text-slate-300">${t.priority}</td>
+                    <td class="py-3 px-3 sm:px-4 text-amber-400 font-semibold">${t.time || '12:00'}</td>
+                    <td class="py-3 px-3 sm:px-4 text-slate-600 dark:text-slate-300">${t.targetDate}</td>
+                    <td class="py-3 px-3 sm:px-4">
+                        <span class="px-2 py-0.5 rounded text-xs font-bold ${t.completed ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-orange-500/10 text-orange-400 border border-orange-500/20'}">
+                            ${t.completed ? 'Completed' : 'Pending'}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function triggerPDFDownload() {
+            window.print();
+        }
+
+        /* ==================== SETTINGS & BACKUP / RESTORE ==================== */
+        function toggleDarkMode() {
+            state.darkMode = !state.darkMode;
+            localStorage.setItem('unstoppable_ash_dark', state.darkMode);
+            if (state.darkMode) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('themeIcon').className = 'fa-solid fa-sun';
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('themeIcon').className = 'fa-solid fa-moon';
+            }
+        }
+
+        function exportDataJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `unstoppable_ash_backup_${new Date().toISOString().split('T')[0]}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            showToast("Backup exported successfully!");
+        }
+
+        function importDataJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (parsed.tasks && Array.isArray(parsed.tasks)) {
+                        state.tasks = parsed.tasks;
+                        if (parsed.weeklyOffDay) {
+                            state.weeklyOffDay = parsed.weeklyOffDay;
+                            document.getElementById('weeklyOffDaySelect').value = state.weeklyOffDay;
+                            localStorage.setItem('unstoppable_ash_weekly_off', state.weeklyOffDay);
+                        }
+                        saveTasksToLocalStorage();
+                        renderTasks();
+                        updateDashboardMetrics();
+                        checkWeeklyOffStatus();
+                        showToast("Data restored successfully!");
+                    } else {
+                        alert("Invalid backup file format.");
+                    }
+                } catch (err) {
+                    alert("Error parsing JSON backup file.");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        /* ==================== UTILITIES ==================== */
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-5 right-5 z-50 bg-[#0b1326] border border-amber-500/40 text-white px-4 py-3 rounded-2xl shadow-2xl text-sm font-semibold transition animate-bounce';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function escapeHTML(str) {  
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+    </script>
+</body>
+</html>
