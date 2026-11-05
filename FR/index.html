@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fashionoriser — fashion, grooming, styling, lookmaxing and personal growth guidance by Shivam Singh.">
+    <title>Fashionoriser | Fashion, Grooming, Styling & Personal Growth</title>
+
+    <!-- Open Graph Metadata -->
+    <meta property="og:title" content="Fashionoriser | Fashion, Grooming, Styling & Personal Growth">
+    <meta property="og:description" content="Improve your appearance, style, grooming, and personal growth with Shivam Singh.">
+    <meta property="og:type" content="website">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header / Floating Navbar -->
+    <header class="header" id="header">
+        <nav class="nav-container" aria-label="Main Navigation">
+            <!-- Clicking logo navigates to top/home -->
+            <a href="#hero" class="brand-logo" aria-label="Fashionoriser Home">
+                <span class="logo-text">FASHIONORISER</span>
+                <span class="logo-sub">STYLE • GROW • EVOLVE</span>
+            </a>
+
+            <!-- Desktop Links (Home Removed) -->
+            <ul class="nav-links">
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#advice" class="nav-link">1:1 Advice</a></li>
+                <li><a href="#community" class="nav-link">Community</a></li>
+                <li><a href="#connect" class="nav-link">Connect</a></li>
+            </ul>
+
+            <!-- Header CTA -->
+            <a href="#community" class="btn-nav-cta">
+                <span>Join ₹19</span>
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+
+            <!-- Mobile Hamburger Button -->
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+        <div class="mobile-menu-inner">
+            <ul class="mobile-nav-links">
+                <li style="--i:1"><a href="#about" class="mobile-link">About</a></li>
+                <li style="--i:2"><a href="#advice" class="mobile-link">1:1 Advice</a></li>
+                <li style="--i:3"><a href="#community" class="mobile-link">Community</a></li>
+                <li style="--i:4"><a href="#connect" class="mobile-link">Connect</a></li>
+            </ul>
+            <div class="mobile-menu-cta" style="--i:5">
+                <a href="#community" class="btn-primary btn-full mobile-link">
+                    <span>Join Community — ₹19</span>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- Section 1: Hero (No Images) -->
+        <section class="hero-section" id="hero">
+            <div class="hero-bg-text" aria-hidden="true">FASHIONORISER</div>
+            <div class="container hero-container">
+                <div class="hero-label-wrap hero-reveal">
+                    <span class="hero-label">FASHION • GROOMING • STYLE • GROWTH</span>
+                </div>
+                
+                <h1 class="hero-title hero-reveal">
+                    <span class="title-line">LOOK BETTER.</span>
+                    <span class="title-line">STYLE BETTER.</span>
+                    <span class="title-line highlight">GROW BETTER.</span>
+                </h1>
+
+                <p class="hero-description hero-reveal">
+                    Fashion, grooming, styling, lookmaxing and personal growth — created to help you improve your style and yourself.
+                </p>
+
+                <div class="hero-actions hero-reveal">
+                    <a href="#advice" class="btn-primary">
+                        <span>Get 1:1 Advice</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                    <a href="#community" class="btn-secondary">
+                        <span>Join Community — ₹19</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-scroll-indicator hero-reveal" aria-hidden="true">
+                <span class="scroll-text">SCROLL</span>
+                <div class="scroll-line"></div>
+            </div>
+        </section>
+
+        <!-- Continuous Fashion Ticker -->
+        <div class="ticker-wrapper" aria-hidden="true">
+            <div class="ticker-track">
+                <div class="ticker-content">
+                    <span>LOOKMAXING</span><span class="star">✦</span>
+                    <span>GROOMING</span><span class="star">✦</span>
+                    <span>STYLING</span><span class="star">✦</span>
+                    <span>FASHION</span><span class="star">✦</span>
+                    <span>PERSONAL GROWTH</span><span class="star">✦</span>
+                    <span>CONFIDENCE</span><span class="star">✦</span>
+                    <span>STYLE</span><span class="star">✦</span>
+                </div>
+                <div class="ticker-content">
+                    <span>LOOKMAXING</span><span class="star">✦</span>
+                    <span>GROOMING</span><span class="star">✦</span>
+                    <span>STYLING</span><span class="star">✦</span>
+                    <span>FASHION</span><span class="star">✦</span>
+                    <span>PERSONAL GROWTH</span><span class="star">✦</span>
+                    <span>CONFIDENCE</span><span class="star">✦</span>
+                    <span>STYLE</span><span class="star">✦</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: About (Single Image Allowed Here) -->
+        <section class="about-section section-padding" id="about">
+            <div class="container">
+                <div class="about-grid">
+                    <div class="about-image-col scroll-reveal">
+                        <div class="about-image-frame">
+                            <img src="fr.jpeg" alt="Shivam Singh - Creator behind Fashionoriser" loading="lazy">
+                            <div class="frame-accent"></div>
+                        </div>
+                    </div>
+                    <div class="about-content-col scroll-reveal">
+                        <span class="section-badge">ABOUT FASHIONORISER</span>
+                        <h2 class="section-title">Style is more than what you wear.</h2>
+                        <div class="about-text-body">
+                            <p class="lead-text">
+                                Hey, I'm Shivam Singh, the creator behind Fashionoriser — a fashion content creator focused on lookmaxing, grooming, styling, fashion, and personal growth.
+                            </p>
+                            <p>
+                                Fashionoriser is a fashion-focused creator/page sharing trendy outfit ideas, styling tips, fashion trends, grooming guidance, lookmaxing content, beauty looks, lifestyle inspiration, and personal-growth content across social media.
+                            </p>
+                            <p>
+                                The goal is to provide practical fashion and personal-style guidance that helps audiences improve their appearance, confidence, style, and overall personal growth.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Focus Areas -->
+        <section class="focus-section section-padding" id="focus">
+            <div class="container">
+                <div class="section-header scroll-reveal">
+                    <span class="section-badge">CORE PILLARS</span>
+                    <h2 class="section-title">Explore Your Style</h2>
+                </div>
+
+                <div class="focus-grid">
+                    <article class="focus-card scroll-reveal">
+                        <span class="card-num">01</span>
+                        <div class="card-content">
+                            <h3>LOOKMAXING</h3>
+                            <p>Improve your overall appearance, presentation and personal style.</p>
+                        </div>
+                        <div class="card-arrow">→</div>
+                    </article>
+
+                    <article class="focus-card scroll-reveal">
+                        <span class="card-num">02</span>
+                        <div class="card-content">
+                            <h3>GROOMING</h3>
+                            <p>Build better grooming habits and take better care of your appearance.</p>
+                        </div>
+                        <div class="card-arrow">→</div>
+                    </article>
+
+                    <article class="focus-card scroll-reveal">
+                        <span class="card-num">03</span>
+                        <div class="card-content">
+                            <h3>FASHION</h3>
+                            <p>Discover outfit ideas, trends and fashion inspiration.</p>
+                        </div>
+                        <div class="card-arrow">→</div>
+                    </article>
+
+                    <article class="focus-card scroll-reveal">
+                        <span class="card-num">04</span>
+                        <div class="card-content">
+                            <h3>STYLING</h3>
+                            <p>Learn how to combine clothing, colors and details effectively.</p>
+                        </div>
+                        <div class="card-arrow">→</div>
+                    </article>
+
+                    <article class="focus-card scroll-reveal card-wide">
+                        <span class="card-num">05</span>
+                        <div class="card-content">
+                            <h3>PERSONAL GROWTH</h3>
+                            <p>Work on confidence, habits, mindset and self-development.</p>
+                        </div>
+                        <div class="card-arrow">→</div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Editorial Statement Break -->
+        <section class="statement-section">
+            <div class="container">
+                <div class="statement-box scroll-reveal">
+                    <h2 class="statement-heading">YOUR STYLE SPEAKS BEFORE YOU DO.</h2>
+                    <p class="statement-sub">Build your appearance. Develop your style. Improve yourself.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: 1:1 Personal Advice -->
+        <section class="advice-section section-padding" id="advice">
+            <div class="container">
+                <div class="advice-header scroll-reveal">
+                    <span class="section-badge">PERSONAL GUIDANCE</span>
+                    <h2 class="section-title">LET'S WORK ON YOU.</h2>
+                    <p class="section-desc">
+                        Have a specific question about your style, grooming, lookmaxing, fashion, or personal growth? Share what you're looking for and Fashionoriser will contact you directly.
+                    </p>
+                    <p class="pricing-notice">
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8 5V8.5M8 11.5H8.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                        1:1 advice is a paid service. Pricing depends on your requirements and will be discussed directly after your request.
+                    </p>
+                </div>
+
+                <div class="form-wrapper scroll-reveal">
+                    <form id="adviceForm" class="advice-form" novalidate>
+                        <div class="form-grid">
+                            <!-- Name -->
+                            <div class="field-group">
+                                <label for="userName">Name <span class="required-star">*</span></label>
+                                <input type="text" id="userName" name="name" placeholder="Shivam Singh" autocomplete="name">
+                                <span class="error-msg" id="nameError">Please enter your name.</span>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="field-group">
+                                <label for="userEmail">Email <span class="required-star">*</span></label>
+                                <input type="email" id="userEmail" name="email" placeholder="shivam@example.com" autocomplete="email">
+                                <span class="error-msg" id="emailError">Please enter a valid email address.</span>
+                            </div>
+
+                            <!-- Mobile -->
+                            <div class="field-group">
+                                <label for="userMobile">Mobile Number <span class="required-star">*</span></label>
+                                <input type="tel" id="userMobile" name="mobile" placeholder="10-digit phone number" autocomplete="tel">
+                                <span class="error-msg" id="mobileError">Please enter a valid 10-digit mobile number.</span>
+                            </div>
+
+                            <!-- Age (Optional) -->
+                            <div class="field-group">
+                                <label for="userAge">Age <span class="optional-tag">(Optional)</span></label>
+                                <input type="number" id="userAge" name="age" min="10" max="100" placeholder="e.g. 22">
+                            </div>
+
+                            <!-- Skin Tone -->
+                            <div class="field-group">
+                                <label for="userSkinTone">Skin Tone <span class="required-star">*</span></label>
+                                <input type="text" id="userSkinTone" name="skinTone" placeholder="e.g. Fair, Medium, Dusky, Warm Brown">
+                                <span class="error-msg" id="skinToneError">Please enter your skin tone.</span>
+                            </div>
+
+                            <!-- Place -->
+                            <div class="field-group">
+                                <label for="userPlace">Place <span class="required-star">*</span></label>
+                                <input type="text" id="userPlace" name="place" placeholder="City, State / Country">
+                                <span class="error-msg" id="placeError">Please enter your location/place.</span>
+                            </div>
+
+                            <!-- Service / Interest -->
+                            <div class="field-group field-full">
+                                <label for="userService">Service / Interest <span class="required-star">*</span></label>
+                                <div class="select-wrapper">
+                                    <select id="userService" name="service">
+                                        <option value="" disabled selected>Select a service</option>
+                                        <option value="Lookmaxing">Lookmaxing</option>
+                                        <option value="Grooming">Grooming</option>
+                                        <option value="Fashion">Fashion</option>
+                                        <option value="Styling">Styling</option>
+                                        <option value="Personal Growth">Personal Growth</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <span class="error-msg" id="serviceError">Please select a service or area of interest.</span>
+                            </div>
+
+                            <!-- Question / Note (Optional) -->
+                            <div class="field-group field-full">
+                                <label for="userQuestion">Question / Note <span class="optional-tag">(Optional)</span></label>
+                                <textarea id="userQuestion" name="question" rows="4" placeholder="Briefly describe what you'd like guidance on..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" id="submitBtn" class="btn-primary btn-full">
+                                <span class="btn-text">Submit 1:1 Request</span>
+                                <span class="btn-loader" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Success Message Box -->
+                    <div id="formSuccess" class="form-success-box" aria-live="polite">
+                        <div class="success-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M8 12L11 15L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                        <h3>Request Received!</h3>
+                        <p>Your request has been submitted successfully. We'll contact you soon.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Community -->
+        <section class="community-section section-padding" id="community">
+            <div class="container">
+                <div class="community-panel scroll-reveal">
+                    <div class="community-header">
+                        <span class="membership-badge">ONE-TIME MEMBERSHIP</span>
+                        <h2 class="community-title">FASHIONORISER COMMUNITY</h2>
+                        <div class="price-tag">
+                            <span class="currency">₹</span>
+                            <span class="amount">19</span>
+                        </div>
+                        <p class="community-desc">
+                            Join the Fashionoriser Community to connect with people interested in fashion, grooming, lookmaxing, personal growth and self-improvement.
+                        </p>
+                    </div>
+
+                    <div class="benefits-grid">
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✦</span>
+                            <span>Lookmaxing discussions</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✦</span>
+                            <span>Grooming advice</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✦</span>
+                            <span>Fashion guidance</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✦</span>
+                            <span>Styling discussions</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✦</span>
+                            <span>Personal growth</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✦</span>
+                            <span>Networking & Connections</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✦</span>
+                            <span>General community chat</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✦</span>
+                            <span>Sharing ideas & experiences</span>
+                        </div>
+                    </div>
+
+                    <div class="community-cta">
+                        <a href="javascript:void(0)" id="communityBtn" class="btn-primary btn-large">
+                            <span>Join Community — ₹19</span>
+                            <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7: Stay Connected (Redesigned & Enhanced) -->
+        <section class="connect-section section-padding" id="connect">
+            <div class="container">
+                <div class="connect-wrapper scroll-reveal">
+                    <div class="connect-header-center">
+                        <span class="section-badge">SOCIAL MEDIA</span>
+                        <h2 class="section-title">STAY CONNECTED</h2>
+                        <p class="section-desc">Follow Fashionoriser for daily fashion inspiration, grooming routines, styling break-downs, lookmaxing tips, and personal growth insights.</p>
+                    </div>
+
+                    <div class="social-showcase">
+                        <!-- Instagram Card -->
+                        <a href="https://www.instagram.com/fashionoriser__" target="_blank" rel="noopener noreferrer" class="social-editorial-card scroll-reveal">
+                            <div class="social-card-top">
+                                <span class="platform-tag">INSTAGRAM</span>
+                                <span class="arrow-badge">
+                                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </span>
+                            </div>
+                            <div class="social-card-body">
+                                <h3 class="social-title">@fashionoriser__</h3>
+                                <p class="social-desc">Outfits, daily grooming guides, and short visual style breakdowns.</p>
+                            </div>
+                            <div class="social-card-footer">
+                                <span>Follow on Instagram</span>
+                            </div>
+                        </a>
+
+                        <!-- YouTube Card -->
+                        <a href="https://youtube.com/@fashionoriser" target="_blank" rel="noopener noreferrer" class="social-editorial-card scroll-reveal">
+                            <div class="social-card-top">
+                                <span class="platform-tag">YOUTUBE</span>
+                                <span class="arrow-badge">
+                                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </span>
+                            </div>
+                            <div class="social-card-body">
+                                <h3 class="social-title">@fashionoriser</h3>
+                                <p class="social-desc">Long-form fashion analysis, lookmaxing guides, and lifestyle routines.</p>
+                            </div>
+                            <div class="social-card-footer">
+                                <span>Subscribe on YouTube</span>
+                            </div>
+                        </a>
+
+                        <!-- LinkedIn Card -->
+                        <a href="LINKEDIN_URL_PLACEHOLDER" target="_blank" rel="noopener noreferrer" class="social-editorial-card scroll-reveal">
+                            <div class="social-card-top">
+                                <span class="platform-tag">LINKEDIN</span>
+                                <span class="arrow-badge">
+                                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </span>
+                            </div>
+                            <div class="social-card-body">
+                                <h3 class="social-title">Fashionoriser</h3>
+                                <p class="social-desc">Professional networking, brand growth, and creator insights.</p>
+                            </div>
+                            <div class="social-card-footer">
+                                <span>Connect on LinkedIn</span>
+                            </div>
+                        </a>
+
+                        <!-- Facebook Card -->
+                        <a href="https://www.facebook.com/share/1KZYXtgqQo" target="_blank" rel="noopener noreferrer" class="social-editorial-card scroll-reveal">
+                            <div class="social-card-top">
+                                <span class="platform-tag">FACEBOOK</span>
+                                <span class="arrow-badge">
+                                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </span>
+                            </div>
+                            <div class="social-card-body">
+                                <h3 class="social-title">Fashionoriser</h3>
+                                <p class="social-desc">Community updates, media content, and style discussions.</p>
+                            </div>
+                            <div class="social-card-footer">
+                                <span>Follow on Facebook</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modern Redesigned Footer -->
+    <footer class="modern-footer">
+        <div class="container">
+            <div class="footer-hero-line">
+                <span class="footer-huge-text">FASHIONORISER</span>
+                <a href="#hero" class="back-to-top" aria-label="Back to top">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+            </div>
+
+            <div class="footer-main-grid">
+                <div class="footer-col brand-col">
+                    <p class="footer-brand-statement">
+                        Practical fashion, grooming, lookmaxing, styling, and personal growth guidance designed to elevate your style and self-confidence.
+                    </p>
+                    <span class="footer-creator-credit">Created by <strong>Shivam Singh</strong></span>
+                </div>
+
+                <div class="footer-col links-col">
+                    <span class="footer-heading">NAVIGATION</span>
+                    <ul class="footer-nav-list">
+                        <li><a href="#about">About Shivam</a></li>
+                        <li><a href="#advice">1:1 Advice</a></li>
+                        <li><a href="#community">Community (₹19)</a></li>
+                        <li><a href="#connect">Social Connect</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col social-col">
+                    <span class="footer-heading">SOCIAL MEDIA</span>
+                    <div class="footer-social-pills">
+                        <a href="https://www.instagram.com/fashionoriser__" target="_blank" rel="noopener noreferrer">Instagram</a>
+                        <a href="https://youtube.com/@fashionoriser" target="_blank" rel="noopener noreferrer">YouTube</a>
+                        <a href="LINKEDIN_URL_PLACEHOLDER" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                        <a href="https://www.facebook.com/share/1KZYXtgqQo" target="_blank" rel="noopener noreferrer">Facebook</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom-bar">
+                <p>&copy; 2026 Fashionoriser. All rights reserved.</p>
+                <span class="tagline-mini">STYLE • GROW • EVOLVE</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
